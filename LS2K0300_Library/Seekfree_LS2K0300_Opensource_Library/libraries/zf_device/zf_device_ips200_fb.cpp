@@ -258,6 +258,10 @@ uint16 width, uint16 height)
 }
 
 
+
+
+
+
 void ips200_init(const char *path)
 {
     struct fb_fix_screeninfo fb_fix;
