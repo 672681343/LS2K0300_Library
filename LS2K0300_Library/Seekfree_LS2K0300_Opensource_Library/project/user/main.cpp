@@ -48,5 +48,6 @@ int main(int, char**)
         Camera::basic_image_processing(rgay_image);
         ImageProc::image_measurement(Camera::bin_pixels,Camera::lcd_pixels);
         ips200_show_gray_image(0, 0, Camera::lcd_pixels, WIDTH, HEIGHT);
+        
     }
 }

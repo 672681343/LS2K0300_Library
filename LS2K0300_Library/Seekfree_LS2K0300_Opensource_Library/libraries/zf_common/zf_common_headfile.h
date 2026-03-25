@@ -163,6 +163,8 @@
 #include "Camera.h"
 #include "ImageProc.h"
 #include "Tool.h"
+#include "Motor.h"
+#include "Key.h"
 //===================================================用户自定义文件===================================================
 
 
