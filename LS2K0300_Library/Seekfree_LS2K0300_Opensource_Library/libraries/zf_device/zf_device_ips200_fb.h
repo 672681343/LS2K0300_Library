@@ -4,7 +4,7 @@
 #include "zf_common_typedef.h"
 
 #define IPS200_DEFAULT_PENCOLOR         (RGB565_RED    )                        // 默认的画笔颜色
-#define IPS200_DEFAULT_BGCOLOR          (RGB565_WHITE  )                        // 默认的背景颜色
+#define IPS200_DEFAULT_BGCOLOR          (RGB565_BLACK  )                        // 默认的背景颜色
 
 
 void    ips200_clear            (void);
