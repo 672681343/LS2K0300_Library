@@ -39,8 +39,9 @@ int main(int, char**)
     Motor::Init();                              // 初始化电机
     Motor::goMotor(0, 0);                       // 电机清空
     Key::Init();                                // 初始化按键
+    PID::PID_init();                            // PID初始化
     MenuSystem::init();                         // 菜单初始化
-
+    Pit::Init();                                // 中断初始化
 
     while(1)
     {
@@ -56,6 +57,7 @@ int main(int, char**)
         ImageProc::image_measurement(Camera::bin_pixels,Camera::lcd_pixels);
         // ips200_show_gray_image(0, 0, Camera::lcd_pixels, WIDTH, HEIGHT);
 
+        Error::last_error_update();
         MenuSystem::key_shutdown();
         MenuSystem::Menu_display();
         
