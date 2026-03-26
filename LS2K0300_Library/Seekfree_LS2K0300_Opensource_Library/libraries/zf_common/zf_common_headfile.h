@@ -165,6 +165,15 @@
 #include "Tool.h"
 #include "Motor.h"
 #include "Key.h"
+#include "Pit.h"
+#include "CarOS.h"
+#include "Elem.h"
+#include "Err.h"
+#include "Encoder.h"
+#include "PID.h"
+#include "Saving.h"
+#include "TCP.h"
+#include "Control.h"
 //===================================================用户自定义文件===================================================
 
 

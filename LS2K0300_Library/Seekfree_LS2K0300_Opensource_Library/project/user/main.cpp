@@ -35,6 +35,13 @@ int main(int, char**)
     }
 
 
+
+    Motor::Init();                              // 初始化电机
+    Motor::goMotor(0, 0);                       // 电机清空
+    Key::Init();                                // 初始化按键
+    MenuSystem::init();                         // 菜单初始化
+
+
     while(1)
     {
 
@@ -47,7 +54,10 @@ int main(int, char**)
 
         Camera::basic_image_processing(rgay_image);
         ImageProc::image_measurement(Camera::bin_pixels,Camera::lcd_pixels);
-        ips200_show_gray_image(0, 0, Camera::lcd_pixels, WIDTH, HEIGHT);
+        // ips200_show_gray_image(0, 0, Camera::lcd_pixels, WIDTH, HEIGHT);
+
+        MenuSystem::key_shutdown();
+        MenuSystem::Menu_display();
         
     }
 }
