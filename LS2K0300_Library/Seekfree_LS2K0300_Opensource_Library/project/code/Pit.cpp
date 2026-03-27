@@ -106,7 +106,7 @@ namespace Pit{
     //-------------------------------------------------------------------------------------------------------------------
     void callback_50ms()
     {
-        // TCP::data_analysis();
+        TCP::data_analysis();
         if (MenuSystem::Car_flag.test && MenuSystem::Car_flag.start && MenuSystem::Car_flag.stop_times > 0) {
             if (MenuSystem::Car_flag.stop_times > count_50ms) {
                 count_50ms++;

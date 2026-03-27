@@ -35,7 +35,7 @@ int main(int, char**)
     }
 
 
-
+    TCP::init();
     Motor::Init();                              // 初始化电机
     Motor::goMotor(0, 0);                       // 电机清空
     Key::Init();                                // 初始化按键
@@ -65,9 +65,9 @@ int main(int, char**)
                 Control::RoadSegment_t = Control::classifyRoadSegment();
                 Control::ControlOutput(Control::RoadSegment_t);
                 // DataSaving::saveTask(MenuSystem::Car_flag.saving);
-                // TCP::send_data();
+                TCP::send_data();
             }
-            Control::stop(0);
+            Control::stop(MenuSystem::Car_flag.protect);
         }
 
         Error::last_error_update();

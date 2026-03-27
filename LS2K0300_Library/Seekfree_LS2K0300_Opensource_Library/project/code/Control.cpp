@@ -332,7 +332,7 @@ namespace Control{
                 MenuSystem::Car_flag.stop = 1;
         }
         else if(mode == 0){
-            if(Camera::outlier_count >= (WIDTH * 3) - 30 && MenuSystem::Car_flag.init == 1 ){
+            if((Camera::outlier_count >= (WIDTH * 3) - 30 && MenuSystem::Car_flag.init == 1) || (ImageProc::state.cutoff < 3 && MenuSystem::Car_flag.init == 1)){
                 if(MenuSystem::Car_flag.test == 1 && MenuSystem::Car_flag.protect == 0){
                     MenuSystem::Car_flag.stop = MenuSystem::Car_flag.stop;
                 }else{

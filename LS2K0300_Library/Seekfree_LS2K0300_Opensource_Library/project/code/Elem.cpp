@@ -288,8 +288,8 @@ namespace Elem {
     //-------------------------------------------------------------------------------------------------------------------
     void Crosshairs(void){
 
-        uint8_t L_flag = 0;
-        uint8_t R_flag = 0;
+        // uint8_t L_flag = 0;
+        // uint8_t R_flag = 0;
 
         //左两点
         if (Left_corner.U_y != 0 && Left_corner.D_y != 0){
@@ -316,7 +316,7 @@ namespace Elem {
         }
         //左无
         else{
-            L_flag = 1;
+            // L_flag = 1;
         }
 
         //右两点
@@ -343,21 +343,21 @@ namespace Elem {
         }
         //右无
         else{
-            R_flag = 1;
+            // R_flag = 1;
         }
 
-        //左边缺失，沿右边
-        if (L_flag == 1 && R_flag != 1){
-            Error::Err.mode = 1;
-        }
-        //右边缺失，沿左边
-        else if (L_flag != 1 && R_flag == 1){
-            Error::Err.mode = -1;
-        }
-        //正常
-        else{
-            Error::Err.mode = 0;
-        }
+        // //左边缺失，沿右边
+        // if (L_flag == 1 && R_flag != 1){
+        //     Error::Err.mode = 1;
+        // }
+        // //右边缺失，沿左边
+        // else if (L_flag != 1 && R_flag == 1){
+        //     Error::Err.mode = -1;
+        // }
+        // //正常
+        // else{
+        //     Error::Err.mode = 0;
+        // }
     }
     
     //-------------------------------------------------------------------------------------------------------------------
@@ -409,13 +409,13 @@ namespace Elem {
                 Left_corner.D_y  = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
                 Right_corner.D_y = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
 
-                if (Left_corner.D_y > 35){
+                if (Left_corner.D_y > 20){
                     Left_corner.U_y = cross_Up(Left_corner.D_y,  HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
                 }else{
                     Left_corner.U_y = cross_Up(HEIGHT - 20,  HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
                 }
                 
-                if (Right_corner.D_y > 35){
+                if (Right_corner.D_y > 20){
                     Right_corner.U_y = cross_Up(Right_corner.D_y, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
                 }else{
                     Right_corner.U_y = cross_Up(HEIGHT - 20, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
