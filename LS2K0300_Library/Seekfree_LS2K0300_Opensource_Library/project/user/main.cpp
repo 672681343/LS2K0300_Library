@@ -55,7 +55,20 @@ int main(int, char**)
 
         Camera::basic_image_processing(rgay_image);
         ImageProc::image_measurement(Camera::bin_pixels,Camera::lcd_pixels);
+        Elem::elem_judge();
+        Error::error_get(ImageProc::state, ImageProc::l_black, ImageProc::r_black, ImageProc::left_flags, ImageProc::right_flags);
         // ips200_show_gray_image(0, 0, Camera::lcd_pixels, WIDTH, HEIGHT);
+
+        if (MenuSystem::Car_flag.init == 1  ){
+
+            if(MenuSystem::Car_flag.start == 1){
+                Control::RoadSegment_t = Control::classifyRoadSegment();
+                Control::ControlOutput(Control::RoadSegment_t);
+                // DataSaving::saveTask(MenuSystem::Car_flag.saving);
+                // TCP::send_data();
+            }
+            Control::stop(0);
+        }
 
         Error::last_error_update();
         MenuSystem::key_shutdown();

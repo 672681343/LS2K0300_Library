@@ -42,6 +42,8 @@ namespace MenuSystem {
         LONG,
         ISLAND,
 
+        PWM,
+
         SPEED,
         ELEM,
         ELEM_LEFT_TILT,

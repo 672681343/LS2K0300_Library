@@ -150,10 +150,13 @@ namespace Control{
                         aim_speed.cur_L = LongStrSpeed.set_speed - my_min(LongStrSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
                         aim_speed.cur_R = LongStrSpeed.set_speed + my_min(LongStrSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
                     }
-                    PID::speed_pid_L.kp = LongStrSpeed.l_kp;
-                    PID::speed_pid_L.ki = LongStrSpeed.l_ki;
-                    PID::speed_pid_R.kp = LongStrSpeed.r_kp;
-                    PID::speed_pid_R.ki = LongStrSpeed.r_ki;
+
+                    if(!MenuSystem::Car_flag.test){
+                        PID::speed_pid_L.kp = LongStrSpeed.l_kp;
+                        PID::speed_pid_L.ki = LongStrSpeed.l_ki;
+                        PID::speed_pid_R.kp = LongStrSpeed.r_kp;
+                        PID::speed_pid_R.ki = LongStrSpeed.r_ki;                       
+                    }
 
                     PID::turn_pid.kp = LongStrPid.kp;
                     PID::turn_pid.kp2 = LongStrPid.kp2;
@@ -163,13 +166,16 @@ namespace Control{
 
 
                 }else{
-                    pwm.L = LongStr_pwm.L;
-                    pwm.R = LongStr_pwm.R;
 
                     PID::turn_pid.kp = LongStrPid.kp;
                     PID::turn_pid.kp2 = LongStrPid.kp2;
                     PID::turn_pid.gkd = LongStrPid.gkd;
-                    PID::turn_pid.kd = LongStrPid.kd;
+                    PID::turn_pid.kd = LongStrPid.kd;  
+
+                    if(!MenuSystem::Car_flag.test){
+                        pwm.L = LongStr_pwm.L;
+                        pwm.R = LongStr_pwm.R;                        
+                    }
 
                 }
 
@@ -185,10 +191,13 @@ namespace Control{
                         aim_speed.cur_L = ShortStrSpeed.set_speed - my_min(ShortStrSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
                         aim_speed.cur_R = ShortStrSpeed.set_speed + my_min(ShortStrSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
                     }
-                    PID::speed_pid_L.kp = ShortStrSpeed.l_kp;
-                    PID::speed_pid_L.ki = ShortStrSpeed.l_ki;
-                    PID::speed_pid_R.kp = ShortStrSpeed.r_kp;
-                    PID::speed_pid_R.ki = ShortStrSpeed.r_ki;
+
+                    if(!MenuSystem::Car_flag.test){
+                        PID::speed_pid_L.kp = ShortStrSpeed.l_kp;
+                        PID::speed_pid_L.ki = ShortStrSpeed.l_ki;
+                        PID::speed_pid_R.kp = ShortStrSpeed.r_kp;
+                        PID::speed_pid_R.ki = ShortStrSpeed.r_ki;                       
+                    }
 
                     PID::turn_pid.kp = ShortStrPid.kp;
                     PID::turn_pid.kp2 = ShortStrPid.kp2;
@@ -198,13 +207,16 @@ namespace Control{
 
 
                 }else{
-                    pwm.L = ShortStr_pwm.L;
-                    pwm.R = ShortStr_pwm.R;
 
                     PID::turn_pid.kp = ShortStrPid.kp;
                     PID::turn_pid.kp2 = ShortStrPid.kp2;
                     PID::turn_pid.gkd = ShortStrPid.gkd;
                     PID::turn_pid.kd = ShortStrPid.kd;
+
+                    if(!MenuSystem::Car_flag.test){
+                        pwm.L = ShortStr_pwm.L;
+                        pwm.R = ShortStr_pwm.R;                        
+                    }
 
                 }
                 
@@ -223,10 +235,13 @@ namespace Control{
                         aim_speed.cur_L = CurveSpeed.set_speed - my_min(CurveSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
                         aim_speed.cur_R = CurveSpeed.set_speed + my_min(CurveSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
                     }
-                    PID::speed_pid_L.kp = CurveSpeed.l_kp;
-                    PID::speed_pid_L.ki = CurveSpeed.l_ki;
-                    PID::speed_pid_R.kp = CurveSpeed.r_kp;
-                    PID::speed_pid_R.ki = CurveSpeed.r_ki;
+
+                    if(!MenuSystem::Car_flag.test){
+                        PID::speed_pid_L.kp = CurveSpeed.l_kp;
+                        PID::speed_pid_L.ki = CurveSpeed.l_ki;
+                        PID::speed_pid_R.kp = CurveSpeed.r_kp;
+                        PID::speed_pid_R.ki = CurveSpeed.r_ki;                       
+                    }
 
                     PID::turn_pid.kp = CurvePid.kp;
                     PID::turn_pid.kp2 = CurvePid.kp2;
@@ -236,13 +251,16 @@ namespace Control{
 
 
                 }else{
-                    pwm.L = Curve_pwm.L;
-                    pwm.R = Curve_pwm.R;
 
                     PID::turn_pid.kp = CurvePid.kp;
                     PID::turn_pid.kp2 = CurvePid.kp2;
                     PID::turn_pid.gkd = CurvePid.gkd;
                     PID::turn_pid.kd = CurvePid.kd;
+
+                    if(!MenuSystem::Car_flag.test){
+                        pwm.L = Curve_pwm.L;
+                        pwm.R = Curve_pwm.R;                        
+                    }
 
                 }
 
@@ -257,10 +275,13 @@ namespace Control{
                         aim_speed.cur_L = IslandSpeed.set_speed - my_min(IslandSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
                         aim_speed.cur_R = IslandSpeed.set_speed + my_min(IslandSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
                     }
-                    PID::speed_pid_L.kp = IslandSpeed.l_kp;
-                    PID::speed_pid_L.ki = IslandSpeed.l_ki;
-                    PID::speed_pid_R.kp = IslandSpeed.r_kp;
-                    PID::speed_pid_R.ki = IslandSpeed.r_ki;
+
+                    if(!MenuSystem::Car_flag.test){
+                        PID::speed_pid_L.kp = IslandSpeed.l_kp;
+                        PID::speed_pid_L.ki = IslandSpeed.l_ki;
+                        PID::speed_pid_R.kp = IslandSpeed.r_kp;
+                        PID::speed_pid_R.ki = IslandSpeed.r_ki;                       
+                    }
 
                     PID::turn_pid.kp = IslandPid.kp;
                     PID::turn_pid.kp2 = IslandPid.kp2;
@@ -270,13 +291,16 @@ namespace Control{
 
 
                 }else{
-                    pwm.L = Island_pwm.L;
-                    pwm.R = Island_pwm.R;
 
                     PID::turn_pid.kp = IslandPid.kp;
                     PID::turn_pid.kp2 = IslandPid.kp2;
                     PID::turn_pid.gkd = IslandPid.gkd;
                     PID::turn_pid.kd = IslandPid.kd;
+
+                    if(!MenuSystem::Car_flag.test){
+                        pwm.L = Island_pwm.L;
+                        pwm.R = Island_pwm.R;                        
+                    }
 
                 }
 
@@ -286,21 +310,15 @@ namespace Control{
                 break;
             }
         }else{
-            PID::turn_pid.kp = ShortStrPid.kp;
-            PID::turn_pid.kd = ShortStrPid.kd;
-            aim_speed.cur_L = -5; // 停车速度
-            aim_speed.cur_R = -5; // 停车速度
+            // PID::turn_pid.kp = ShortStrPid.kp;
+            // PID::turn_pid.kd = ShortStrPid.kd;
+            // aim_speed.cur_L = -5; // 停车速度
+            // aim_speed.cur_R = -5; // 停车速度
+                    pwm.L = 0;
+                    pwm.R = 0;
         }
 
 
-
-        if(MenuSystem::Car_flag.test == 1 && MenuSystem::Car_flag.turn == 0){
-
-
-        }else{
-
-
-        }
     }
     //-------------------------------------------------------------------------------------------------------------------
     // 函数简介: 停车检测

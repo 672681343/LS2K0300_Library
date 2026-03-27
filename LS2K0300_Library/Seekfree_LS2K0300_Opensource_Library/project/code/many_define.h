@@ -13,7 +13,7 @@
 // 端口号
 #define PORT            (8086)
 //图像处理模式 0：opencv图像处理 1：使用自己的图像处理 
-#define CAMERA_MODE     (0)
+#define CAMERA_MODE     (1)
 //反转
 #define _Reverse        (0)
 

@@ -131,7 +131,7 @@
 
 
 //===================================================外部组件库===================================================
-#include "ncnn/net.h" // for ncnn
+// #include "ncnn/net.h" // for ncnn
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>  // for cv::cvtColor
 #include <opencv2/highgui/highgui.hpp> // for cv::VideoCapture

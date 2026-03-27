@@ -47,7 +47,7 @@ namespace MenuSystem {
         {"Menu",        ACTION_SWITCH,   "car_flag.menu",      {0,1},   MenuID::NONE},
         {"Turn",        ACTION_SWITCH,   "car_flag.turn",      {0,1},   MenuID::NONE},
         {"Sloop",       ACTION_SWITCH,   "car_flag.speedloop", {0,1},   MenuID::NONE},
-        {"PWM",         ACTION_ADJUST,   "car_flag.pwm",       {0,0},   MenuID::NONE},
+        {"PWM",         ACTION_CALLBACK, "car_flag.pwm",       {0,0},   MenuID::PWM},
 
         {"Timing",      ACTION_ADJUST,   "car_flag.set_time",  {0, 60}, MenuID::NONE},
         {"Protect",     ACTION_SWITCH,   "car_flag.protect",   {0,1},   MenuID::NONE},
@@ -57,6 +57,12 @@ namespace MenuSystem {
     static const MenuItem confirm_items[] = {
         
         {"Officially Start", ACTION_CALLBACK, "officially.start",  {0,0}, MenuID::NONE},
+    };
+
+    static const MenuItem pwm_items[] = {
+        
+        {"PWM_L", ACTION_ADJUST, "pwm.L",  {0.0f, 5000.0f}, MenuID::NONE},
+        {"PWM_R", ACTION_ADJUST, "pwm.R",  {0.0f, 5000.0f}, MenuID::NONE},
     };
 
     static const MenuItem group_items[] = {
@@ -70,38 +76,54 @@ namespace MenuSystem {
 
     static const MenuItem curve_items[] = {
         {"crvP",  ACTION_ADJUST, "Group.crvkp", {0.0f, 100.0f}, MenuID::NONE},
+        {"crvP2",  ACTION_ADJUST, "Group.crvkp2", {0.0f, 100.0f}, MenuID::NONE},
         {"crvD",  ACTION_ADJUST, "Group.crvkd", {0.0f, 100.0f}, MenuID::NONE},
+        {"crvGD",  ACTION_ADJUST, "Group.crvgkd", {0.0f, 100.0f}, MenuID::NONE},
         {"dif",   ACTION_ADJUST, "Group.crvdif", {0.0f, 100.0f}, MenuID::NONE},
         {"rep" , ACTION_ADJUST, "Group.difrep", {0.0f, 1.0f}, MenuID::NONE},
         {"speed", ACTION_ADJUST, "Group.crvspd", {0,0}, MenuID::NONE},
         {"Err",   ACTION_ADJUST, "Group.crvErr", {10, 70}, MenuID::NONE},
+        {"pwm_cl",  ACTION_ADJUST, "Group.pwm_cl", {0.0f, 5000.0f}, MenuID::NONE},
+        {"pwm_cr",  ACTION_ADJUST, "Group.pwm_cr", {0.0f, 5000.0f}, MenuID::NONE},
 
 
     };
     static const MenuItem short_items[] = {
         {"shtP", ACTION_ADJUST, "Group.shtkp", {0.0f, 100.0f}, MenuID::NONE},
+        {"shtP2", ACTION_ADJUST, "Group.shtkp2", {0.0f, 100.0f}, MenuID::NONE},
         {"shtD", ACTION_ADJUST, "Group.shtkd", {0.0f, 100.0f}, MenuID::NONE},
+        {"shtGD", ACTION_ADJUST, "Group.shtgkd", {0.0f, 100.0f}, MenuID::NONE},
         {"dif" , ACTION_ADJUST, "Group.shtdif", {0.0f, 100.0f}, MenuID::NONE},
         {"speed",ACTION_ADJUST, "Group.shtspd", {0,0}, MenuID::NONE},
         {"Err",  ACTION_ADJUST, "Group.shtErr", {10, 70}, MenuID::NONE},
+        {"pwm_sl",  ACTION_ADJUST, "Group.pwm_sl", {0.0f, 5000.0f}, MenuID::NONE},
+        {"pwm_sr",  ACTION_ADJUST, "Group.pwm_sr", {0.0f, 5000.0f}, MenuID::NONE},
 
 
     };
     static const MenuItem long_items[] = {
         {"logP", ACTION_ADJUST, "Group.logkp", {0.0f, 100.0f}, MenuID::NONE},
+        {"logP2", ACTION_ADJUST, "Group.logkp2", {0.0f, 100.0f}, MenuID::NONE},
         {"logD", ACTION_ADJUST, "Group.logkd", {0.0f, 100.0f}, MenuID::NONE},
+        {"logGD", ACTION_ADJUST, "Group.loggkd", {0.0f, 100.0f}, MenuID::NONE},
         {"dif" , ACTION_ADJUST, "Group.logdif", {0.0f, 100.0f}, MenuID::NONE},
         {"speed",ACTION_ADJUST, "Group.logspd", {0,0}, MenuID::NONE},
         {"Err",  ACTION_ADJUST, "Group.logErr", {10, 70}, MenuID::NONE},
+        {"pwm_ll",  ACTION_ADJUST, "Group.pwm_ll", {0.0f, 5000.0f}, MenuID::NONE},
+        {"pwm_lr",  ACTION_ADJUST, "Group.pwm_lr", {0.0f, 5000.0f}, MenuID::NONE},
   
 
     };
     static const MenuItem island_items[] = {
         {"islP", ACTION_ADJUST, "Group.islandkp", {0.0f, 100.0f}, MenuID::NONE},
+        {"islP2", ACTION_ADJUST, "Group.islandkp2", {0.0f, 100.0f}, MenuID::NONE},
         {"islD", ACTION_ADJUST, "Group.islandkd", {0.0f, 100.0f}, MenuID::NONE},
+        {"islGD", ACTION_ADJUST, "Group.islandgkd", {0.0f, 100.0f}, MenuID::NONE},
         {"dif", ACTION_ADJUST, "Group.islanddif", {0.0f, 100.0f}, MenuID::NONE},
         {"speed", ACTION_ADJUST, "Group.islandspd", {0,0}, MenuID::NONE},
         {"Err", ACTION_ADJUST, "Group.islandErr", {10, 70}, MenuID::NONE},
+        {"pwm_il",  ACTION_ADJUST, "Group.pwm_il", {0.0f, 5000.0f}, MenuID::NONE},
+        {"pwm_ir",  ACTION_ADJUST, "Group.pwm_ir", {0.0f, 5000.0f}, MenuID::NONE},
 
     };
 
@@ -204,6 +226,8 @@ namespace MenuSystem {
     const Menu elem_left_island_menu = {"Left Island", elem_left_island_items, sizeof(elem_left_island_items)/sizeof(MenuItem)};
     const Menu elem_right_island_menu = {"Right Island", elem_right_island_items, sizeof(elem_right_island_items)/sizeof(MenuItem)};
 
+    const Menu pwm_menu   = {"PWM Settings",pwm_items,sizeof(pwm_items)/sizeof(MenuItem)};
+
     const Menu confirm_menu = {"Confirm",       confirm_items,sizeof(confirm_items)/sizeof(MenuItem)};
     const Menu version_menu = {"Version",       version_items, sizeof(version_items)/sizeof(MenuItem)};
     const Menu version_action_menu = {"Version Action", version_action_items, sizeof(version_action_items)/sizeof(MenuItem)};
@@ -218,7 +242,8 @@ namespace MenuSystem {
         &long_menu,             // [6] MenuID::LONG
         &island_menu,           // [7] MenuID::ISLAND
 
- 
+        &pwm_menu,              // [8] MenuID::PWM
+
         &speed_menu,            // [10] MenuID::SPEED
         &elem_menu,             // [11] MenuID::ELEM
         &elem_left_tilt_menu,   // [12] MenuID::ELEM_LEFT_TILT
@@ -233,6 +258,7 @@ namespace MenuSystem {
         &confirm_menu,          // [24] MenuID::CONFIRM
         &version_menu,          // [25] MenuID::VERSION
         &version_action_menu    // [26] MenuID::V_ACTION
+
     };
  
     // 编译期安全检查
@@ -312,34 +338,54 @@ namespace MenuSystem {
 
     static const ParamMapping group_params[] = {
         {"logkp", TYPE_FLOAT,  .as_float = &Control::LongStrPid.kp, .persist = true},
+        {"logkp2", TYPE_FLOAT,  .as_float = &Control::LongStrPid.kp2, .persist = true},
         {"logkd", TYPE_FLOAT,  .as_float = &Control::LongStrPid.kd, .persist = true},
+        {"loggkd", TYPE_FLOAT,  .as_float = &Control::LongStrPid.gkd, .persist = true},
 
         {"logdif", TYPE_FLOAT, .as_float = &Control::LongStrSpeed.dif, .persist = true},
         {"logspd", TYPE_INT16, .as_int16 = &Control::LongStrSpeed.set_speed, .persist = true},
         {"logErr", TYPE_UINT8, .as_uint8 = &Control::LongStrSpeed.err_row, .persist = true},
 
+        {"pwm_ll", TYPE_INT16, .as_int16 = &Control::LongStr_pwm.L, .persist = true},
+        {"pwm_lr", TYPE_INT16, .as_int16 = &Control::LongStr_pwm.R, .persist = true},
+
         {"shtkp", TYPE_FLOAT,  .as_float = &Control::ShortStrPid.kp, .persist = true},
+        {"shtkp2", TYPE_FLOAT,  .as_float = &Control::ShortStrPid.kp2, .persist = true},
         {"shtkd", TYPE_FLOAT,  .as_float = &Control::ShortStrPid.kd, .persist = true},
+        {"shtgkd", TYPE_FLOAT,  .as_float = &Control::ShortStrPid.gkd, .persist = true},
 
         {"shtdif", TYPE_FLOAT, .as_float = &Control::ShortStrSpeed.dif, .persist = true},
         {"shtspd", TYPE_INT16, .as_int16 = &Control::ShortStrSpeed.set_speed, .persist = true},
         {"shtErr", TYPE_UINT8, .as_uint8 = &Control::ShortStrSpeed.err_row, .persist = true},
 
+        {"pwm_sl", TYPE_INT16, .as_int16 = &Control::ShortStr_pwm.L, .persist = true},
+        {"pwm_sr", TYPE_INT16, .as_int16 = &Control::ShortStr_pwm.R, .persist = true},
+
 
         {"crvkp", TYPE_FLOAT,  .as_float = &Control::CurvePid.kp, .persist = true},
+        {"crvkp2", TYPE_FLOAT,  .as_float = &Control::CurvePid.kp2, .persist = true},
         {"crvkd", TYPE_FLOAT,  .as_float = &Control::CurvePid.kd, .persist = true},
+        {"crvgkd", TYPE_FLOAT,  .as_float = &Control::CurvePid.gkd, .persist = true},
 
         {"crvdif", TYPE_FLOAT, .as_float = &Control::CurveSpeed.dif, .persist = true},
         {"difrep", TYPE_FLOAT, .as_float = &Control::dif_rep, .persist = true},
         {"crvspd", TYPE_INT16, .as_int16 = &Control::CurveSpeed.set_speed, .persist = true},
         {"crvErr", TYPE_UINT8, .as_uint8 = &Control::CurveSpeed.err_row, .persist = true},
 
+        {"pwm_cl", TYPE_INT16, .as_int16 = &Control::Curve_pwm.L, .persist = true},
+        {"pwm_cr", TYPE_INT16, .as_int16 = &Control::Curve_pwm.R, .persist = true},
+
         {"islandkp", TYPE_FLOAT,  .as_float = &Control::IslandPid.kp, .persist = true},
+        {"islandkp2", TYPE_FLOAT,  .as_float = &Control::IslandPid.kp2, .persist = true},
         {"islandkd", TYPE_FLOAT,  .as_float = &Control::IslandPid.kd, .persist = true},
+        {"islandgkd", TYPE_FLOAT,  .as_float = &Control::IslandPid.gkd, .persist = true},
 
         {"islanddif", TYPE_FLOAT, .as_float = &Control::IslandSpeed.dif, .persist = true},
         {"islandspd", TYPE_INT16, .as_int16 = &Control::IslandSpeed.set_speed, .persist = true},
         {"islandErr", TYPE_UINT8, .as_uint8 = &Control::IslandSpeed.err_row, .persist = true},
+
+        {"pwm_il", TYPE_INT16, .as_int16 = &Control::Island_pwm.L, .persist = true},
+        {"pwm_ir", TYPE_INT16, .as_int16 = &Control::Island_pwm.R, .persist = true},
 
 
     };

@@ -40,41 +40,61 @@ namespace Pit{
 
         // 测试模式分发
         if (MenuSystem::Car_flag.test && MenuSystem::Car_flag.init && MenuSystem::Car_flag.start) {
-            // if (MenuSystem::Car_flag.speed_loop ) {
-
-            //     // PID::speed_pid_R.kp = PID::speed_pid_L.kp;
-            //     // PID::speed_pid_R.ki = PID::speed_pid_L.ki;
-            //     // PID::speed_pid_R.kd = PID::speed_pid_L.kd;
+            if (MenuSystem::Car_flag.speed_loop ) {
                 
-            //     // 闭环测试（允许左右轮独立 PID 参数）
-            //     Control::pwm.L = PID::Speed_loc_PID(Control::aim_speed.cur_L, Encoder::count.L, &PID::speed_pid_L);
-            //     Control::pwm.R = PID::Speed_loc_PID(Control::aim_speed.cur_R, Encoder::count.R, &PID::speed_pid_R);
-            //     // Control::pwm.L = PID::Speed_loc_PID(0, Encoder::count.L, &PID::speed_pid_L);
-            //     // Control::pwm.R = PID::Speed_loc_PID(0, Encoder::count.R, &PID::speed_pid_R);
+                // 闭环测试（允许左右轮独立 PID 参数）
+                Control::pwm.L = PID::Speed_loc_PID(Control::aim_speed.cur_L, Encoder::count.L, &PID::speed_pid_L);
+                Control::pwm.R = PID::Speed_loc_PID(Control::aim_speed.cur_R, Encoder::count.R, &PID::speed_pid_R);
 
-            // } else if(MenuSystem::Car_flag.stop == 0){
-            //     // 开环测试（允许左右轮独立 PWM）
-            //     Control::pwm.L = MenuSystem::Car_flag.pwm; // 需在 Car_flag 中增加 pwm_L/pwm_R
-            //     Control::pwm.R = MenuSystem::Car_flag.pwm;
-            // } else {
-            //     // 停止测试模式
-            //     Control::pwm.L = 0;
-            //     Control::pwm.R = 0;
-            // }
-            // Motor::goMotor(Control::pwm.L, Control::pwm.R);
-           Motor::goMotor(1500, 1500);
+                if(MenuSystem::Car_flag.turn == 0){
+                    Motor::goMotor(Control::pwm.L, Control::pwm.R); 
+                }else{
+                    Motor::goMotor(Control::pwm.L-PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R+PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
+                }
+
+
+            } else if(MenuSystem::Car_flag.stop == 0){
+                // 开环测试（允许左右轮独立 PWM）
+
+                if(MenuSystem::Car_flag.turn == 0){
+                    Motor::goMotor(Control::pwm.L, Control::pwm.R); 
+                }else{
+                    Motor::goMotor(Control::pwm.L-PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R+PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
+                }
+
+            } else {
+                // 停止测试模式
+                Control::pwm.L = 0;
+                Control::pwm.R = 0;
+                Motor::goMotor(Control::pwm.L, Control::pwm.R);
+            }
+            
         } 
         // 非测试模式
         else if (MenuSystem::Car_flag.init && MenuSystem::Car_flag.start) {
-            // 速度环控制
-            // PID::speed_pid_R.kp = PID::speed_pid_L.kp;
-            // PID::speed_pid_R.ki = PID::speed_pid_L.ki;
-            // PID::speed_pid_R.kd = PID::speed_pid_L.kd;
-            
-            Control::pwm.L = PID::Speed_loc_PID(Control::aim_speed.cur_L, Encoder::count.L, &PID::speed_pid_L);
-            Control::pwm.R = PID::Speed_loc_PID(Control::aim_speed.cur_R, Encoder::count.R, &PID::speed_pid_R);
 
-            Motor::goMotor(Control::pwm.L, Control::pwm.R);
+                if (MenuSystem::Car_flag.speed_loop ) {
+                
+                // 闭环测试（允许左右轮独立 PID 参数）
+                Control::pwm.L = PID::Speed_loc_PID(Control::aim_speed.cur_L, Encoder::count.L, &PID::speed_pid_L);
+                Control::pwm.R = PID::Speed_loc_PID(Control::aim_speed.cur_R, Encoder::count.R, &PID::speed_pid_R);
+ 
+                if(MenuSystem::Car_flag.turn == 0){
+                    Motor::goMotor(Control::pwm.L, Control::pwm.R); 
+                }else{
+                    Motor::goMotor(Control::pwm.L-PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R+PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
+                }
+
+            } else if(MenuSystem::Car_flag.stop == 0){
+                // 开环测试（允许左右轮独立 PWM）
+
+                if(MenuSystem::Car_flag.turn == 0){
+                    Motor::goMotor(Control::pwm.L, Control::pwm.R); 
+                }else{
+                    Motor::goMotor(Control::pwm.L-PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R+PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
+                }
+            }
+
         }
     }
     //-------------------------------------------------------------------------------------------------------------------

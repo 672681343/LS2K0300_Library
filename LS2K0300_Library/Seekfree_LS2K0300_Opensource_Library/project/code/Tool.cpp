@@ -504,7 +504,7 @@ uint8_t cross_Up(uint8_t start, uint8_t end, uint8_t mode,
         {
             if (abs(Search_line[i - 2] - Search_line[i - 1]) < maxDelta &&
                 abs(Search_line[i - 1] - Search_line[i]) < maxDelta &&
-                Search_line[i] - Search_line[i + 2] < -jumpThreshold
+                Search_line[i] - Search_line[i + 3] < -jumpThreshold
                 )
             {
                 U_point = i-2;
@@ -530,12 +530,12 @@ uint8 cross_Down(uint8 start, uint8 end, uint8 mode,
     if (end < 3) { end = 3; }
     if (start > HEIGHT - 3) { start = HEIGHT - 3; }
     int8_t maxDelta = 5;
-    int8_t jumpThreshold = 5;
+    int8_t jumpThreshold = 6;
     if(mode == 0)
     {
         for (i = start; i > end; i--)
         {
-            if ((Search_line[i + 2] - Search_line[i]) > jumpThreshold &&
+            if ((Search_line[i + 3] - Search_line[i]) > jumpThreshold &&
                 abs(Search_line[i] - Search_line[i - 1]) < maxDelta &&
                 abs(Search_line[i - 1] - Search_line[i - 2]) < maxDelta
                 )
