@@ -1116,7 +1116,7 @@ namespace MenuSystem {
             //保存到默认文件
             Parameter_saving();
             system_delay_ms(500);
-            sh_down();
+            // sh_down();
         }
         if(strcmp(path,"sys.quash") == 0){
             json_load(JSON_TEMP_FILE);
@@ -1166,7 +1166,6 @@ namespace MenuSystem {
         ips200_show_string(20, 120, "Or wake up on your computer");
 
 
-        ips200_show_string(40, 180, "GOOD LUCK!");
         int8 result = system("./car_mode 1");
         
         if(result==-1)

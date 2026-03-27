@@ -67,7 +67,7 @@ int main(int, char**)
                 // DataSaving::saveTask(MenuSystem::Car_flag.saving);
                 TCP::send_data();
             }
-            Control::stop(MenuSystem::Car_flag.protect);
+            Control::stop(0);
         }
 
         Error::last_error_update();

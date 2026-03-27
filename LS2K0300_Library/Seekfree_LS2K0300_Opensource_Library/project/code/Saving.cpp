@@ -125,7 +125,7 @@ namespace {
             file << file_index++ << "=" << static_cast<int>(Error::Err.current) << "\n";
             file << file_index++ << "=" << static_cast<int>(Error::Err.tem_row) << "\n";
 
-            file << file_index++ << "=" << static_cast<int>(Servo::duty.cur) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Servo::duty.cur) << "\n";
             file << file_index++ << "=" << static_cast<int>(Encoder::count.L) << "\n";    
             file << file_index++ << "=" << static_cast<int>(Encoder::count.R) << "\n";
 

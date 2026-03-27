@@ -26,6 +26,9 @@ namespace Pit{
         imu660ra_get_gyro();
 
         // // 公共停机逻辑
+        if(ImageProc::state.cutoff < 3){
+            MenuSystem::Car_flag.stop = 1;
+        }
         if (MenuSystem::Car_flag.stop == 1) {
             Motor::deinit();
             return; // 直接退出，避免后续逻辑
@@ -49,7 +52,7 @@ namespace Pit{
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.R); 
                 }else{
-                    Motor::goMotor(Control::pwm.L-PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R+PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
+                    Motor::goMotor(Control::pwm.L+PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R-PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
                 }
 
 
@@ -59,7 +62,7 @@ namespace Pit{
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.R); 
                 }else{
-                    Motor::goMotor(Control::pwm.L-PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R+PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
+                    Motor::goMotor(Control::pwm.L+PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R-PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
                 }
 
             } else {
@@ -82,7 +85,7 @@ namespace Pit{
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.R); 
                 }else{
-                    Motor::goMotor(Control::pwm.L-PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R+PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
+                    Motor::goMotor(Control::pwm.L+PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R-PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
                 }
 
             } else if(MenuSystem::Car_flag.stop == 0){
@@ -91,7 +94,7 @@ namespace Pit{
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.R); 
                 }else{
-                    Motor::goMotor(Control::pwm.L-PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R+PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
+                    Motor::goMotor(Control::pwm.L+PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R-PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
                 }
             }
 

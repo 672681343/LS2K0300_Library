@@ -44,47 +44,47 @@ namespace Control{
 
     //长直道速度
     Set_Speed LongStrSpeed = {
-        .set_speed = 200,
+        .set_speed = 420,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
-        .l_kp = 0,
-        .l_ki = 0,
-        .r_kp = 0,
-        .r_ki = 0
+        .l_kp = 9,
+        .l_ki = 0.24,
+        .r_kp = 9,
+        .r_ki = 0.29
     };
     //短直道速度
     Set_Speed ShortStrSpeed = {
-        .set_speed = 200,
+        .set_speed = 380,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
-        .l_kp = 0,
-        .l_ki = 0,
-        .r_kp = 0,
-        .r_ki = 0
+        .l_kp = 9.0,
+        .l_ki = 0.24,
+        .r_kp = 9.0,
+        .r_ki = 0.29
     };
     //弯道速度
     Set_Speed CurveSpeed = {
-        .set_speed = 200,
+        .set_speed = 330,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
-        .l_kp = 0,
-        .l_ki = 0,
-        .r_kp = 0,
-        .r_ki = 0
+        .l_kp = 10,
+        .l_ki = 0.24,
+        .r_kp = 10.0,
+        .r_ki = 0.28
     };
     //环岛速度
     Set_Speed IslandSpeed = {
-        .set_speed = 200,
+        .set_speed = 100,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
-        .l_kp = 0,
-        .l_ki = 0,
-        .r_kp = 0,
-        .r_ki = 0
+        .l_kp = 13.5,
+        .l_ki = 0.20,
+        .r_kp = 15.0,
+        .r_ki = 0.26
 
     };
 
@@ -126,7 +126,7 @@ namespace Control{
 
     uint8_t RoadSegment_t = SHORT; 
     uint16_t stop_count = 0; // 停车计帧
-    float dif_rep = 0.1; // 差速补偿
+    float dif_rep = 0; // 差速补偿
     //-------------------------------------------------------------------------------------------------------------------
     // 函数简介: 控制输出
     // 参数说明:
@@ -188,8 +188,8 @@ namespace Control{
                         aim_speed.cur_L = ShortStrSpeed.set_speed - my_min(ShortStrSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
                         aim_speed.cur_R = ShortStrSpeed.set_speed + my_min(ShortStrSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
                     }else{
-                        aim_speed.cur_L = ShortStrSpeed.set_speed - my_min(ShortStrSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
-                        aim_speed.cur_R = ShortStrSpeed.set_speed + my_min(ShortStrSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
+                        aim_speed.cur_L = ShortStrSpeed.set_speed + my_min(ShortStrSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
+                        aim_speed.cur_R = ShortStrSpeed.set_speed - my_min(ShortStrSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
                     }
 
                     if(!MenuSystem::Car_flag.test){
@@ -232,16 +232,16 @@ namespace Control{
                         aim_speed.cur_L = CurveSpeed.set_speed - my_min(CurveSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
                         aim_speed.cur_R = CurveSpeed.set_speed + my_min(CurveSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
                     }else{
-                        aim_speed.cur_L = CurveSpeed.set_speed - my_min(CurveSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
-                        aim_speed.cur_R = CurveSpeed.set_speed + my_min(CurveSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
+                        aim_speed.cur_L = CurveSpeed.set_speed + my_min(CurveSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
+                        aim_speed.cur_R = CurveSpeed.set_speed - my_min(CurveSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
                     }
 
-                    if(!MenuSystem::Car_flag.test){
+                    // if(!MenuSystem::Car_flag.test){
                         PID::speed_pid_L.kp = CurveSpeed.l_kp;
                         PID::speed_pid_L.ki = CurveSpeed.l_ki;
                         PID::speed_pid_R.kp = CurveSpeed.r_kp;
                         PID::speed_pid_R.ki = CurveSpeed.r_ki;                       
-                    }
+                    // }
 
                     PID::turn_pid.kp = CurvePid.kp;
                     PID::turn_pid.kp2 = CurvePid.kp2;
@@ -272,16 +272,16 @@ namespace Control{
                         aim_speed.cur_L = IslandSpeed.set_speed - my_min(IslandSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
                         aim_speed.cur_R = IslandSpeed.set_speed + my_min(IslandSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
                     }else{
-                        aim_speed.cur_L = IslandSpeed.set_speed - my_min(IslandSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
-                        aim_speed.cur_R = IslandSpeed.set_speed + my_min(IslandSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
+                        aim_speed.cur_L = IslandSpeed.set_speed + my_min(IslandSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
+                        aim_speed.cur_R = IslandSpeed.set_speed - my_min(IslandSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
                     }
 
-                    if(!MenuSystem::Car_flag.test){
+                    // if(!MenuSystem::Car_flag.test){
                         PID::speed_pid_L.kp = IslandSpeed.l_kp;
                         PID::speed_pid_L.ki = IslandSpeed.l_ki;
                         PID::speed_pid_R.kp = IslandSpeed.r_kp;
                         PID::speed_pid_R.ki = IslandSpeed.r_ki;                       
-                    }
+                    // }
 
                     PID::turn_pid.kp = IslandPid.kp;
                     PID::turn_pid.kp2 = IslandPid.kp2;
@@ -332,7 +332,7 @@ namespace Control{
                 MenuSystem::Car_flag.stop = 1;
         }
         else if(mode == 0){
-            if((Camera::outlier_count >= (WIDTH * 3) - 30 && MenuSystem::Car_flag.init == 1) || (ImageProc::state.cutoff < 3 && MenuSystem::Car_flag.init == 1)){
+            if((Camera::outlier_count >= (WIDTH * 3) - 30 && MenuSystem::Car_flag.init == 1) ){
                 if(MenuSystem::Car_flag.test == 1 && MenuSystem::Car_flag.protect == 0){
                     MenuSystem::Car_flag.stop = MenuSystem::Car_flag.stop;
                 }else{
