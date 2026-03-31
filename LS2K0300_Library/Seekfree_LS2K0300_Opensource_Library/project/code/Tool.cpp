@@ -481,16 +481,16 @@ uint8_t cross_Up(uint8_t start, uint8_t end, uint8_t mode,
     uint8_t i = 0;
     uint8_t U_point = 0;
     if (end < 3) { end = 3; }
-    if (start > HEIGHT - 5) { start = HEIGHT - 5; }
+    if (start > HEIGHT - 6) { start = HEIGHT - 6; }
     int8_t maxDelta = 5;
-    int8_t jumpThreshold = 7;
+    int8_t jumpThreshold = 15;
     if(mode == 0)
     {
         for (i = start; i > end; i--)
         {
-            if (abs(Search_line[i - 2] - Search_line[i - 1]) < maxDelta &&
-                abs(Search_line[i - 1] - Search_line[i]) < maxDelta &&
-                Search_line[i] - Search_line[i + 2] > jumpThreshold
+            if (abs((int16_t)Search_line[i - 2] - (int16_t)Search_line[i - 1]) < maxDelta &&
+                abs((int16_t)Search_line[i - 1] - (int16_t)Search_line[i]) < maxDelta &&
+                (int16_t)Search_line[i] - (int16_t)Search_line[i + 6] > jumpThreshold
                 )
             {
                 U_point = i-2;
@@ -502,9 +502,9 @@ uint8_t cross_Up(uint8_t start, uint8_t end, uint8_t mode,
     {
         for (i = start; i > end; i--)
         {
-            if (abs(Search_line[i - 2] - Search_line[i - 1]) < maxDelta &&
-                abs(Search_line[i - 1] - Search_line[i]) < maxDelta &&
-                Search_line[i] - Search_line[i + 3] < -jumpThreshold
+            if (abs((int16_t)Search_line[i - 2] - (int16_t)Search_line[i - 1]) < maxDelta &&
+                abs((int16_t)Search_line[i - 1] - (int16_t)Search_line[i]) < maxDelta &&
+                (int16_t)Search_line[i] - (int16_t)Search_line[i + 6] < -jumpThreshold
                 )
             {
                 U_point = i-2;
@@ -528,19 +528,19 @@ uint8 cross_Down(uint8 start, uint8 end, uint8 mode,
     uint8_t i = 0;
     uint8_t D_point = 0;
     if (end < 3) { end = 3; }
-    if (start > HEIGHT - 3) { start = HEIGHT - 3; }
+    if (start > HEIGHT - 8) { start = HEIGHT - 8; }
     int8_t maxDelta = 5;
-    int8_t jumpThreshold = 4;
+    int8_t jumpThreshold = 15;
     if(mode == 0)
     {
         for (i = start; i > end; i--)
         {
-            if ((Search_line[i + 2] - Search_line[i]) > jumpThreshold &&
-                abs(Search_line[i] - Search_line[i - 1]) < maxDelta &&
-                abs(Search_line[i - 1] - Search_line[i - 2]) < maxDelta
+            if (((int16_t)Search_line[i + 5] - (int16_t)Search_line[i]) >= jumpThreshold &&
+                abs((int16_t)Search_line[i] - (int16_t)Search_line[i - 1]) < maxDelta &&
+                abs((int16_t)Search_line[i - 1] - (int16_t)Search_line[i - 2]) < maxDelta
                 )
             {
-                D_point = i + 5;
+                D_point = i + 7;
                 break;
             }
         }
@@ -549,12 +549,12 @@ uint8 cross_Down(uint8 start, uint8 end, uint8 mode,
     {
         for (i = start; i > end; i--)
         {
-            if ((Search_line[i + 2] - Search_line[i]) < -jumpThreshold &&
-                abs(Search_line[i] - Search_line[i - 1]) < maxDelta &&
-                abs(Search_line[i - 1] - Search_line[i - 2]) < maxDelta
+            if (((int16_t)Search_line[i + 5] - (int16_t)Search_line[i]) <= -jumpThreshold &&
+                abs((int16_t)Search_line[i] - (int16_t)Search_line[i - 1]) < maxDelta &&
+                abs((int16_t)Search_line[i - 1] - (int16_t)Search_line[i - 2]) < maxDelta
                 )
             {
-                D_point = i + 5;
+                D_point = i + 7;
                 break;
             }
         }
@@ -948,4 +948,51 @@ float my_draw_line(uint8_t x1,
         }
     }
     return k;  // 返回斜率
+}
+
+//-------------------------------------------------------------------------------------------------------------------
+// 函数简介: 斜入十字上的抖M拐点
+// 参数说明: 
+// 返回参数: 
+// 使用示例: 
+// 备注信息: 
+//-------------------------------------------------------------------------------------------------------------------
+
+uint8_t M_point(uint8_t start, uint8_t end,
+    const std::array<uint8_t, WIDTH>& Search_line){
+
+
+        uint8_t j = 0;
+        for(j = start + 3 ; j < end-3; j++){
+            int8_t left_diff = Search_line[j-9] - Search_line[j];
+            int8_t right_diff = Search_line[j+9] - Search_line[j];
+            if (left_diff >= 1 && right_diff >= 1) {
+                return j;
+            }
+
+        }
+    return -1;
+
+}
+
+int16_t find_first_valley(
+    uint8_t start, 
+    uint8_t end,
+    const std::array<uint8_t, WIDTH>& search_line,
+    uint8_t min_depth = 10)  // 最小谷深阈值
+{
+    if (end <= start + 6 || start > 252) return -1;
+    
+    for (uint8_t j = start + 3; j < end - 3; ++j) {
+        
+        // 防止uint8_t减法溢出：强制转int16_t
+        int16_t left_diff = static_cast<int16_t>(search_line[j-2]) - search_line[j];
+        int16_t right_diff = static_cast<int16_t>(search_line[j+2]) - search_line[j];
+        
+        // 左右都下降（中心是谷），且深度足够
+        if (left_diff >= min_depth && right_diff >= min_depth) {
+            return static_cast<int16_t>(j);
+        }
+    }
+    return -1;
 }

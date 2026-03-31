@@ -77,3 +77,6 @@ int16_t width_anomaly_detection (uint8_t start, uint8_t end,
     
 float my_draw_line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2,
     LineMode mode, LineDirection dir, float slope);
+
+uint8_t M_point(uint8_t start, uint8_t end,
+    const std::array<uint8_t, WIDTH>& Search_line);

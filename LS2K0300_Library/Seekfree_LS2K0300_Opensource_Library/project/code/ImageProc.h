@@ -57,6 +57,7 @@ namespace ImageProc {
     extern _SecLossDetect sec_loss_right; // 二次丢线区域
     extern _SecLossDetect sec_loss_both;  // 二次丢线区域
     // 外部可见的边界数据
+    extern std::array<uint8_t, WIDTH> white_line;  // 长白列记录
     extern std::array<uint16_t, HEIGHT> l_black;  // 左边界记录
     extern std::array<uint16_t, HEIGHT> r_black;  // 右边界记录
     extern std::array<uint16_t, HEIGHT> fit_l_black; // 左边界拟合

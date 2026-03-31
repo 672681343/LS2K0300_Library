@@ -36,7 +36,7 @@ namespace TCP {
             seekfree_assistant_oscilloscope_data.data[5] =  Control::pwm.L;
 
             seekfree_assistant_oscilloscope_data.data[6] =  Control::pwm.R;
-            seekfree_assistant_oscilloscope_data.data[7] = PID::speed_pid_L.d_term;
+            seekfree_assistant_oscilloscope_data.data[7] = (Encoder::count.L+Encoder::count.R)/2;
             
             seekfree_assistant_oscilloscope_data.channel_num = 8;
 

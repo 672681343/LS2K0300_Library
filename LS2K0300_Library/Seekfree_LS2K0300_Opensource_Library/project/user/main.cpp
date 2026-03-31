@@ -64,7 +64,7 @@ int main(int, char**)
             if(MenuSystem::Car_flag.start == 1){
                 Control::RoadSegment_t = Control::classifyRoadSegment();
                 Control::ControlOutput(Control::RoadSegment_t);
-                // DataSaving::saveTask(MenuSystem::Car_flag.saving);
+                DataSaving::saveTask(1);
                 TCP::send_data();
             }
             Control::stop(0);
@@ -74,5 +74,6 @@ int main(int, char**)
         MenuSystem::key_shutdown();
         MenuSystem::Menu_display();
         
+
     }
 }

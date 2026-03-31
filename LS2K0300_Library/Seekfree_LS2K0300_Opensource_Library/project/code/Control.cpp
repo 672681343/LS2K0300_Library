@@ -48,9 +48,9 @@ namespace Control{
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
-        .l_kp = 9,
+        .l_kp = 9.7,
         .l_ki = 0.24,
-        .r_kp = 9,
+        .r_kp = 9.7,
         .r_ki = 0.29
     };
     //短直道速度
@@ -59,9 +59,9 @@ namespace Control{
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
-        .l_kp = 9.0,
+        .l_kp = 9.8,
         .l_ki = 0.24,
-        .r_kp = 9.0,
+        .r_kp = 9.8,
         .r_ki = 0.29
     };
     //弯道速度
@@ -72,7 +72,7 @@ namespace Control{
         .err_row = 35,
         .l_kp = 10,
         .l_ki = 0.24,
-        .r_kp = 10.0,
+        .r_kp = 10,
         .r_ki = 0.28
     };
     //环岛速度
@@ -95,24 +95,24 @@ namespace Control{
 
     //长直道PID参数
     Set_Pid LongStrPid = {
-        .kp = 0.0,
+        .kp = 50.0,
         .kp2 = 0.0,
-        .gkd = 0.0,
-        .kd = 0.0
+        .gkd = 0.00,
+        .kd = 20.0
     };
     //短直道PID参数
     Set_Pid ShortStrPid = {
-        .kp = 0.0,
+        .kp = 50.0,
         .kp2 = 0.0,
-        .gkd = 0.0,
-        .kd = 0.0
+        .gkd = 0.00,
+        .kd = 20.0
     };
     //弯道PID参数
     Set_Pid CurvePid = {
-        .kp = 0.0,
-        .kp2 = 0.0,
+        .kp = 18.0,
+        .kp2 = 1.3,
         .gkd = 0.0,
-        .kd = 0.0
+        .kd = 70.0
     };
     //环岛PID参数
     Set_Pid IslandPid = {
@@ -147,16 +147,16 @@ namespace Control{
                         aim_speed.cur_L = LongStrSpeed.set_speed - my_min(LongStrSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
                         aim_speed.cur_R = LongStrSpeed.set_speed + my_min(LongStrSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
                     }else{
-                        aim_speed.cur_L = LongStrSpeed.set_speed - my_min(LongStrSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
-                        aim_speed.cur_R = LongStrSpeed.set_speed + my_min(LongStrSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
+                        aim_speed.cur_L = LongStrSpeed.set_speed + my_min(LongStrSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
+                        aim_speed.cur_R = LongStrSpeed.set_speed - my_min(LongStrSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
                     }
 
-                    if(!MenuSystem::Car_flag.test){
+                    // if(!MenuSystem::Car_flag.test){
                         PID::speed_pid_L.kp = LongStrSpeed.l_kp;
                         PID::speed_pid_L.ki = LongStrSpeed.l_ki;
                         PID::speed_pid_R.kp = LongStrSpeed.r_kp;
                         PID::speed_pid_R.ki = LongStrSpeed.r_ki;                       
-                    }
+                    // }
 
                     PID::turn_pid.kp = LongStrPid.kp;
                     PID::turn_pid.kp2 = LongStrPid.kp2;

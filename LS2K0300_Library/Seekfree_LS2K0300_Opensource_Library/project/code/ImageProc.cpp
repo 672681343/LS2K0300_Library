@@ -148,7 +148,7 @@ namespace ImageProc {
         const uint8_t start = state.start_point;
         
         l_black.fill(0);          // 初始化为最小值
-        r_black.fill(WIDTH);      // 初始化为最大值
+        r_black.fill(WIDTH-1);      // 初始化为最大值
         left_flags.fill(false);   // 初始化为false
         right_flags.fill(false);  // 初始化为false
 

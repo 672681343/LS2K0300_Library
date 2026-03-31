@@ -38,12 +38,12 @@ namespace Elem {
         Left_Island.similar_flag = 0;
         Right_Island.similar_flag = 0;
         
-        zebra_detection();
-        tilt_cross_detection();
-        island_detection();
+        // zebra_detection();
+        // tilt_cross_detection();
+        // island_detection();
         cross_detection();
-        roadblock_detection();
-        ramp_detection();
+        // roadblock_detection();
+        // ramp_detection();
     }
 
     void clear()
@@ -83,6 +83,7 @@ namespace Elem {
         Ramp.R_slope = 0.0f;
         isHandling = 1; // 设置为正在处理状态
     }
+
     //-------------------------------------------------------------------------------------------------------------------
     // 函数简介: 斜元素
     // 参数说明: 
@@ -90,202 +91,224 @@ namespace Elem {
     // 使用示例: 
     // 备注信息: 
     //-------------------------------------------------------------------------------------------------------------------
-    void tilt_cross_detection(void)
-    {
-        
-        switch (Left_Tilt_Cross.State)
-        {
-            case 0:
-                {
-                    if (isHandling == 0 && Left_Tilt_Cross.enable &&
-                        Left_Island.State == 0 && Right_Island.State == 0 && Cross.State == 0 && Right_Tilt_Cross.State == 0 &&
-                        Zebra.State == 0 && Left_Roadblock.State == 0 && Right_Roadblock.State == 0 && Ramp.State == 0 &&
-                        ImageProc::state.start_point < 50 && ImageProc::state.cutoff < 60 &&
-                        ImageProc::Left_BF.LostParam.sum >= 38 && ((ImageProc::Right_BF.LostParam.sum < 15 && ImageProc::Right_BF.LostParam.start > 67 ) || ImageProc::Right_BF.LostParam.sum < 2) &&
-                        ImageProc::Left_BF.Var < 10 && ImageProc::Right_BF.Var > 50 && ImageProc::Right_BF.Slope > 2)
-                    {
-                        Left_Tilt_Cross.similar_flag = 1;
-                        Right_corner.Curve_Row = 0;
-                        Right_corner.Curve_Row = Circular_Detection(1, 0, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::r_black);
-                        
-                        if(Right_corner.Curve_Row > 15 && Right_corner.Curve_Row < HEIGHT - 10)
-                        {
-                            Elem::black_count = Region_Search(ImageProc::r_black[Right_corner.Curve_Row] + 3, Right_corner.Curve_Row, 9, Camera::bin_pixels);
-                        }
-                        if (Right_corner.Curve_Row != 0 && Elem::black_count < Left_Tilt_Cross.black_threshold && Elem::black_count != 0)
-                        {
-                            Left_Tilt_Cross.State = 1;
-                            ImageProc::state.range_r = my_max(ImageProc::r_black[Right_corner.Curve_Row] - 5, 20);
-                        }
-                    }
-                    break;
-                }
-            case 1:
-                {
-                    Right_corner.Curve_Row = Circular_Detection(1, 0, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::r_black);
-                    draw_slope = -5;
-                    if (Right_corner.Curve_Row > 15 && Right_corner.Curve_Row < HEIGHT - 10)
-                    {
-                        ImageProc::state.range_r = my_max(ImageProc::r_black[Right_corner.Curve_Row] - 5, 20);
-                        draw_slope = my_draw_line(ImageProc::r_black[Right_corner.Curve_Row], Right_corner.Curve_Row, 0, 0, MODE_AUTO_SLOPE, DIRECTION_DOWN_RIGHT, 0);
-                    }
-                    if (ImageProc::Left_BF.LostParam.sum < 2){
-                        clear();
-                        Left_Tilt_Cross.State = 0;
-                    }
-                    if (draw_slope > -3)
-                    {
-                        ImageProc::state.range_r = WIDTH - 10;
-                        Left_Tilt_Cross.State = 2;
-                    }
-                    break;
-                }
-            case 2:
-                {
-                    Left_corner.U_y = cross_Up(ImageProc::Left_BF.LostParam.mid , HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
-                    Left_corner.D_y = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
 
-                    Right_corner.U_y = cross_Up(ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
-                    Right_corner.D_y = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
-
-                    Right_corner.Curve_Row = Circular_Detection(1, 0, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::r_black);
-                    
-                    if (Right_corner.Curve_Row > 15 && Right_corner.Curve_Row < HEIGHT - 10)
-                    {
-                        my_draw_line(ImageProc::r_black[Right_corner.Curve_Row], Right_corner.Curve_Row, 0, 0, MODE_AUTO_SLOPE, DIRECTION_DOWN_RIGHT, 0);
-                    }
-                    if (ImageProc::Left_BF.LostParam.sum < 2){
-                        clear();
-                        Left_Tilt_Cross.State = 0;
-                    }
-                    //左斜右环岛
-                    // if ( ImageProc::state.cutoff > 55 && ImageProc::Left_BF.Var < 40 && ImageProc::Right_BF.Var > 500)
-                    // {
-                    //     Right_corner.Curve_Row = Circular_Detection(1, 0, Right_corner.D_y - 10, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::r_black);
-                    //     if (Right_corner.Curve_Row > 15 && Right_corner.Curve_Row < HEIGHT - 10)
-                    //     {
-                    //         clear();
-                    //         Left_Tilt_Cross.State = 0;
-                    //         Right_Island.State = 1;
-                    //     }
-                    // }
-                    //左斜十字
-                    if (ImageProc::state.cutoff > 55 &&
-                        (((Left_corner.U_y > 10 && Left_corner.U_y < HEIGHT - 15) &&
-                        (Right_corner.U_y > 10 && Right_corner.U_y < HEIGHT - 15)) ||
-                        ((Left_corner.D_y > 15 && Left_corner.D_y < HEIGHT - 10) &&
-                        (Right_corner.D_y > 15 && Right_corner.D_y < HEIGHT - 10)))
-                        )
-                    {
-                        clear();
-                        Left_Tilt_Cross.State = 0;
-                        Cross.State = 1;
-                    }
-                    break;
-                }
+    void tilt_cross_detection(void){
+        int m = 0;
+        m = M_point(30,WIDTH-40, ImageProc::white_line);
+        for(int i = 0;i<HEIGHT-1;i++){
+            Camera::lcd_pixels[i * WIDTH + m] = 0;
         }
-        switch (Right_Tilt_Cross.State)
-        {
-            case 0:
-                {
-                    if (isHandling == 0 && Right_Tilt_Cross.enable &&
-                        Right_Island.State == 0 && Left_Island.State == 0 && Cross.State == 0 && Left_Tilt_Cross.State == 0 &&
-                        Zebra.State == 0 && Left_Roadblock.State == 0 && Right_Roadblock.State == 0 && Ramp.State == 0 && 
-                        ImageProc::state.start_point > WIDTH - 50 && ImageProc::state.cutoff < 60 &&
-                        ImageProc::Right_BF.LostParam.sum >= 38 && ((ImageProc::Left_BF.LostParam.sum < 15 && ImageProc::Left_BF.LostParam.start > 67) || ImageProc::Left_BF.LostParam.sum < 2)&&
-                        ImageProc::Right_BF.Var < 10 && ImageProc::Left_BF.Var > 50 && ImageProc::Left_BF.Slope < -2)
-                    {
-                        Right_Tilt_Cross.similar_flag = 1;
-                        Left_corner.Curve_Row = 0;
-                        Left_corner.Curve_Row = Circular_Detection(0, 0, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::l_black);
+        printf("%d\n",m);
 
-                        if(Left_corner.Curve_Row > 15 && Left_corner.Curve_Row < HEIGHT - 10)
-                        {
-                            Elem::black_count = Region_Search(ImageProc::l_black[Left_corner.Curve_Row] - 3, Left_corner.Curve_Row, 9, Camera::bin_pixels);
-                        }
-
-                        if (Left_corner.Curve_Row != 0 && Elem::black_count < Right_Tilt_Cross.black_threshold && Elem::black_count != 0)
-                        {
-                            Right_Tilt_Cross.State = 1;
-                            ImageProc::state.range_l = my_min(ImageProc::l_black[Left_corner.Curve_Row] + 5, WIDTH - 20);
-                        }
-                    }
-                    break;
-                }
-            case 1:
-                {
-                    Left_corner.Curve_Row = Circular_Detection(0, 0, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::l_black);
-                    draw_slope = 5;
-                    if (Left_corner.Curve_Row > 15 && Left_corner.Curve_Row < HEIGHT - 10)
-                    {
-                        ImageProc::state.range_l = my_min(ImageProc::l_black[Left_corner.Curve_Row] + 5, WIDTH - 20);
-                        draw_slope = my_draw_line(ImageProc::l_black[Left_corner.Curve_Row], Left_corner.Curve_Row, 0, 0, MODE_AUTO_SLOPE, DIRECTION_DOWN_LEFT, 0);
-                    }
-                    if (ImageProc::Right_BF.LostParam.sum < 2){
-                        clear();
-                        Right_Tilt_Cross.State = 0;
-                    }
-                    if (draw_slope < 3)
-                    {
-                        ImageProc::state.range_l = 10;
-                        Right_Tilt_Cross.State = 2;
-                    }
-                    break;
-                }
-            case 2:
-                {
-                    Left_corner.U_y  = cross_Up(ImageProc::Left_BF.LostParam.mid , HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
-                    Left_corner.D_y  = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
-
-                    Right_corner.U_y = cross_Up(ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
-                    Right_corner.D_y = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
-
-                    Left_corner.Curve_Row = Circular_Detection(0, 0, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::l_black);
-                    if (ImageProc::Right_BF.LostParam.sum < 2){
-                        clear();
-                        Right_Tilt_Cross.State = 0;
-                    }
-                    if (Left_corner.Curve_Row > 15 && Left_corner.Curve_Row < HEIGHT - 10)
-                    {
-                        my_draw_line(ImageProc::l_black[Left_corner.Curve_Row], Left_corner.Curve_Row, 0, 0, MODE_AUTO_SLOPE, DIRECTION_DOWN_LEFT, 0);
-                    }
-                    //右斜左环岛
-                    // if (ImageProc::state.cutoff > 55 && ImageProc::Right_BF.Var < 40 && ImageProc::Left_BF.Var > 500)
-                    // {
-                    //     Left_corner.Curve_Row = Circular_Detection(0, 0, Left_corner.D_y - 10, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::l_black);
-                    //     if (Left_corner.Curve_Row > 15 && Left_corner.Curve_Row < HEIGHT - 10)
-                    //     {
-                    //         clear();
-                    //         Right_Tilt_Cross.State = 0;
-                    //         Left_Island.State = 1;
-                    //     }
-                    // }
-                    //右斜十字
-                    if (ImageProc::state.cutoff > 55 &&
-                        (((Left_corner.U_y > 10 && Left_corner.U_y < HEIGHT - 15) &&
-                        (Right_corner.U_y > 10 && Right_corner.U_y < HEIGHT - 15)) ||
-                        ((Left_corner.D_y > 15 && Left_corner.D_y < HEIGHT - 10) &&
-                        (Right_corner.D_y > 15 && Right_corner.D_y < HEIGHT - 10)))
-                        )
-                    {
-                        clear();
-                        Right_Tilt_Cross.State = 0;
-                        Cross.State = 1;
-                    }
-                    break;
-                }
-        }
-        // SetText("左斜十字状态:" + Left_Tilt_Cross_State + "   左类似斜十字:" + Left_Tilt_Cross_similar_flag);
-        // SetText("右斜十字状态:" + Right_Tilt_Cross_State + "   右类似斜十字:" + Right_Tilt_Cross_similar_flag);
     }
+
+
+
+
+
+    // //-------------------------------------------------------------------------------------------------------------------
+    // // 函数简介: 斜元素
+    // // 参数说明: 
+    // // 返回参数: 
+    // // 使用示例: 
+    // // 备注信息: 
+    // //-------------------------------------------------------------------------------------------------------------------
+    // void tilt_cross_detection(void)
+    // {
+        
+    //     switch (Left_Tilt_Cross.State)
+    //     {
+    //         case 0:
+    //             {
+    //                 if (isHandling == 0 && Left_Tilt_Cross.enable &&
+    //                     Left_Island.State == 0 && Right_Island.State == 0 && Cross.State == 0 && Right_Tilt_Cross.State == 0 &&
+    //                     Zebra.State == 0 && Left_Roadblock.State == 0 && Right_Roadblock.State == 0 && Ramp.State == 0 &&
+    //                     ImageProc::state.start_point < 50 && ImageProc::state.cutoff < 60 &&
+    //                     ImageProc::Left_BF.LostParam.sum >= 38 && ((ImageProc::Right_BF.LostParam.sum < 15 && ImageProc::Right_BF.LostParam.start > 67 ) || ImageProc::Right_BF.LostParam.sum < 2) &&
+    //                     ImageProc::Left_BF.Var < 10 && ImageProc::Right_BF.Var > 50 && ImageProc::Right_BF.Slope > 2)
+    //                 {
+    //                     Left_Tilt_Cross.similar_flag = 1;
+    //                     Right_corner.Curve_Row = 0;
+    //                     Right_corner.Curve_Row = Circular_Detection(1, 0, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::r_black);
+                        
+    //                     if(Right_corner.Curve_Row > 15 && Right_corner.Curve_Row < HEIGHT - 10)
+    //                     {
+    //                         Elem::black_count = Region_Search(ImageProc::r_black[Right_corner.Curve_Row] + 3, Right_corner.Curve_Row, 9, Camera::bin_pixels);
+    //                     }
+    //                     if (Right_corner.Curve_Row != 0 && Elem::black_count < Left_Tilt_Cross.black_threshold && Elem::black_count != 0)
+    //                     {
+    //                         Left_Tilt_Cross.State = 1;
+    //                         ImageProc::state.range_r = my_max(ImageProc::r_black[Right_corner.Curve_Row] - 5, 20);
+    //                     }
+    //                 }
+    //                 break;
+    //             }
+    //         case 1:
+    //             {
+    //                 Right_corner.Curve_Row = Circular_Detection(1, 0, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::r_black);
+    //                 draw_slope = -5;
+    //                 if (Right_corner.Curve_Row > 15 && Right_corner.Curve_Row < HEIGHT - 10)
+    //                 {
+    //                     ImageProc::state.range_r = my_max(ImageProc::r_black[Right_corner.Curve_Row] - 5, 20);
+    //                     draw_slope = my_draw_line(ImageProc::r_black[Right_corner.Curve_Row], Right_corner.Curve_Row, 0, 0, MODE_AUTO_SLOPE, DIRECTION_DOWN_RIGHT, 0);
+    //                 }
+    //                 if (ImageProc::Left_BF.LostParam.sum < 2){
+    //                     clear();
+    //                     Left_Tilt_Cross.State = 0;
+    //                 }
+    //                 if (draw_slope > -3)
+    //                 {
+    //                     ImageProc::state.range_r = WIDTH - 10;
+    //                     Left_Tilt_Cross.State = 2;
+    //                 }
+    //                 break;
+    //             }
+    //         case 2:
+    //             {
+    //                 Left_corner.U_y = cross_Up(ImageProc::Left_BF.LostParam.mid , HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
+    //                 Left_corner.D_y = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
+
+    //                 Right_corner.U_y = cross_Up(ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
+    //                 Right_corner.D_y = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
+
+    //                 Right_corner.Curve_Row = Circular_Detection(1, 0, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::r_black);
+                    
+    //                 if (Right_corner.Curve_Row > 15 && Right_corner.Curve_Row < HEIGHT - 10)
+    //                 {
+    //                     my_draw_line(ImageProc::r_black[Right_corner.Curve_Row], Right_corner.Curve_Row, 0, 0, MODE_AUTO_SLOPE, DIRECTION_DOWN_RIGHT, 0);
+    //                 }
+    //                 if (ImageProc::Left_BF.LostParam.sum < 2){
+    //                     clear();
+    //                     Left_Tilt_Cross.State = 0;
+    //                 }
+    //                 //左斜右环岛
+    //                 // if ( ImageProc::state.cutoff > 55 && ImageProc::Left_BF.Var < 40 && ImageProc::Right_BF.Var > 500)
+    //                 // {
+    //                 //     Right_corner.Curve_Row = Circular_Detection(1, 0, Right_corner.D_y - 10, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::r_black);
+    //                 //     if (Right_corner.Curve_Row > 15 && Right_corner.Curve_Row < HEIGHT - 10)
+    //                 //     {
+    //                 //         clear();
+    //                 //         Left_Tilt_Cross.State = 0;
+    //                 //         Right_Island.State = 1;
+    //                 //     }
+    //                 // }
+    //                 //左斜十字
+    //                 if (ImageProc::state.cutoff > 55 &&
+    //                     (((Left_corner.U_y > 10 && Left_corner.U_y < HEIGHT - 15) &&
+    //                     (Right_corner.U_y > 10 && Right_corner.U_y < HEIGHT - 15)) ||
+    //                     ((Left_corner.D_y > 15 && Left_corner.D_y < HEIGHT - 10) &&
+    //                     (Right_corner.D_y > 15 && Right_corner.D_y < HEIGHT - 10)))
+    //                     )
+    //                 {
+    //                     clear();
+    //                     Left_Tilt_Cross.State = 0;
+    //                     Cross.State = 1;
+    //                 }
+    //                 break;
+    //             }
+    //     }
+    //     switch (Right_Tilt_Cross.State)
+    //     {
+    //         case 0:
+    //             {
+    //                 if (isHandling == 0 && Right_Tilt_Cross.enable &&
+    //                     Right_Island.State == 0 && Left_Island.State == 0 && Cross.State == 0 && Left_Tilt_Cross.State == 0 &&
+    //                     Zebra.State == 0 && Left_Roadblock.State == 0 && Right_Roadblock.State == 0 && Ramp.State == 0 && 
+    //                     ImageProc::state.start_point > WIDTH - 50 && ImageProc::state.cutoff < 60 &&
+    //                     ImageProc::Right_BF.LostParam.sum >= 38 && ((ImageProc::Left_BF.LostParam.sum < 15 && ImageProc::Left_BF.LostParam.start > 67) || ImageProc::Left_BF.LostParam.sum < 2)&&
+    //                     ImageProc::Right_BF.Var < 10 && ImageProc::Left_BF.Var > 50 && ImageProc::Left_BF.Slope < -2)
+    //                 {
+    //                     Right_Tilt_Cross.similar_flag = 1;
+    //                     Left_corner.Curve_Row = 0;
+    //                     Left_corner.Curve_Row = Circular_Detection(0, 0, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::l_black);
+
+    //                     if(Left_corner.Curve_Row > 15 && Left_corner.Curve_Row < HEIGHT - 10)
+    //                     {
+    //                         Elem::black_count = Region_Search(ImageProc::l_black[Left_corner.Curve_Row] - 3, Left_corner.Curve_Row, 9, Camera::bin_pixels);
+    //                     }
+
+    //                     if (Left_corner.Curve_Row != 0 && Elem::black_count < Right_Tilt_Cross.black_threshold && Elem::black_count != 0)
+    //                     {
+    //                         Right_Tilt_Cross.State = 1;
+    //                         ImageProc::state.range_l = my_min(ImageProc::l_black[Left_corner.Curve_Row] + 5, WIDTH - 20);
+    //                     }
+    //                 }
+    //                 break;
+    //             }
+    //         case 1:
+    //             {
+    //                 Left_corner.Curve_Row = Circular_Detection(0, 0, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::l_black);
+    //                 draw_slope = 5;
+    //                 if (Left_corner.Curve_Row > 15 && Left_corner.Curve_Row < HEIGHT - 10)
+    //                 {
+    //                     ImageProc::state.range_l = my_min(ImageProc::l_black[Left_corner.Curve_Row] + 5, WIDTH - 20);
+    //                     draw_slope = my_draw_line(ImageProc::l_black[Left_corner.Curve_Row], Left_corner.Curve_Row, 0, 0, MODE_AUTO_SLOPE, DIRECTION_DOWN_LEFT, 0);
+    //                 }
+    //                 if (ImageProc::Right_BF.LostParam.sum < 2){
+    //                     clear();
+    //                     Right_Tilt_Cross.State = 0;
+    //                 }
+    //                 if (draw_slope < 3)
+    //                 {
+    //                     ImageProc::state.range_l = 10;
+    //                     Right_Tilt_Cross.State = 2;
+    //                 }
+    //                 break;
+    //             }
+    //         case 2:
+    //             {
+    //                 Left_corner.U_y  = cross_Up(ImageProc::Left_BF.LostParam.mid , HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
+    //                 Left_corner.D_y  = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
+
+    //                 Right_corner.U_y = cross_Up(ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
+    //                 Right_corner.D_y = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
+
+    //                 Left_corner.Curve_Row = Circular_Detection(0, 0, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::l_black);
+    //                 if (ImageProc::Right_BF.LostParam.sum < 2){
+    //                     clear();
+    //                     Right_Tilt_Cross.State = 0;
+    //                 }
+    //                 if (Left_corner.Curve_Row > 15 && Left_corner.Curve_Row < HEIGHT - 10)
+    //                 {
+    //                     my_draw_line(ImageProc::l_black[Left_corner.Curve_Row], Left_corner.Curve_Row, 0, 0, MODE_AUTO_SLOPE, DIRECTION_DOWN_LEFT, 0);
+    //                 }
+    //                 //右斜左环岛
+    //                 // if (ImageProc::state.cutoff > 55 && ImageProc::Right_BF.Var < 40 && ImageProc::Left_BF.Var > 500)
+    //                 // {
+    //                 //     Left_corner.Curve_Row = Circular_Detection(0, 0, Left_corner.D_y - 10, HEIGHT - ImageProc::state.cutoff + 1, ImageProc::l_black);
+    //                 //     if (Left_corner.Curve_Row > 15 && Left_corner.Curve_Row < HEIGHT - 10)
+    //                 //     {
+    //                 //         clear();
+    //                 //         Right_Tilt_Cross.State = 0;
+    //                 //         Left_Island.State = 1;
+    //                 //     }
+    //                 // }
+    //                 //右斜十字
+    //                 if (ImageProc::state.cutoff > 55 &&
+    //                     (((Left_corner.U_y > 10 && Left_corner.U_y < HEIGHT - 15) &&
+    //                     (Right_corner.U_y > 10 && Right_corner.U_y < HEIGHT - 15)) ||
+    //                     ((Left_corner.D_y > 15 && Left_corner.D_y < HEIGHT - 10) &&
+    //                     (Right_corner.D_y > 15 && Right_corner.D_y < HEIGHT - 10)))
+    //                     )
+    //                 {
+    //                     clear();
+    //                     Right_Tilt_Cross.State = 0;
+    //                     Cross.State = 1;
+    //                 }
+    //                 break;
+    //             }
+    //     }
+    //     // SetText("左斜十字状态:" + Left_Tilt_Cross_State + "   左类似斜十字:" + Left_Tilt_Cross_similar_flag);
+    //     // SetText("右斜十字状态:" + Right_Tilt_Cross_State + "   右类似斜十字:" + Right_Tilt_Cross_similar_flag);
+    // }
     
-    //-------------------------------------------------------------------------------------------------------------------
-    // 函数简介: 十字补线函数(内部函数)
-    // 参数说明: 
-    // 返回参数: 
-    // 使用示例: 
-    // 备注信息: 
-    //-------------------------------------------------------------------------------------------------------------------
+    // //-------------------------------------------------------------------------------------------------------------------
+    // // 函数简介: 十字补线函数(内部函数)
+    // // 参数说明: 
+    // // 返回参数: 
+    // // 使用示例: 
+    // // 备注信息: 
+    // //-------------------------------------------------------------------------------------------------------------------
     void Crosshairs(void){
 
         // uint8_t L_flag = 0;
@@ -310,10 +333,7 @@ namespace Elem {
                 0, 0,
                 MODE_AUTO_SLOPE, DIRECTION_DOWN_LEFT, 0);
         }
-        else if (Left_corner.Curve_Row != 0)
-        {
 
-        }
         //左无
         else{
             // L_flag = 1;
@@ -337,10 +357,7 @@ namespace Elem {
                         0, 0,
                         MODE_AUTO_SLOPE, DIRECTION_DOWN_RIGHT, 0);
         }
-        else if (Right_corner.Curve_Row != 0)
-        {
 
-        }
         //右无
         else{
             // R_flag = 1;
@@ -377,63 +394,62 @@ namespace Elem {
                 if( isHandling == 0 && Cross.enable &&
                     Left_Island.State == 0 && Right_Island.State == 0 && Left_Tilt_Cross.State == 0 && Right_Tilt_Cross.State == 0 &&
                     Zebra.State == 0 && Left_Roadblock.State == 0 && Right_Roadblock.State == 0 && Ramp.State == 0 &&
-                    ImageProc::state.start_point >= 50 &&
-                    (((ImageProc::Left_BF.LostParam.sum >4 && ImageProc::Left_BF.LostParam.start < 45) &&
-                     (ImageProc::Right_BF.LostParam.sum > 4 && ImageProc::Right_BF.LostParam.start < 45)&&
-                    my_abs(ImageProc::Left_BF.LostParam.sum - ImageProc::Right_BF.LostParam.sum) < 10 &&
-                    my_abs(ImageProc::Left_BF.LostParam.mid - ImageProc::Right_BF.LostParam.mid) < 20) ||
                     (ImageProc::sec_loss_both.LostParam.sum > 3 &&
-                    ImageProc::Left_BF.LostParam.sum < 25 && ImageProc::Right_BF.LostParam.sum < 25)) &&
+                    ImageProc::Left_BF.LostParam.sum < 25 && ImageProc::Right_BF.LostParam.sum < 25) && //
                     (ImageProc::Left_BF.Var > 100 || ImageProc::Right_BF.Var > 100) )
                 {
-                    Left_corner.U_y  = cross_Up(ImageProc::Left_BF.LostParam.mid,  HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
-                    Right_corner.U_y = cross_Up(ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
-                    Left_corner.D_y  = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
-                    Right_corner.D_y = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
+                    Left_corner.U_y  = cross_Up(ImageProc::Left_BF.LostParam.mid,  HEIGHT - ImageProc::state.cutoff , 0, ImageProc::l_black);
+                    Right_corner.U_y = cross_Up(ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff , 1, ImageProc::r_black);
+                    Left_corner.D_y  = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff , 0, ImageProc::l_black);
+                    Right_corner.D_y = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff , 1, ImageProc::r_black);
+                    // printf("状态0:左上%d, 右上%d, 左下%d, 右下%d, 丢线中值%d\n", Left_corner.U_y, Right_corner.U_y, Left_corner.D_y, Right_corner.D_y, ImageProc::Left_BF.LostParam.mid);
 
                     Cross.similar_flag = 1;
-                    if (Left_corner.D_y > 15 && Left_corner.D_y < HEIGHT - 10 &&
-                        Right_corner.D_y> 15 && Right_corner.D_y < HEIGHT - 10 && 
-                        ImageProc::r_black[Right_corner.D_y] - ImageProc::l_black[Left_corner.D_y] > 40
+                    if (Left_corner.D_y > 15 && Left_corner.D_y < HEIGHT - 10 &&//这边只对下点进行了限幅，后续上点没更新，就会置0
+                        Right_corner.D_y> 15 && Right_corner.D_y < HEIGHT - 10 
                         )
                     {
                         Cross.State = 1;
-                        MenuSystem::beep_on();
                     }
+
                 }
+
+                // else if(isHandling == 0 && Cross.enable &&
+                //     Left_Island.State == 0 && Right_Island.State == 0 && Left_Tilt_Cross.State == 0 && Right_Tilt_Cross.State == 0 &&
+                //     Zebra.State == 0 && Left_Roadblock.State == 0 && Right_Roadblock.State == 0 && Ramp.State == 0 &&
+
+                //     )
+
                 break;
             }
             case 1:{
-                // Left_corner.U_y  = cross_Up(ImageProc::Left_BF.LostParam.mid,  HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
-                // Right_corner.U_y = cross_Up(ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
-                Left_corner.D_y  = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
-                Right_corner.D_y = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
 
-                if (Left_corner.D_y > 20){
-                    Left_corner.U_y = cross_Up(Left_corner.D_y,  HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
+
+                Left_corner.D_y  = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff , 0, ImageProc::l_black);
+                Right_corner.D_y = cross_Down(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff , 1, ImageProc::r_black);
+
+                if (Left_corner.D_y > 20 ){
+                    Left_corner.U_y = cross_Up(Left_corner.D_y,  HEIGHT - ImageProc::state.cutoff , 0, ImageProc::l_black);
                 }else{
-                    Left_corner.U_y = cross_Up(HEIGHT - 20,  HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
+                    Left_corner.U_y = cross_Up(HEIGHT - 20,  HEIGHT - ImageProc::state.cutoff , 0, ImageProc::l_black);
                 }
                 
-                if (Right_corner.D_y > 20){
-                    Right_corner.U_y = cross_Up(Right_corner.D_y, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
+                if (Right_corner.D_y > 20 ){
+                    Right_corner.U_y = cross_Up(Right_corner.D_y, HEIGHT - ImageProc::state.cutoff , 1, ImageProc::r_black);
                 }else{
-                    Right_corner.U_y = cross_Up(HEIGHT - 20, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
+                    Right_corner.U_y = cross_Up(HEIGHT - 20, HEIGHT - ImageProc::state.cutoff , 1, ImageProc::r_black);
                 }
 
-                if (Left_corner.U_y < 10) { Left_corner.U_y = 0; }
-                if (Right_corner.U_y < 10) { Right_corner.U_y = 0; }
-                if (Left_corner.U_y > Left_corner.D_y ) { Left_corner.D_y = 0; }
-                if (Right_corner.U_y > Right_corner.D_y ) { Right_corner.D_y = 0; }
+
+                if (Left_corner.U_y < 10) { Left_corner.U_y = 0;}//
+                if (Right_corner.U_y < 10) { Right_corner.U_y = 0;}//
+                if (Left_corner.U_y > Left_corner.D_y ) { Left_corner.D_y = 0;}
+                if (Right_corner.U_y > Right_corner.D_y ) { Right_corner.D_y = 0;}
                 if (Left_corner.D_y > HEIGHT - 5) { Left_corner.D_y = 0; }
-                if (Right_corner.D_y > HEIGHT - 5) { Right_corner.D_y = 0; }
+                if (Right_corner.D_y > HEIGHT - 5) { Right_corner.D_y = 0;}
                 Crosshairs();
 
-                if (ImageProc::Mid_BF.LostParam.sum > 25 ){
-                    Cross.State = 2;
-                    Left_corner.D_y = 0;
-                    Right_corner.D_y = 0;
-                }
+
                 break;
             }
             case 2:{
@@ -501,7 +517,7 @@ namespace Elem {
                     ImageProc::Right_BF.Var < 10 && ImageProc::Left_BF.Var > 200 // 方差特征（镜像）
                 )
                 {
-                    Left_corner.D_y = island_Down(HEIGHT - 4, HEIGHT - ImageProc::state.cutoff - 1, 0, ImageProc::l_black);
+                    Left_corner.D_y = island_Down(HEIGHT - 4, HEIGHT - ImageProc::state.cutoff , 0, ImageProc::l_black);
                     Left_Island.similar_flag = 1;
 
                     if (Left_corner.D_y != 0)
@@ -711,7 +727,7 @@ namespace Elem {
                     ImageProc::Right_BF.Var > 200 && ImageProc::Left_BF.Var < 10 // 方差特征（镜像）
                    )
                 {
-                    Right_corner.D_y = island_Down(HEIGHT - 4, HEIGHT - ImageProc::state.cutoff - 1, 1, ImageProc::r_black);
+                    Right_corner.D_y = island_Down(HEIGHT - 4, HEIGHT - ImageProc::state.cutoff , 1, ImageProc::r_black);
                     Right_Island.similar_flag = 1;
 
                     if (Right_corner.D_y != 0)

@@ -123,11 +123,10 @@ namespace {
         int file_index = 0; // 初始化序号计数器
         #if Saving_param
             file << file_index++ << "=" << static_cast<int>(Error::Err.current) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Error::Err.tem_row) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Error::Err.tem_row) << "\n";
 
-            // file << file_index++ << "=" << static_cast<int>(Servo::duty.cur) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Encoder::count.L) << "\n";    
-            file << file_index++ << "=" << static_cast<int>(Encoder::count.R) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Encoder::count.L) << "\n";    
+            // file << file_index++ << "=" << static_cast<int>(Encoder::count.R) << "\n";
 
             file << file_index++ << "=" << static_cast<int>(ImageProc::state.start_point) << "\n";
             file << file_index++ << "=" << static_cast<int>(ImageProc::state.cutoff) << "\n";
@@ -149,92 +148,97 @@ namespace {
             file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_both.LostParam.start) << "\n";
             file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_both.LostParam.end) << "\n";
 
-            file << file_index++ << "=" << static_cast<int>(ImageProc::Left_BF.Var) << "\n";
-            file << file_index++ << "=" << static_cast<int>(ImageProc::Right_BF.Var) << "\n";
+
 
             file << file_index++ << "=" << static_cast<int>(Elem::Left_corner.U_y) << "\n";
             file << file_index++ << "=" << static_cast<int>(Elem::Left_corner.D_y) << "\n";
             file << file_index++ << "=" << static_cast<int>(Elem::Right_corner.U_y) << "\n";
             file << file_index++ << "=" << static_cast<int>(Elem::Right_corner.D_y) << "\n";
 
-            file << file_index++ << "=" << static_cast<int>(Elem::Left_corner.Curve_Row) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Elem::Right_corner.Curve_Row) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Elem::Left_corner.Curve_Row) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Elem::Right_corner.Curve_Row) << "\n";
 
-            file << file_index++ << "=" << static_cast<int>(my_max(Elem::Right_Island.State,Elem::Left_Island.State)) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Elem::Left_Island.similar_flag) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Elem::Right_Island.similar_flag) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(my_max(Elem::Right_Island.State,Elem::Left_Island.State)) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Elem::Left_Island.similar_flag) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Elem::Right_Island.similar_flag) << "\n";
             file << file_index++ << "=" << static_cast<int>(Elem::Cross.State) << "\n";
             file << file_index++ << "=" << static_cast<int>(Elem::Cross.similar_flag) << "\n";
 
-            file << file_index++ << "=" << static_cast<int>(Elem::Zebra.State) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Elem::Zebra.y) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Elem::Zebra.State) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Elem::Zebra.y) << "\n";
 
-            file << file_index++ << "=" << static_cast<int>(my_max(Elem::Left_Tilt_Cross.State,Elem::Right_Tilt_Cross.State)) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Elem::Left_Tilt_Cross.similar_flag) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Elem::Right_Tilt_Cross.similar_flag) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Elem::black_count) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(my_max(Elem::Left_Tilt_Cross.State,Elem::Right_Tilt_Cross.State)) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Elem::Left_Tilt_Cross.similar_flag) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Elem::Right_Tilt_Cross.similar_flag) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Elem::black_count) << "\n";
 
-            file << file_index++ << "=" << static_cast<int>(Control::RoadSegment_t) << "\n";
-            file << file_index++ << "=" << static_cast<float>(ImageProc::Mid_BF.Slope) << "\n";
-            file << file_index++ << "=" << static_cast<int>(ImageProc::Mid_BF.Var) << "\n";
-            file << file_index++ << "=" << static_cast<float>(Elem::draw_slope) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Control::RoadSegment_t) << "\n";
+
+            // file << file_index++ << "=" << static_cast<float>(Elem::draw_slope) << "\n";
             file << file_index++ << "=" << static_cast<float>(ImageProc::Left_BF.Slope) << "\n";
             file << file_index++ << "=" << static_cast<float>(ImageProc::Right_BF.Slope) << "\n";
+            file << file_index++ << "=" << static_cast<int>(ImageProc::Left_BF.Var) << "\n";
+            file << file_index++ << "=" << static_cast<int>(ImageProc::Right_BF.Var) << "\n";
 
-            file << file_index++ << "=" << static_cast<int>(Elem::raw_count) << "\n";
-            file << file_index++ << "=" << static_cast<float>(Elem::roadblack_slope) << "\n";
-            file << file_index++ << "=" << static_cast<int>(my_max(Elem::Left_Roadblock.State,Elem::Right_Roadblock.State)) << "\n";
+            file << file_index++ << "=" << static_cast<float>(ImageProc::Mid_BF.Slope) << "\n";
+            file << file_index++ << "=" << static_cast<int>(ImageProc::Mid_BF.Var) << "\n";
+
+            // file << file_index++ << "=" << static_cast<int>(Elem::raw_count) << "\n";
+            // file << file_index++ << "=" << static_cast<float>(Elem::roadblack_slope) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(my_max(Elem::Left_Roadblock.State,Elem::Right_Roadblock.State)) << "\n";
+
+            // // file << file_index++ << "=" << static_cast<int>(Elem::Ramp.y) << "\n";
+            // // file << file_index++ << "=" << static_cast<int>(Elem::Ramp.State) << "\n";
+        #else 
+            // // file << file_index++ << "=" << static_cast<int>(Servo::duty.cur) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Error::Err.tem_row) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Control::RoadSegment_t) << "\n";
+
+            // file << file_index++ << "=" << static_cast<int>(Error::Err.current) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(PID::turn_pid.prev_error) << "\n";
+            
+            // file << file_index++ << "=" << static_cast<int>(PID::turn_pid.p_term) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(PID::turn_pid.d_term) << "\n"; 
+
+            // // file << file_index++ << "=" << static_cast<int>(Servo::duty.cal) << "\n";
+
+            
+            // file << file_index++ << "=" << static_cast<int>(Control::aim_speed.cur_L) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Encoder::count.L) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(PID::speed_pid_L.prev_error) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(PID::speed_pid_L.p_term) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(PID::speed_pid_L.i_term) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(PID::speed_pid_L.d_term) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Control::pwm.L) << "\n";
+
+            // file << file_index++ << "=" << static_cast<int>(Control::aim_speed.cur_R) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Encoder::count.R) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(PID::speed_pid_R.prev_error) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(PID::speed_pid_R.p_term) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(PID::speed_pid_R.i_term) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(PID::speed_pid_R.d_term) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Control::pwm.R) << "\n";
 
             // file << file_index++ << "=" << static_cast<int>(Elem::Ramp.y) << "\n";
             // file << file_index++ << "=" << static_cast<int>(Elem::Ramp.State) << "\n";
-        #else 
-            // file << file_index++ << "=" << static_cast<int>(Servo::duty.cur) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Error::Err.tem_row) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Control::RoadSegment_t) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Elem::raw_count) << "\n";
 
-            file << file_index++ << "=" << static_cast<int>(Error::Err.current) << "\n";
-            file << file_index++ << "=" << static_cast<int>(PID::turn_pid.prev_error) << "\n";
-            
-            file << file_index++ << "=" << static_cast<int>(PID::turn_pid.p_term) << "\n";
-            file << file_index++ << "=" << static_cast<int>(PID::turn_pid.d_term) << "\n"; 
-            // file << file_index++ << "=" << static_cast<int>(Servo::duty.cal) << "\n";
+            // file << file_index++ << "=" << static_cast<float>(Elem::Ramp.R_UP_SLPOE) << "\n";
+            // file << file_index++ << "=" << static_cast<float>(Elem::Ramp.R_DOWN_SLPOE) << "\n";
+            // file << file_index++ << "=" << static_cast<float>(Elem::Ramp.L_UP_SLPOE) << "\n";
+            // file << file_index++ << "=" << static_cast<float>(Elem::Ramp.L_DOWN_SLPOE) << "\n";
+            // file << file_index++ << "=" << static_cast<float>(Elem::Ramp.L_slope) << "\n";
+            // file << file_index++ << "=" << static_cast<float>(Elem::Ramp.R_slope) << "\n";
 
-            
-            file << file_index++ << "=" << static_cast<int>(Control::aim_speed.cur_L) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Encoder::count.L) << "\n";
-            file << file_index++ << "=" << static_cast<int>(PID::speed_pid_L.prev_error) << "\n";
-            file << file_index++ << "=" << static_cast<int>(PID::speed_pid_L.p_term) << "\n";
-            file << file_index++ << "=" << static_cast<int>(PID::speed_pid_L.i_term) << "\n";
-            file << file_index++ << "=" << static_cast<int>(PID::speed_pid_L.d_term) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Control::pwm.L) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Error::Err.current) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Error::Err.current - Error::Err.last) << "\n";
+            // file << file_index++ << "=" << static_cast<float>(PID::turn_pid.kp) << "\n";
+            // file << file_index++ << "=" << static_cast<float>(PID::turn_pid.kd) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(PID::turn_pid.p_term) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(PID::turn_pid.d_term) << "\n"; 
 
-            file << file_index++ << "=" << static_cast<int>(Control::aim_speed.cur_R) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Encoder::count.R) << "\n";
-            file << file_index++ << "=" << static_cast<int>(PID::speed_pid_R.prev_error) << "\n";
-            file << file_index++ << "=" << static_cast<int>(PID::speed_pid_R.p_term) << "\n";
-            file << file_index++ << "=" << static_cast<int>(PID::speed_pid_R.i_term) << "\n";
-            file << file_index++ << "=" << static_cast<int>(PID::speed_pid_R.d_term) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Control::pwm.R) << "\n";
-
-            file << file_index++ << "=" << static_cast<int>(Elem::Ramp.y) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Elem::Ramp.State) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Elem::raw_count) << "\n";
-
-            file << file_index++ << "=" << static_cast<float>(Elem::Ramp.R_UP_SLPOE) << "\n";
-            file << file_index++ << "=" << static_cast<float>(Elem::Ramp.R_DOWN_SLPOE) << "\n";
-            file << file_index++ << "=" << static_cast<float>(Elem::Ramp.L_UP_SLPOE) << "\n";
-            file << file_index++ << "=" << static_cast<float>(Elem::Ramp.L_DOWN_SLPOE) << "\n";
-            file << file_index++ << "=" << static_cast<float>(Elem::Ramp.L_slope) << "\n";
-            file << file_index++ << "=" << static_cast<float>(Elem::Ramp.R_slope) << "\n";
-
-            file << file_index++ << "=" << static_cast<int>(Error::Err.current) << "\n";
-            file << file_index++ << "=" << static_cast<int>(Error::Err.current - Error::Err.last) << "\n";
-            file << file_index++ << "=" << static_cast<float>(PID::turn_pid.kp) << "\n";
-            file << file_index++ << "=" << static_cast<float>(PID::turn_pid.kd) << "\n";
-            file << file_index++ << "=" << static_cast<int>(PID::turn_pid.p_term) << "\n";
-            file << file_index++ << "=" << static_cast<int>(PID::turn_pid.d_term) << "\n"; 
-            // file << file_index++ << "=" << static_cast<int>(Servo::duty.cal) << "\n";
-            //file << file_index++ << "=" << static_cast<int>(TCP::test[0]) << "\n";
+            // // file << file_index++ << "=" << static_cast<int>(Servo::duty.cal) << "\n";
+            // //file << file_index++ << "=" << static_cast<int>(TCP::test[0]) << "\n";
 
         #endif
         // 自动填充剩余序号为0，直到49
