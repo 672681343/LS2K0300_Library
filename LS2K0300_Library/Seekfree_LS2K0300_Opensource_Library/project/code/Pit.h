@@ -5,5 +5,6 @@ namespace Pit{
     
     void Init();
     void callback_5ms();
+    void callback_10ms();
     void callback_50ms();
 }

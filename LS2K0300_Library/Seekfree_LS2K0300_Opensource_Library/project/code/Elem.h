@@ -79,6 +79,7 @@ namespace Elem {
     extern float draw_slope;
     extern int16_t raw_count;
     extern float roadblack_slope;
+    extern uint8_t M_y;
     
     void elem_judge();
     void clear();

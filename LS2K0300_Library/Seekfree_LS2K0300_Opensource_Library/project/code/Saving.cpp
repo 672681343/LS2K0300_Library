@@ -137,16 +137,17 @@ namespace {
             file << file_index++ << "=" << static_cast<int>(ImageProc::Right_BF.LostParam.start) << "\n";
             file << file_index++ << "=" << static_cast<int>(ImageProc::Right_BF.LostParam.end) << "\n";
             file << file_index++ << "=" << static_cast<int>(ImageProc::Right_BF.LostParam.sum) << "\n";
+
             file << file_index++ << "=" << static_cast<int>(ImageProc::Mid_BF.LostParam.start) << "\n";
             file << file_index++ << "=" << static_cast<int>(ImageProc::Mid_BF.LostParam.end) << "\n";
             file << file_index++ << "=" << static_cast<int>(ImageProc::Mid_BF.LostParam.sum) << "\n";
 
-            file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_left.LostParam.start) << "\n";
-            file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_left.LostParam.end) << "\n";
-            file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_right.LostParam.start) << "\n";
-            file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_right.LostParam.end) << "\n";
-            file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_both.LostParam.start) << "\n";
-            file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_both.LostParam.end) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_left.LostParam.start) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_left.LostParam.end) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_right.LostParam.start) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_right.LostParam.end) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_both.LostParam.start) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_both.LostParam.end) << "\n";
 
 
 
@@ -155,26 +156,26 @@ namespace {
             file << file_index++ << "=" << static_cast<int>(Elem::Right_corner.U_y) << "\n";
             file << file_index++ << "=" << static_cast<int>(Elem::Right_corner.D_y) << "\n";
 
-            // file << file_index++ << "=" << static_cast<int>(Elem::Left_corner.Curve_Row) << "\n";
-            // file << file_index++ << "=" << static_cast<int>(Elem::Right_corner.Curve_Row) << "\n";
+            file << file_index++ << "=" << static_cast<int>(Elem::Left_corner.Curve_Row) << "\n";
+            file << file_index++ << "=" << static_cast<int>(Elem::Right_corner.Curve_Row) << "\n";
 
-            // file << file_index++ << "=" << static_cast<int>(my_max(Elem::Right_Island.State,Elem::Left_Island.State)) << "\n";
-            // file << file_index++ << "=" << static_cast<int>(Elem::Left_Island.similar_flag) << "\n";
-            // file << file_index++ << "=" << static_cast<int>(Elem::Right_Island.similar_flag) << "\n";
+            file << file_index++ << "=" << static_cast<int>(my_max(Elem::Right_Island.State,Elem::Left_Island.State)) << "\n";
+            file << file_index++ << "=" << static_cast<int>(Elem::Left_Island.similar_flag) << "\n";
+            file << file_index++ << "=" << static_cast<int>(Elem::Right_Island.similar_flag) << "\n";
             file << file_index++ << "=" << static_cast<int>(Elem::Cross.State) << "\n";
             file << file_index++ << "=" << static_cast<int>(Elem::Cross.similar_flag) << "\n";
 
             // file << file_index++ << "=" << static_cast<int>(Elem::Zebra.State) << "\n";
             // file << file_index++ << "=" << static_cast<int>(Elem::Zebra.y) << "\n";
 
-            // file << file_index++ << "=" << static_cast<int>(my_max(Elem::Left_Tilt_Cross.State,Elem::Right_Tilt_Cross.State)) << "\n";
-            // file << file_index++ << "=" << static_cast<int>(Elem::Left_Tilt_Cross.similar_flag) << "\n";
-            // file << file_index++ << "=" << static_cast<int>(Elem::Right_Tilt_Cross.similar_flag) << "\n";
+            file << file_index++ << "=" << static_cast<int>(my_max(Elem::Left_Tilt_Cross.State,Elem::Right_Tilt_Cross.State)) << "\n";
+            file << file_index++ << "=" << static_cast<int>(Elem::Left_Tilt_Cross.similar_flag) << "\n";
+            file << file_index++ << "=" << static_cast<int>(Elem::Right_Tilt_Cross.similar_flag) << "\n";
             // file << file_index++ << "=" << static_cast<int>(Elem::black_count) << "\n";
 
             // file << file_index++ << "=" << static_cast<int>(Control::RoadSegment_t) << "\n";
 
-            // file << file_index++ << "=" << static_cast<float>(Elem::draw_slope) << "\n";
+            file << file_index++ << "=" << static_cast<float>(Elem::draw_slope) << "\n";
             file << file_index++ << "=" << static_cast<float>(ImageProc::Left_BF.Slope) << "\n";
             file << file_index++ << "=" << static_cast<float>(ImageProc::Right_BF.Slope) << "\n";
             file << file_index++ << "=" << static_cast<int>(ImageProc::Left_BF.Var) << "\n";
@@ -183,12 +184,14 @@ namespace {
             file << file_index++ << "=" << static_cast<float>(ImageProc::Mid_BF.Slope) << "\n";
             file << file_index++ << "=" << static_cast<int>(ImageProc::Mid_BF.Var) << "\n";
 
+            file << file_index++ << "=" << static_cast<int>(Elem::M_y) << "\n";
+
             // file << file_index++ << "=" << static_cast<int>(Elem::raw_count) << "\n";
             // file << file_index++ << "=" << static_cast<float>(Elem::roadblack_slope) << "\n";
             // file << file_index++ << "=" << static_cast<int>(my_max(Elem::Left_Roadblock.State,Elem::Right_Roadblock.State)) << "\n";
 
-            // // file << file_index++ << "=" << static_cast<int>(Elem::Ramp.y) << "\n";
-            // // file << file_index++ << "=" << static_cast<int>(Elem::Ramp.State) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Elem::Ramp.y) << "\n";
+            // file << file_index++ << "=" << static_cast<int>(Elem::Ramp.State) << "\n";
         #else 
             // // file << file_index++ << "=" << static_cast<int>(Servo::duty.cur) << "\n";
             // file << file_index++ << "=" << static_cast<int>(Error::Err.tem_row) << "\n";

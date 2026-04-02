@@ -488,26 +488,29 @@ uint8_t cross_Up(uint8_t start, uint8_t end, uint8_t mode,
     {
         for (i = start; i > end; i--)
         {
-            if (abs((int16_t)Search_line[i - 2] - (int16_t)Search_line[i - 1]) < maxDelta &&
-                abs((int16_t)Search_line[i - 1] - (int16_t)Search_line[i]) < maxDelta &&
-                (int16_t)Search_line[i] - (int16_t)Search_line[i + 6] > jumpThreshold
+            if (abs(Search_line[i - 2] - Search_line[i - 1]) < maxDelta &&
+                abs(Search_line[i - 1] - Search_line[i]) < maxDelta &&
+                Search_line[i] - Search_line[i + 2] > jumpThreshold &&
+                Search_line[i] - Search_line[i + 3] > jumpThreshold && i < 50
                 )
             {
-                U_point = i-2;
+                U_point = i-1;
                 break;
             }
+    
         }
     }
     else
     {
         for (i = start; i > end; i--)
         {
-            if (abs((int16_t)Search_line[i - 2] - (int16_t)Search_line[i - 1]) < maxDelta &&
-                abs((int16_t)Search_line[i - 1] - (int16_t)Search_line[i]) < maxDelta &&
-                (int16_t)Search_line[i] - (int16_t)Search_line[i + 6] < -jumpThreshold
+            if (abs(Search_line[i - 2] - Search_line[i - 1]) < maxDelta &&
+                abs(Search_line[i - 1] - Search_line[i]) < maxDelta &&
+                Search_line[i] - Search_line[i + 2] < -jumpThreshold &&
+                Search_line[i] - Search_line[i + 3] < -jumpThreshold && i < 50
                 )
             {
-                U_point = i-2;
+                U_point = i-1;
                 break;
             }
         }
@@ -530,17 +533,18 @@ uint8 cross_Down(uint8 start, uint8 end, uint8 mode,
     if (end < 3) { end = 3; }
     if (start > HEIGHT - 8) { start = HEIGHT - 8; }
     int8_t maxDelta = 5;
-    int8_t jumpThreshold = 15;
+    int8_t jumpThreshold = 9;
     if(mode == 0)
     {
         for (i = start; i > end; i--)
         {
-            if (((int16_t)Search_line[i + 5] - (int16_t)Search_line[i]) >= jumpThreshold &&
-                abs((int16_t)Search_line[i] - (int16_t)Search_line[i - 1]) < maxDelta &&
-                abs((int16_t)Search_line[i - 1] - (int16_t)Search_line[i - 2]) < maxDelta
+            if ((Search_line[i] - Search_line[i-2]) >= jumpThreshold &&
+                (Search_line[i] - Search_line[i-3]) >= jumpThreshold &&
+                abs(Search_line[i] - Search_line[i + 1]) < maxDelta &&
+                abs(Search_line[i + 1] - Search_line[i + 2]) < maxDelta 
                 )
             {
-                D_point = i + 7;
+                D_point = i + 1;
                 break;
             }
         }
@@ -549,12 +553,13 @@ uint8 cross_Down(uint8 start, uint8 end, uint8 mode,
     {
         for (i = start; i > end; i--)
         {
-            if (((int16_t)Search_line[i + 5] - (int16_t)Search_line[i]) <= -jumpThreshold &&
-                abs((int16_t)Search_line[i] - (int16_t)Search_line[i - 1]) < maxDelta &&
-                abs((int16_t)Search_line[i - 1] - (int16_t)Search_line[i - 2]) < maxDelta
+            if ((Search_line[i] - Search_line[i-3]) <= -jumpThreshold &&
+                (Search_line[i] - Search_line[i-2]) <= -jumpThreshold &&
+                abs(Search_line[i] - Search_line[i + 1]) < maxDelta &&
+                abs(Search_line[i + 1] - Search_line[i + 2]) < maxDelta
                 )
             {
-                D_point = i + 7;
+                D_point = i + 1;
                 break;
             }
         }
@@ -751,11 +756,12 @@ static inline void update_visual(uint8_t y, uint8_t hx,
     // 更新目标边界
     target[y] = (uint16_t)hx;
 
+
     // 修正后的冲突处理（容差机制）
     if (is_left) {
-        if (hx > other[y]) other[y] = WIDTH - 1;  // 左边界覆盖右边界时，右边界同步到左边界坐标[1,5](@ref)
+        if (hx >= other[y]) other[y] = WIDTH - 1;  // 左边界覆盖右边界时，右边界同步到左边界坐标[1,5](@ref)
     } else {
-        if (hx < other[y]) other[y] = 1;  // 右边界覆盖左边界时，左边界同步到右边界坐标[1,5](@ref)
+        if (hx <= other[y]) other[y] = 1;  // 右边界覆盖左边界时，左边界同步到右边界坐标[1,5](@ref)
     }
 
     // 安全写入可视化数据（保持不变）
@@ -834,8 +840,21 @@ float my_draw_line(uint8_t x1,
                 for (uint8_t y = start; y >= end; --y) {
                     uint8_t dx = x1 + (uint8_t)(k * (y1 - y));
                     // 边界冲突检查
-                    if (dx >= 185 || dx <= 1) break; // 左边线遇到右边线则停止
-                    update_visual(y, dx, target, other, is_left);
+
+                    if(dx < 185 && dx > 1){
+                        update_visual(y, dx, target, other, is_left);
+                    }
+
+                    else if(y > end)  //  多了无用线的处理操作
+                    {
+                        if(is_left){
+                            target[y] = WIDTH-1;
+                            other[y] = WIDTH-1;
+                        }else{
+                            target[y] = 1;
+                            other[y] = 1;
+                        }
+                    }
                 }
             }
             break;
@@ -962,16 +981,16 @@ uint8_t M_point(uint8_t start, uint8_t end,
     const std::array<uint8_t, WIDTH>& Search_line){
 
 
-        uint8_t j = 0;
-        for(j = start + 3 ; j < end-3; j++){
-            int8_t left_diff = Search_line[j-9] - Search_line[j];
-            int8_t right_diff = Search_line[j+9] - Search_line[j];
-            if (left_diff >= 1 && right_diff >= 1) {
-                return j;
-            }
 
+        uint8_t j = 0;
+        for(j = start + 5 ; j < end - 5; j++){
+            int8_t left_diff = Search_line[j-5] - Search_line[j];
+            int8_t right_diff = Search_line[j+5] - Search_line[j];
+            if (left_diff >= 1 && right_diff >= 1 ) {
+                return HEIGHT-Search_line[j+5];
+            }
         }
-    return -1;
+    return 0;
 
 }
 
@@ -996,3 +1015,4 @@ int16_t find_first_valley(
     }
     return -1;
 }
+
