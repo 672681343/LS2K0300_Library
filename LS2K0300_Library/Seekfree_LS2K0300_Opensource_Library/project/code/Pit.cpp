@@ -2,6 +2,8 @@
 namespace Pit{
     uint16_t count_50ms = 0;
     uint16_t count_5ms = 0;
+    int16_t Err_out = 0;
+    int16_t Angle_out = 0;
     //-------------------------------------------------------------------------------------------------------------------
     // 函数简介: 中断初始化
     // 参数说明: 无
@@ -25,6 +27,9 @@ namespace Pit{
     {
         Encoder::update();
         imu660ra_get_gyro();
+
+        Angle_out = PID::AnglePID(Err_out, imu660ra_gyro_z, &PID::angle_pid);
+
 
         // // 公共停机逻辑
         if(ImageProc::state.cutoff < 3){
@@ -53,7 +58,7 @@ namespace Pit{
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.R); 
                 }else{
-                    Motor::goMotor(Control::pwm.L+PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R-PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
+                    Motor::goMotor(Control::pwm.L-Angle_out, Control::pwm.R+Angle_out);
                 }
 
 
@@ -63,7 +68,7 @@ namespace Pit{
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.R); 
                 }else{
-                    Motor::goMotor(Control::pwm.L+PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R-PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
+                    Motor::goMotor(Control::pwm.L-Angle_out, Control::pwm.R+Angle_out);
                 }
 
             } else {
@@ -86,7 +91,7 @@ namespace Pit{
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.R); 
                 }else{
-                    Motor::goMotor(Control::pwm.L+PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R-PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
+                    Motor::goMotor(Control::pwm.L+Angle_out, Control::pwm.R-Angle_out);
                 }
 
             } else if(MenuSystem::Car_flag.stop == 0){
@@ -95,7 +100,7 @@ namespace Pit{
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.R); 
                 }else{
-                    Motor::goMotor(Control::pwm.L+PID::TurnPID(0, Error::Err.current, &PID::turn_pid), Control::pwm.R-PID::TurnPID(0, Error::Err.current, &PID::turn_pid));
+                    Motor::goMotor(Control::pwm.L+Angle_out, Control::pwm.R-Angle_out);
                 }
             }
 
@@ -111,7 +116,7 @@ namespace Pit{
     //-------------------------------------------------------------------------------------------------------------------
     void callback_10ms()
     {
-        
+        Err_out = -PID::TurnPID(0, Error::Err.current, &PID::turn_pid);
     }
 
 

@@ -24,6 +24,8 @@ namespace ImageProc {
         uint8_t start_point;       // 当前起始点
         uint8_t last_start_point;  // 上次起始点
         uint8_t cutoff;            // 扫描截止行
+
+        uint8_t set_start_point;   // 设置起始点
         
         // 低频访问变量
         uint8_t range_l;           // 左边界限制
@@ -33,7 +35,7 @@ namespace ImageProc {
         
         // 构造函数
         State() : start_point(WIDTH/2), last_start_point(WIDTH/2),
-        cutoff(HEIGHT-1), range_l(5), range_r(WIDTH-5),mode(0) {}
+        cutoff(HEIGHT-1),set_start_point(0) ,range_l(10), range_r(WIDTH-10),mode(0) {}
     };
 
     // 全局丢线状态容器

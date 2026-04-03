@@ -45,6 +45,9 @@ namespace MenuSystem {
         PWM,
 
         SPEED,
+
+        ANGLE,
+
         ELEM,
         ELEM_LEFT_TILT,
         ELEM_RIGHT_TILT,

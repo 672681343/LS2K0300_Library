@@ -23,12 +23,14 @@ namespace PID {
     }PIDParams;
 
 
+    extern PIDParams angle_pid;    // 角度环PID
     extern PIDParams turn_pid;     // 转向环PID
     extern PIDParams speed_pid_L;  // 左轮速度环PID
     extern PIDParams speed_pid_R;  // 右轮速度环PID
 
     void PID_init();                                                    // 初始化PID参数
     int16_t TurnPID(int16_t target, int16_t current, PIDParams *pid);   // 转向环PID
+    int16_t AnglePID(int16_t target, int16_t current, PIDParams *pid);  // 角度环PID
     int16_t Speed_loc_PID(int16_t target, int16_t current, PIDParams* pid);  // 速度环PID
     int16_t Speed_inc_PID(int16_t target, int16_t current, PIDParams* pid);  // 速度环增量PID
 }

@@ -22,6 +22,8 @@ typedef enum {
 constexpr int32_t SCALE = 1000;
 extern std::array<uint16_t, HEIGHT> tem_fit;
 
+extern uint8_t M_x;
+
 /* Exported functions ------------------------------------------------------- */
 void fitting_line(uint8_t start,uint8_t end,
     const std::array<uint16_t, HEIGHT>& raw_line,

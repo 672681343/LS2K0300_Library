@@ -145,7 +145,13 @@ namespace ImageProc {
     //-------------------------------------------------------------------------------------------------------------------
     void finding_boundary(uint8_t* bin, uint8_t* lcd, uint8_t cut_off) {
         constexpr uint8_t FEATURE_MARGIN = 3;  // 特征检测安全边界
-        const uint8_t start = state.start_point;
+        uint8_t start;
+        if(state.set_start_point == 0 ){
+            start = state.start_point;
+        }else{
+            start = state.set_start_point;
+        }
+        if (start < FEATURE_MARGIN) start = FEATURE_MARGIN;
         
         l_black.fill(0);          // 初始化为最小值
         r_black.fill(WIDTH-1);      // 初始化为最大值

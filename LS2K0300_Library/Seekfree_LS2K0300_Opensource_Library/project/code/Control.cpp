@@ -44,29 +44,29 @@ namespace Control{
 
     //长直道速度
     Set_Speed LongStrSpeed = {
-        .set_speed = 420,
+        .set_speed = 530,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
-        .l_kp = 9.7,
-        .l_ki = 0.24,
-        .r_kp = 9.7,
-        .r_ki = 0.29
+        .l_kp = 7,
+        .l_ki = 0.26,
+        .r_kp = 7,
+        .r_ki = 0.325
     };
     //短直道速度
     Set_Speed ShortStrSpeed = {
-        .set_speed = 380,
+        .set_speed = 480,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
-        .l_kp = 9.8,
-        .l_ki = 0.24,
-        .r_kp = 9.8,
-        .r_ki = 0.29
+        .l_kp = 7,
+        .l_ki = 0.26,
+        .r_kp = 7,
+        .r_ki = 0.325
     };
     //弯道速度
     Set_Speed CurveSpeed = {
-        .set_speed = 330,
+        .set_speed = 340,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
@@ -95,21 +95,21 @@ namespace Control{
 
     //长直道PID参数
     Set_Pid LongStrPid = {
-        .kp = 50.0,
+        .kp = 200.0,
         .kp2 = 0.0,
         .gkd = 0.00,
         .kd = 20.0
     };
     //短直道PID参数
     Set_Pid ShortStrPid = {
-        .kp = 50.0,
+        .kp = 200.0,
         .kp2 = 0.0,
         .gkd = 0.00,
         .kd = 20.0
     };
     //弯道PID参数
     Set_Pid CurvePid = {
-        .kp = 18.0,
+        .kp = 220.0,
         .kp2 = 1.3,
         .gkd = 0.0,
         .kd = 70.0

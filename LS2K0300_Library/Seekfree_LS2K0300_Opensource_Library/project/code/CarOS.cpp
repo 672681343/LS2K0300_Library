@@ -36,6 +36,7 @@ namespace MenuSystem {
         {"Start",    ACTION_SUBMENU, "start", {0,0}, MenuID::START},
         {"Group",    ACTION_SUBMENU, "turn",  {0,0}, MenuID::GROUP},
         {"Speed PID",ACTION_SUBMENU, "speed", {0,0}, MenuID::SPEED},
+        {"Angle PID",ACTION_SUBMENU, "angle", {0,0}, MenuID::ANGLE},
         {"Err",      ACTION_SUBMENU, "err",   {0,0}, MenuID::ERR},
         {"Elem",     ACTION_SUBMENU, "elem",  {0,0}, MenuID::ELEM},
         {"System",   ACTION_SUBMENU, "sys",   {0,0}, MenuID::SYSTEM}
@@ -75,9 +76,9 @@ namespace MenuSystem {
     };
 
     static const MenuItem curve_items[] = {
-        {"crvP",  ACTION_ADJUST, "Group.crvkp", {0.0f, 100.0f}, MenuID::NONE},
+        {"crvP",  ACTION_ADJUST, "Group.crvkp", {0.0f, 1000.0f}, MenuID::NONE},
         {"crvP2",  ACTION_ADJUST, "Group.crvkp2", {0.0f, 100.0f}, MenuID::NONE},
-        {"crvD",  ACTION_ADJUST, "Group.crvkd", {0.0f, 100.0f}, MenuID::NONE},
+        {"crvD",  ACTION_ADJUST, "Group.crvkd", {0.0f, 1000.0f}, MenuID::NONE},
         {"crvGD",  ACTION_ADJUST, "Group.crvgkd", {0.0f, 100.0f}, MenuID::NONE},
         {"dif",   ACTION_ADJUST, "Group.crvdif", {0.0f, 100.0f}, MenuID::NONE},
         {"rep" , ACTION_ADJUST, "Group.difrep", {0.0f, 1.0f}, MenuID::NONE},
@@ -89,9 +90,9 @@ namespace MenuSystem {
 
     };
     static const MenuItem short_items[] = {
-        {"shtP", ACTION_ADJUST, "Group.shtkp", {0.0f, 100.0f}, MenuID::NONE},
+        {"shtP", ACTION_ADJUST, "Group.shtkp", {0.0f, 1000.0f}, MenuID::NONE},
         {"shtP2", ACTION_ADJUST, "Group.shtkp2", {0.0f, 100.0f}, MenuID::NONE},
-        {"shtD", ACTION_ADJUST, "Group.shtkd", {0.0f, 100.0f}, MenuID::NONE},
+        {"shtD", ACTION_ADJUST, "Group.shtkd", {0.0f, 1000.0f}, MenuID::NONE},
         {"shtGD", ACTION_ADJUST, "Group.shtgkd", {0.0f, 100.0f}, MenuID::NONE},
         {"dif" , ACTION_ADJUST, "Group.shtdif", {0.0f, 100.0f}, MenuID::NONE},
         {"speed",ACTION_ADJUST, "Group.shtspd", {0,0}, MenuID::NONE},
@@ -102,9 +103,9 @@ namespace MenuSystem {
 
     };
     static const MenuItem long_items[] = {
-        {"logP", ACTION_ADJUST, "Group.logkp", {0.0f, 100.0f}, MenuID::NONE},
+        {"logP", ACTION_ADJUST, "Group.logkp", {0.0f, 1000.0f}, MenuID::NONE},
         {"logP2", ACTION_ADJUST, "Group.logkp2", {0.0f, 100.0f}, MenuID::NONE},
-        {"logD", ACTION_ADJUST, "Group.logkd", {0.0f, 100.0f}, MenuID::NONE},
+        {"logD", ACTION_ADJUST, "Group.logkd", {0.0f, 1000.0f}, MenuID::NONE},
         {"logGD", ACTION_ADJUST, "Group.loggkd", {0.0f, 100.0f}, MenuID::NONE},
         {"dif" , ACTION_ADJUST, "Group.logdif", {0.0f, 100.0f}, MenuID::NONE},
         {"speed",ACTION_ADJUST, "Group.logspd", {0,0}, MenuID::NONE},
@@ -115,9 +116,9 @@ namespace MenuSystem {
 
     };
     static const MenuItem island_items[] = {
-        {"islP", ACTION_ADJUST, "Group.islandkp", {0.0f, 100.0f}, MenuID::NONE},
+        {"islP", ACTION_ADJUST, "Group.islandkp", {0.0f, 1000.0f}, MenuID::NONE},
         {"islP2", ACTION_ADJUST, "Group.islandkp2", {0.0f, 100.0f}, MenuID::NONE},
-        {"islD", ACTION_ADJUST, "Group.islandkd", {0.0f, 100.0f}, MenuID::NONE},
+        {"islD", ACTION_ADJUST, "Group.islandkd", {0.0f, 1000.0f}, MenuID::NONE},
         {"islGD", ACTION_ADJUST, "Group.islandgkd", {0.0f, 100.0f}, MenuID::NONE},
         {"dif", ACTION_ADJUST, "Group.islanddif", {0.0f, 100.0f}, MenuID::NONE},
         {"speed", ACTION_ADJUST, "Group.islandspd", {0,0}, MenuID::NONE},
@@ -128,6 +129,7 @@ namespace MenuSystem {
     };
 
     static const MenuItem speed_items[] = {
+        
         {"L_P",   ACTION_ADJUST, "speed_pid_L.kp", {0.0f, 100.0f}, MenuID::NONE},
         {"L_I",   ACTION_ADJUST, "speed_pid_L.ki", {0.0f, 100.0f}, MenuID::NONE},
         {"L_D",   ACTION_ADJUST, "speed_pid_L.kd", {0.0f, 100.0f}, MenuID::NONE},
@@ -141,6 +143,16 @@ namespace MenuSystem {
         {"pwmR",ACTION_VIEW,   "pwm.R",          {0.0f, 0.0f},   MenuID::NONE},
 
     };
+
+    static const MenuItem angle_items[] = {
+        {"ang_P",   ACTION_ADJUST, "angle_pid.kp", {0.0f, 100.0f}, MenuID::NONE},
+        {"ang_I",   ACTION_ADJUST, "angle_pid.ki", {0.0f, 100.0f}, MenuID::NONE},
+        {"ang_D",   ACTION_ADJUST, "angle_pid.kd", {0.0f, 100.0f}, MenuID::NONE},
+
+    };
+
+
+
     static const MenuItem elem_items[] = {
         {"Left Tilt",       ACTION_SUBMENU, "elem_left_tilt",       {0,0}, MenuID::ELEM_LEFT_TILT},
         {"Right Tilt",      ACTION_SUBMENU, "elem_right_tilt",      {0,0}, MenuID::ELEM_RIGHT_TILT},
@@ -217,6 +229,9 @@ namespace MenuSystem {
  
  
     const Menu speed_menu   = {"Speed Settings",speed_items,sizeof(speed_items)/sizeof(MenuItem)};
+
+    const Menu angle_menu   = {"Speed Settings",angle_items,sizeof(angle_items)/sizeof(MenuItem)};
+
     const Menu err_menu     = {"Err Config",    err_items,  sizeof(err_items)/sizeof(MenuItem)};
     const Menu sys_menu     = {"System",        sys_items,  sizeof(sys_items)/sizeof(MenuItem)};
     const Menu elem_menu    = {"Elem",          elem_items,  sizeof(elem_items)/sizeof(MenuItem)};
@@ -245,6 +260,9 @@ namespace MenuSystem {
         &pwm_menu,              // [8] MenuID::PWM
 
         &speed_menu,            // [10] MenuID::SPEED
+
+        &angle_menu,
+
         &elem_menu,             // [11] MenuID::ELEM
         &elem_left_tilt_menu,   // [12] MenuID::ELEM_LEFT_TILT
         &elem_right_tilt_menu,  // [13] MenuID::ELEM_RIGHT_TILT
@@ -288,6 +306,14 @@ namespace MenuSystem {
         {"ki", TYPE_FLOAT, .as_float = &PID::speed_pid_R.ki, .persist = true},
         {"kd", TYPE_FLOAT, .as_float = &PID::speed_pid_R.kd, .persist = true}
     };
+
+
+    static const ParamMapping angle_pid_params[] = {
+        {"kp", TYPE_FLOAT, .as_float = &PID::angle_pid.kp, .persist = true},
+        {"ki", TYPE_FLOAT, .as_float = &PID::angle_pid.ki, .persist = true},
+        {"kd", TYPE_FLOAT, .as_float = &PID::angle_pid.kd, .persist = true}
+    };
+
     static const ParamMapping pwm_params[] = {
         {"L", TYPE_INT16, .as_int16 = &Control::pwm.L, .persist = false},
         {"R", TYPE_INT16, .as_int16 = &Control::pwm.R, .persist = false},
@@ -493,6 +519,15 @@ namespace MenuSystem {
             speed_pid_R_params,  // 使用统一命名的全局定义
             sizeof(speed_pid_R_params)/sizeof(ParamMapping)
         });
+
+        //注册角度环PID参数组
+        register_param_group({
+            "angle_pid",
+            '.',
+            angle_pid_params,  // 使用统一命名的全局定义
+            sizeof(angle_pid_params)/sizeof(ParamMapping)
+        });
+
         //注册PWM参数组
         register_param_group({
             "pwm",
@@ -595,6 +630,7 @@ namespace MenuSystem {
     const std::vector<std::string> save_groups{
     "speed_pid_L", 
     "speed_pid_R",
+    "angle_pid",
     "car_flag", 
     "duty", 
     "Err", 

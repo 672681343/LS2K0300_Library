@@ -1,6 +1,7 @@
 #include "PID.h"
 
 namespace PID {
+    PIDParams angle_pid = {0};
     PIDParams turn_pid = {0};
     PIDParams speed_pid_L = {0};
     PIDParams speed_pid_R = {0};
@@ -12,6 +13,15 @@ namespace PID {
     // 备注信息:
     //-------------------------------------------------------------------------------------------------------------------
     void PID_init() {
+
+        angle_pid.kp = 0.40;
+        angle_pid.ki = 0.0;
+        angle_pid.kd = 0.0;
+        angle_pid.integral = 0;
+        angle_pid.prev_error = 0;
+        angle_pid.I_limit = 0;
+        angle_pid.out_limit = 0;
+
         turn_pid.kp = 1.6;
         turn_pid.kp2 = 0.0;
         turn_pid.ki = 0.0;
@@ -30,11 +40,6 @@ namespace PID {
         speed_pid_L.I_limit = 7000;
         speed_pid_L.out_limit = 9000;
 
-        speed_pid_L.prev_output = 0;
-        speed_pid_L.prev_error = 0;
-        speed_pid_L.prev_prev_error = 0;
-
-
         speed_pid_R.kp = 0.0;
         speed_pid_R.ki = 0.0;
         speed_pid_R.kd = 0.0;
@@ -42,6 +47,35 @@ namespace PID {
         speed_pid_R.prev_error = 0;
         speed_pid_R.I_limit = 7000;
         speed_pid_R.out_limit = 9000;
+    }
+
+
+    //-------------------------------------------------------------------------------------------------------------------
+    // 函数简介: 角度环PID
+    // 参数说明: 目标，实际
+    // 返回参数: int16
+    // 使用示例: PID::TurnPID(0, Error::Err.current, &PID::turn_pid);
+    // 备注信息: 
+    //-------------------------------------------------------------------------------------------------------------------
+    int16_t AnglePID(int16_t target, int16_t current, PIDParams *pid)
+    {
+        int16_t error = target - current;
+        pid->p_term = pid->kp * error;
+        pid->d_term = pid->kd * (error - pid->prev_error);
+        int16_t output = pid->p_term + pid->d_term ;
+        // 总输出限幅
+        if (pid->out_limit > 0) {
+            if (output > pid->out_limit) {
+                output = pid->out_limit;
+            } else if (output < -pid->out_limit) {
+                output = -pid->out_limit;
+            }
+        }
+        pid->prev_error = error;
+
+        // TCP::test[0] = output;
+        
+        return output ;
     }
 
     //-------------------------------------------------------------------------------------------------------------------

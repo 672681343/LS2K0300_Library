@@ -16,6 +16,4 @@ namespace Encoder {
     extern CountPram count;
     // 更新编码器数值（需周期性调用）
     void update();
-    int16_t LowPassFilter(uint8_t ch, int16_t currentValue, float alpha, int16_t maxDelta);
-
 }

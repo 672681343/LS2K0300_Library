@@ -3,6 +3,8 @@
 #include <cstdint>
 
 std::array<uint16_t, HEIGHT> tem_fit;
+
+uint8_t M_x;
 //-------------------------------------------------------------------------------------------------------------------
 // 函数简介: 拟合线
 // 参数说明: 拟合起始点，拟合结束点，原曲线数组，拟合数组
@@ -840,21 +842,8 @@ float my_draw_line(uint8_t x1,
                 for (uint8_t y = start; y >= end; --y) {
                     uint8_t dx = x1 + (uint8_t)(k * (y1 - y));
                     // 边界冲突检查
-
-                    if(dx < 185 && dx > 1){
-                        update_visual(y, dx, target, other, is_left);
-                    }
-
-                    else if(y > end)  //  多了无用线的处理操作
-                    {
-                        if(is_left){
-                            target[y] = WIDTH-1;
-                            other[y] = WIDTH-1;
-                        }else{
-                            target[y] = 1;
-                            other[y] = 1;
-                        }
-                    }
+                    if (dx >= 185 || dx <= 1) break; // 左边线遇到右边线则停止
+                    update_visual(y, dx, target, other, is_left);
                 }
             }
             break;
@@ -980,39 +969,25 @@ float my_draw_line(uint8_t x1,
 uint8_t M_point(uint8_t start, uint8_t end,
     const std::array<uint8_t, WIDTH>& Search_line){
 
+    // 验证开始和结束参数
+    if (start >= WIDTH-6) start = WIDTH - 6;
+    if (start <= 6) start = 6;
+    if (end >= WIDTH-6) end = WIDTH - 6;
+    if (end <= 6) end = 6;
+    if (start > end) start = end;  // 确保起点在终点左侧
+
 
 
         uint8_t j = 0;
-        for(j = start + 5 ; j < end - 5; j++){
+        for(j = start + 5  ; j < end - 5 ; j++){
             int8_t left_diff = Search_line[j-5] - Search_line[j];
             int8_t right_diff = Search_line[j+5] - Search_line[j];
-            if (left_diff >= 1 && right_diff >= 1 ) {
-                return HEIGHT-Search_line[j+5];
+            if (left_diff >= 1 && right_diff >= 1 && Search_line[j] != 0 && Search_line[j] <= 68) {
+                M_x = j;
+                return HEIGHT-Search_line[j]-2;
             }
         }
     return 0;
 
-}
-
-int16_t find_first_valley(
-    uint8_t start, 
-    uint8_t end,
-    const std::array<uint8_t, WIDTH>& search_line,
-    uint8_t min_depth = 10)  // 最小谷深阈值
-{
-    if (end <= start + 6 || start > 252) return -1;
-    
-    for (uint8_t j = start + 3; j < end - 3; ++j) {
-        
-        // 防止uint8_t减法溢出：强制转int16_t
-        int16_t left_diff = static_cast<int16_t>(search_line[j-2]) - search_line[j];
-        int16_t right_diff = static_cast<int16_t>(search_line[j+2]) - search_line[j];
-        
-        // 左右都下降（中心是谷），且深度足够
-        if (left_diff >= min_depth && right_diff >= min_depth) {
-            return static_cast<int16_t>(j);
-        }
-    }
-    return -1;
 }
 
