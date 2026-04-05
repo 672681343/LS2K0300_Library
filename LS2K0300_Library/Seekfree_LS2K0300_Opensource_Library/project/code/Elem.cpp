@@ -42,7 +42,7 @@ namespace Elem {
         
         // zebra_detection();
         tilt_cross_detection();
-        // island_detection();
+        island_detection();
         cross_detection();
         // roadblock_detection();
         // ramp_detection();
@@ -443,434 +443,320 @@ namespace Elem {
         }
     }
    
-    //-------------------------------------------------------------------------------------------------------------------
-    // 函数简介: 元素（环岛）
-    // 参数说明: 
-    // 返回参数: 
-    // 使用示例: 
-    // 备注信息: 
-    //-------------------------------------------------------------------------------------------------------------------
-    void island_detection(void)
-    {
-        //左环岛
-        switch (Left_Island.State)
-        {
-            case 0:{
-                //左边环岛
-                if (isHandling == 0 && Left_Island.enable &&
-                    Right_Island.State == 0 && Cross.State == 0 && Left_Tilt_Cross.State == 0 && Right_Tilt_Cross.State == 0 && 
-                    Zebra.State == 0 && Left_Roadblock.State == 0 && Right_Roadblock.State == 0 && Ramp.State == 0 &&
-                    ImageProc::state.cutoff >= 65 && // 截止行（不变）
-                    ((ImageProc::Right_BF.LostParam.start > 67 && ImageProc::Right_BF.LostParam.sum < 15) ||
-                     ImageProc::Right_BF.LostParam.sum < 2) && // 右边线特征（镜像）
-                    (((ImageProc::Left_BF.LostParam.sum > 6 || ImageProc::sec_loss_left.LostParam.sum > 6)&& ImageProc::Left_BF.LostParam.start < 50) ) && // 左边线特征（镜像）
-                    (ImageProc::Mid_BF.LostParam.sum < 2  )&& // 共同丢线特征（不变）
-                    ImageProc::Right_BF.Var < 10 && ImageProc::Left_BF.Var > 200 // 方差特征（镜像）
-                )
-                {
-                    Left_corner.D_y = island_Down(HEIGHT - 4, HEIGHT - ImageProc::state.cutoff , 0, ImageProc::l_black);
-                    Left_Island.similar_flag = 1;
+    // //-------------------------------------------------------------------------------------------------------------------
+    // // 函数简介: 环岛
+    // // 参数说明: 
+    // // 返回参数: 
+    // // 使用示例: 
+    // // 备注信息: 
+    // //-------------------------------------------------------------------------------------------------------------------
 
-                    if (Left_corner.D_y != 0)
-                    {
-                        MenuSystem::beep_on();
+    void island_detection(){
+        
+        //左环
+        switch(Left_Island.State){
+            //判断圆环
+            case 0:{
+                if(  Right_Tilt_Cross.State==0 && Left_Tilt_Cross.State==0 && Left_Island.enable &&
+                    Right_Island.State==0 && Cross.State == 0 && ImageProc::state.cutoff >= 65 &&  
+                    ((ImageProc::Right_BF.LostParam.start > 67 && ImageProc::Right_BF.LostParam.sum < 15) ||
+                     ImageProc::Right_BF.LostParam.sum < 2) && 
+                    (((ImageProc::Left_BF.LostParam.sum > 6 || ImageProc::sec_loss_left.LostParam.sum > 6)&& ImageProc::Left_BF.LostParam.start < 50) ) && 
+                    (ImageProc::Mid_BF.LostParam.sum < 2  )&& 
+                    ImageProc::Right_BF.Var < 10 && ImageProc::Left_BF.Var > 200 ){
+                    Left_corner.D_y = island_Down(HEIGHT - 4, HEIGHT - ImageProc::state.cutoff - 1 , 0, ImageProc::l_black);
+                    Left_Island.similar_flag = 1;
+                    
+                    
+                    if(Left_corner.D_y != 0){
                         Left_Island.State = 1;
                     }
-                }                        
-                //左弯接左环
-                if (isHandling == 0 && Left_Island.enable &&
-                    Right_Island.State == 0 && Cross.State == 0 && // 镜像右边环岛的条件
-                    ImageProc::state.cutoff >= 65 && // 截止行（不变）
-                    ((ImageProc::Right_BF.LostParam.sum < 25 && ImageProc::Right_BF.LostParam.start > 67) || 
-                    ImageProc::Right_BF.LostParam.start == 0) && 
-                    (ImageProc::Left_BF.LostParam.sum > 20 && ImageProc::Left_BF.LostParam.start > 50) &&
-                     ImageProc::Left_BF.Var > 80 && ImageProc::Right_BF.Var < 10 &&// 左边线特征（镜像）
-                    ImageProc::Right_BF.Slope < 2.5
-                    )
-                {
-                    // 调用环形检测函数处理右侧，参数调整为右侧相关
-                    Left_corner.Curve_Row = Circular_Detection(0, 0, ImageProc::Left_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::l_black);
-                    Right_corner.Curve_Row = Circular_Detection(1, 0, ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::r_black);
-
-                    if (Left_corner.Curve_Row != 0) {
-                        Left_corner.U_y = island_Up(Left_corner.Curve_Row, HEIGHT - ImageProc::state.cutoff + 2, 0, ImageProc::l_black);
-                    }
-                    Left_Island.similar_flag = 1;
-
-                    if (Left_corner.Curve_Row != 0 && Left_corner.U_y != 0 && (Right_corner.Curve_Row < 10 || Right_corner.Curve_Row > HEIGHT - 10))
-                    {
-                        MenuSystem::beep_on();
-                        Left_Island.State = 2;
-                    }
                 }
+
                 break;
             }
+
+            //靠近补线（下拐点，突变点）
             case 1:{
-                Left_corner.D_y = island_Down(HEIGHT - 4, HEIGHT - ImageProc::state.cutoff + 2, 0 ,ImageProc::l_black);
+                Left_corner.D_y = island_Down(HEIGHT - 4, HEIGHT - ImageProc::state.cutoff + 2, 0, ImageProc::l_black);
                 Left_corner.Curve_Row = Circular_Detection(0, 0, ImageProc::Left_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::l_black);
-                
-                if (Left_corner.D_y < Left_corner.Curve_Row + 10 && Left_corner.Curve_Row != 0){ Left_corner.D_y = 0;}
-                if (Left_corner.D_y != 0 && Left_corner.Curve_Row != 0){
-                    my_draw_line(ImageProc::l_black[Left_corner.Curve_Row], Left_corner.Curve_Row, 
-                                ImageProc::l_black[Left_corner.D_y], Left_corner.D_y, 
-                                MODE_TWO_POINTS, DIRECTION_DOWN_LEFT, 0);
-                    Error::Err.mode = 0;        
-                }else if (Left_corner.D_y != 0){
-                    my_draw_line(ImageProc::l_black[Left_corner.D_y], Left_corner.D_y, 
-                                0, 0, 
-                                MODE_AUTO_SLOPE, DIRECTION_DOWN_LEFT, 0);
-                    Error::Err.mode = 0;        
-                }else if (Left_corner.Curve_Row != 0){
-                    my_draw_line(ImageProc::l_black[Left_corner.Curve_Row], Left_corner.Curve_Row, 
-                                0, 0, 
-                                MODE_FIXED_SLOPE, DIRECTION_UP_LEFT, -ImageProc::Right_BF.Slope);
-                    Error::Err.mode = 0;        
+                if((Left_corner.D_y < Left_corner.Curve_Row + 10 && Left_corner.Curve_Row != 0) || Left_corner.D_y < ImageProc::Left_BF.LostParam.mid ) Left_corner.D_y = 0;
+                if(Left_corner.D_y != 0 && Left_corner.Curve_Row != 0){
+                    my_draw_line(ImageProc::l_black[Left_corner.D_y],Left_corner.D_y,ImageProc::l_black[Left_corner.Curve_Row],Left_corner.Curve_Row,MODE_TWO_POINTS,DIRECTION_DOWN_LEFT,0);
+
+                }else if(Left_corner.D_y != 0){
+                    my_draw_line(ImageProc::l_black[Left_corner.D_y],Left_corner.D_y,0,0,MODE_AUTO_SLOPE,DIRECTION_DOWN_LEFT,0);
+                   
+                }else if(Left_corner.Curve_Row !=0){
+                    my_draw_line(ImageProc::l_black[Left_corner.Curve_Row],Left_corner.Curve_Row,0,0,MODE_FIXED_SLOPE,DIRECTION_UP_LEFT,-ImageProc::Right_BF.Slope);
+                     
                 }else{
-                    Error::Err.mode = 1;        
+                    Error::Err.mode = 1;
+                }
+                
+                if (ImageProc::Left_BF.LostParam.sum > 30 && ImageProc::Left_BF.LostParam.start > 67){
+                    Left_Island.State = 2;
+                    Error::Err.mode = 0;
+
                 }
 
-                if (Left_Island.State){
-                    //左下角大面积丢线
-                    if (ImageProc::Left_BF.LostParam.sum > 30 && ImageProc::Left_BF.LostParam.start > 67){
-                        Left_Island.State = 2;
-                        Error::Err.mode = 0;
-                    }
-                }
                 break;
             }
+            //靠近补线（突变点，上拐点）
             case 2:{
-                //左上拐点位置
-                static uint8_t state_count = 0;
-                Left_corner.Curve_Row = Circular_Detection(0, 0, HEIGHT - 5, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::l_black);
-                if (ImageProc::Left_BF.LostParam.mid > Left_corner.Curve_Row &&
-                     ImageProc::Left_BF.LostParam.start < 50){
+                Left_corner.Curve_Row = Circular_Detection(0, 0, ImageProc::Left_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::l_black);
+                Left_corner.U_y = island_Up(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff , 0, ImageProc::l_black);
+                if(ImageProc::Left_BF.LostParam.mid > Left_corner.Curve_Row && ImageProc::Left_BF.LostParam.start < 50){
                     Left_corner.Curve_Row = 0;
                 }
-                Left_corner.U_y = island_Up(ImageProc::Left_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 0 ,ImageProc::l_black);
-                
-                if (Left_corner.Curve_Row != 0){
-                    my_draw_line(ImageProc::l_black[Left_corner.Curve_Row], Left_corner.Curve_Row, 
-                                0, 0, 
-                                MODE_FIXED_SLOPE, DIRECTION_UP_LEFT, -ImageProc::Right_BF.Slope);
-                }
-                
-                if (Left_corner.U_y != 0 && Left_corner.Curve_Row != 0){
-                    my_draw_line(ImageProc::r_black[Left_corner.Curve_Row], Left_corner.Curve_Row, 
-                                ImageProc::l_black[Left_corner.U_y], Left_corner.U_y, 
-                                MODE_TWO_POINTS, DIRECTION_UP_RIGHT, 0);
-                }else if (Left_corner.U_y != 0){
-                    my_draw_line(ImageProc::l_black[Left_corner.U_y], Left_corner.U_y, 
-                                ImageProc::r_black[HEIGHT - 10], HEIGHT - 10, 
-                                MODE_TWO_POINTS, DIRECTION_UP_RIGHT, 0);
-                }
-                if (Left_corner.Curve_Row != 0){
-                    state_count++;
-                }else{
-                    state_count = 0;
+                if(Left_corner.Curve_Row != 0){
+                    my_draw_line(ImageProc::l_black[Left_corner.Curve_Row],Left_corner.Curve_Row,0,0,MODE_FIXED_SLOPE,DIRECTION_UP_LEFT,-ImageProc::Right_BF.Slope);
                 }
 
-                if ((Left_corner.Curve_Row == 0 || Left_corner.Curve_Row > 40) && state_count > 3){
-                    Left_Island.State = 3;
+
+                else if(Left_corner.U_y != 0){
+                    my_draw_line(ImageProc::l_black[Left_corner.U_y],Left_corner.U_y,ImageProc::r_black[HEIGHT-10],HEIGHT-10,MODE_TWO_POINTS,DIRECTION_DOWN_RIGHT,0);
+                }
+                if(Left_corner.Curve_Row == 0 || Left_corner.Curve_Row > 40){
+                    Left_Island.State=3;
                 }
                 break;
             }
+            //准备入环（上拐点）
             case 3:{
-                //左下角再次大面积丢线
-                Left_corner.U_y = island_Up(ImageProc::Left_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 0 ,ImageProc::l_black);
-                if (Left_corner.U_y != 0){
+                Left_corner.U_y = island_Up(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff + 2 , 0, ImageProc::l_black);
+                if(Left_corner.U_y != 0 && ImageProc::Left_BF.LostParam.start > 60){
                     Error::Err.limit = HEIGHT - Left_corner.U_y;
-                    my_draw_line(ImageProc::l_black[Left_corner.U_y], Left_corner.U_y,
-                                ImageProc::r_black[HEIGHT - 10], HEIGHT - 10, 
-                                MODE_TWO_POINTS, DIRECTION_UP_RIGHT, 0);
+                    my_draw_line(ImageProc::l_black[Left_corner.U_y],Left_corner.U_y,ImageProc::r_black[HEIGHT-10],HEIGHT-10,MODE_TWO_POINTS,DIRECTION_DOWN_RIGHT,0);
                 }
-                if (ImageProc::Right_BF.LostParam.sum > 30){
+                if (ImageProc::Right_BF.LostParam.sum > 36 && Left_corner.U_y != 0){
                     Left_Island.State = 4;
                     ImageProc::state.range_r = ImageProc::l_black[Left_corner.U_y - 2];
                     Right_corner.U_y = Left_corner.U_y;
                 }
                 break;
             }
+            //入环（左上拐点变右上拐点）
             case 4:{
-                Error::Err.limit = HEIGHT - 1;
-                Right_corner.U_y = island_sideUp(ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 1 ,ImageProc::r_black);
+                Error::Err.limit = HEIGHT - 1; 
+                Right_corner.U_y = island_Up(ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 1 ,ImageProc::r_black);
                 if (Right_corner.U_y == 0) { Right_corner.U_y = Left_corner.U_y; }
-                if (Right_corner.U_y != 0){
-                    my_draw_line(ImageProc::r_black[Right_corner.U_y - 1], Right_corner.U_y - 1,
-                                 ImageProc::r_black[HEIGHT - 5], HEIGHT - 5, 
-                                 MODE_TWO_POINTS, DIRECTION_UP_RIGHT, 0);
+                if(Right_corner.U_y != 0){
+                    my_draw_line(ImageProc::r_black[Right_corner.U_y-1],Right_corner.U_y-1,ImageProc::r_black[HEIGHT-5],HEIGHT-5,MODE_TWO_POINTS,DIRECTION_UP_RIGHT,0);
                 }
-
-                if (ImageProc::Right_BF.LostParam.sum < 15 || 
-                    (ImageProc::r_black[ImageProc::Right_BF.LostParam.end - 2] > WIDTH - 5 )){
+                if (ImageProc::Right_BF.LostParam.sum < 5 ){
                     Left_Island.State = 5;
                     ImageProc::state.range_r = WIDTH - 10;
                 }
                 break;
             }
+            //入环成功，找出环标志（有突变点）
             case 5:{
                 Right_corner.Curve_Row = Circular_Detection(1, 0, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::r_black);
                 if (Right_corner.Curve_Row != 0){
-                    my_draw_line(ImageProc::r_black[Right_corner.Curve_Row + 4], Right_corner.Curve_Row + 4, 
-                                0, 0, 
-                                MODE_AUTO_SLOPE, DIRECTION_DOWN_RIGHT, 0);
+                    my_draw_line(ImageProc::r_black[Right_corner.Curve_Row + 4], Right_corner.Curve_Row + 4, 20, 20, MODE_TWO_POINTS, DIRECTION_DOWN_RIGHT, 0);
                 }
-                if (Right_corner.Curve_Row > 25 && ImageProc::Right_BF.LostParam.sum > 2 && ImageProc::Right_BF.LostParam.start < 50){
+                if (Right_corner.Curve_Row > 45 && ImageProc::Right_BF.LostParam.sum > 2 && ImageProc::Right_BF.LostParam.start < 50){
                     Left_Island.State = 6;
-                }else if (Right_corner.Curve_Row == 0 && ImageProc::Right_BF.LostParam.sum > 25 && ImageProc::Right_BF.LostParam.start > 65){
+                }else if (Right_corner.Curve_Row == 0 && ImageProc::Right_BF.LostParam.sum > 25 && ImageProc::Right_BF.LostParam.start > 65 && ImageProc::Left_BF.LostParam.start < 55 && ImageProc::Mid_BF.LostParam.sum > 10){
                     Left_Island.State = 6;
                 }
-                    
                 break;
             }
+            //出环标志（无突变点）
             case 6:{
-                if (ImageProc::Right_BF.LostParam.sum > 30 && ImageProc::Right_BF.LostParam.start > 65){
+
+                my_draw_line(ImageProc::r_black[HEIGHT-10],HEIGHT-10,20,20,MODE_TWO_POINTS,DIRECTION_DOWN_RIGHT,0);
+                if(ImageProc::Right_BF.LostParam.sum < 10  && ImageProc::Right_BF.Var < 150  ){
                     Left_Island.State = 7;
                 }
-                for (uint8_t i = 10; i < 60; i++){
-                    ImageProc::l_black[i] = 1;
-                    ImageProc::r_black[i] = 1;
-                } 
-                my_draw_line(WIDTH - Left_Island.x1, 10, WIDTH - Left_Island.x2, 60,  MODE_TWO_POINTS, DIRECTION_DOWN_RIGHT, 0);
-
-                break;
+                break;           
             }
             case 7:{
-                Left_corner.U_y = island_Up(ImageProc::Left_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 0 ,ImageProc::l_black);
-
-                if (ImageProc::Right_BF.LostParam.sum < 15 || (Left_corner.U_y < HEIGHT - 20 && Left_corner.U_y > 5)){
+                Left_corner.U_y = island_Up(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff , 0, ImageProc::l_black);
+                Left_corner.Curve_Row = Circular_Detection(0, 0, ImageProc::Left_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::l_black);
+                if(Left_corner.U_y !=0 && Left_corner.Curve_Row != 0){
+                    my_draw_line(ImageProc::l_black[Left_corner.U_y],Left_corner.U_y,ImageProc::r_black[HEIGHT-1],HEIGHT-1,MODE_TWO_POINTS,DIRECTION_DOWN_LEFT,0);
+                }else if(Left_corner.U_y !=0){
+                    my_draw_line(ImageProc::l_black[Left_corner.U_y],Left_corner.U_y,0,0,MODE_AUTO_SLOPE,DIRECTION_UP_LEFT,0);
+                }else if(Left_corner.Curve_Row != 0){
+                    my_draw_line(ImageProc::l_black[Left_corner.Curve_Row],Left_corner.Curve_Row,0,0,MODE_FIXED_SLOPE,DIRECTION_DOWN_LEFT,-ImageProc::Right_BF.Slope);
+                }
+                if(ImageProc::Left_BF.LostParam.mid > 55 && Left_corner.Curve_Row == 0){
                     Left_Island.State = 8;
                 }
-                for (uint8_t i = 10; i < 60; i++){
-                    ImageProc::l_black[i] = 1;
-                    ImageProc::r_black[i] = 1;
-                } 
-                my_draw_line(WIDTH - Left_Island.x1, 10, WIDTH - Left_Island.x2, 60,  MODE_TWO_POINTS, DIRECTION_DOWN_RIGHT, 0);
                 break;
             }
             case 8:{
-                Left_corner.U_y = island_sideUp(ImageProc::Left_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 0 ,ImageProc::l_black);
-
-                if (Left_corner.U_y != 0){
-                    my_draw_line(ImageProc::l_black[Left_corner.U_y], Left_corner.U_y,
-                                    0, 0, 
-                                    MODE_AUTO_SLOPE, DIRECTION_UP_LEFT, 0);
-                }
-                if ((ImageProc::Left_BF.LostParam.sum < 30 && Left_corner.U_y < 30) || ImageProc::Left_BF.LostParam.start < 45){
+                if((ImageProc::Mid_BF.LostParam.sum < 2 && ImageProc::Left_BF.Var< 100 && ImageProc::Right_BF.Var< 100)|| ImageProc::Left_BF.LostParam.start < 30 || ImageProc::Right_BF.LostParam.start < 30){
                     Left_Island.State = 0;
                     clear();
+                    break;
                 }
-                break;
             }
-        }
-        //右环岛
-        switch (Right_Island.State)
-        {
-            case 0:{
-                //右边环岛
-                if (isHandling == 0 && Right_Island.enable &&
-                    Left_Island.State == 0 && Cross.State == 0 && Left_Tilt_Cross.State == 0 && Right_Tilt_Cross.State == 0 && 
-                    Zebra.State == 0 && Left_Roadblock.State == 0 && Right_Roadblock.State == 0 && Ramp.State == 0 &&
-                    ImageProc::state.cutoff >= 65 && // 截止行（不变）
-                    ((ImageProc::Left_BF.LostParam.start > 67 && ImageProc::Left_BF.LostParam.sum < 15) ||
-                     ImageProc::Left_BF.LostParam.sum < 2) && // 左边线特征（镜像）
-                    ((ImageProc::Right_BF.LostParam.sum > 6 || ImageProc::sec_loss_right.LostParam.sum > 6)&& ImageProc::Right_BF.LostParam.start < 50) && // 右边线特征（镜像）
-                    (ImageProc::Mid_BF.LostParam.sum < 2 )&& // 共同丢线特征（不变）
-                    ImageProc::Right_BF.Var > 200 && ImageProc::Left_BF.Var < 10 // 方差特征（镜像）
-                   )
-                {
-                    Right_corner.D_y = island_Down(HEIGHT - 4, HEIGHT - ImageProc::state.cutoff , 1, ImageProc::r_black);
-                    Right_Island.similar_flag = 1;
+            
 
-                    if (Right_corner.D_y != 0)
-                    {
-                        MenuSystem::beep_on();
+        }
+        // if(Left_Island.State > 0) printf("左环\n");
+        // ips200_show_int(20,180,Elem::Left_Island.State,1);
+
+        //右环
+        switch(Right_Island.State){
+            //判断圆环
+            case 0:{
+                if((Right_Tilt_Cross.State==0 && Left_Tilt_Cross.State==0 && Right_Island.enable &&
+                    Left_Island.State == 0 && Cross.State == 0  &&
+                    ImageProc::state.cutoff >= 65 && 
+                    ((ImageProc::Left_BF.LostParam.start > 67 && ImageProc::Left_BF.LostParam.sum < 15) ||
+                     ImageProc::Left_BF.LostParam.sum < 2) && 
+                    ((ImageProc::Right_BF.LostParam.sum > 6 || ImageProc::sec_loss_right.LostParam.sum > 6)&& ImageProc::Right_BF.LostParam.start < 50) && 
+                    (ImageProc::Mid_BF.LostParam.sum < 2 )&& 
+                    ImageProc::Right_BF.Var > 200 && ImageProc::Left_BF.Var < 10 
+                   )){
+                    Right_corner.D_y = island_Down(HEIGHT - 4, HEIGHT - ImageProc::state.cutoff , 0, ImageProc::r_black);
+                    Right_Island.similar_flag = 1;
+                    
+                    
+                    if(Right_corner.D_y != 0){
                         Right_Island.State = 1;
                     }
                 }
 
-                //右弯接右环
-                if (isHandling == 0 && Right_Island.enable &&
-                    Left_Island.State == 0 && Cross.State == 0 && // 镜像左边环岛的条件
-                    ImageProc::state.cutoff >= 65 && // 截止行（不变）
-                    ((ImageProc::Left_BF.LostParam.sum < 25 && ImageProc::Left_BF.LostParam.start > 67) ||
-                    ImageProc::Left_BF.LostParam.sum < 2) && 
-                    (ImageProc::Right_BF.LostParam.sum > 20 && ImageProc::Right_BF.LostParam.start > 55) &&
-                     ImageProc::Right_BF.Var > 80 && ImageProc::Left_BF.Var < 10 &&
-                    ImageProc::Left_BF.Slope > -2.5
-                    )
-                {
-                    // 调用环形检测函数处理左侧，参数调整为左侧相关
-                    Right_corner.Curve_Row = Circular_Detection(1, 0, ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::r_black);
-                    Left_corner.Curve_Row = Circular_Detection(0, 0, ImageProc::Left_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::l_black);
-
-                    if (Right_corner.Curve_Row != 0){
-                        Right_corner.U_y = island_Up(Right_corner.Curve_Row, HEIGHT - ImageProc::state.cutoff + 2, 1 ,ImageProc::r_black);
-                    }
-                    Right_Island.similar_flag = 1;
-
-                    if (Right_corner.Curve_Row != 0 && Right_corner.U_y != 0 && (Left_corner.Curve_Row < 10 || Left_corner.Curve_Row > HEIGHT - 10))
-                    {
-                        MenuSystem::beep_on();
-                        Right_Island.State = 2;
-                    }
-                }
-
                 break;
             }
-            case 1:{
-                Right_corner.D_y = island_Down(HEIGHT - 4, HEIGHT - ImageProc::state.cutoff + 2, 1 ,ImageProc::r_black);
-                Right_corner.Curve_Row = Circular_Detection(1, 0, ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::r_black);
 
-                if (Right_corner.D_y < Right_corner.Curve_Row + 10 && Right_corner.Curve_Row != 0){ Right_corner.D_y = 0;}
-                if (Right_corner.D_y != 0 && Right_corner.Curve_Row != 0){
-                    my_draw_line(ImageProc::r_black[Right_corner.Curve_Row], Right_corner.Curve_Row, 
-                                ImageProc::r_black[Right_corner.D_y], Right_corner.D_y, 
-                                MODE_TWO_POINTS, DIRECTION_DOWN_RIGHT, 0);
-                    Error::Err.mode = 0;
-                }else if (Right_corner.D_y != 0){
-                    my_draw_line(ImageProc::r_black[Right_corner.D_y], Right_corner.D_y, 
-                                0, 0, 
-                                MODE_AUTO_SLOPE, DIRECTION_DOWN_RIGHT, 0);
-                    Error::Err.mode = 0;
-                }else if (Right_corner.Curve_Row != 0){
-                    my_draw_line(ImageProc::r_black[Right_corner.Curve_Row], Right_corner.Curve_Row, 
-                                0, 0, 
-                                MODE_FIXED_SLOPE, DIRECTION_UP_RIGHT, -ImageProc::Left_BF.Slope);
-                    Error::Err.mode = 0;
+            //靠近补线（下拐点，突变点）
+            case 1:{
+                Right_corner.D_y = island_Down(HEIGHT - 4, HEIGHT - ImageProc::state.cutoff + 2, 1, ImageProc::r_black);
+                Right_corner.Curve_Row = Circular_Detection(1, 0, ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::r_black);
+                if((Right_corner.D_y < Right_corner.Curve_Row + 10 && Right_corner.Curve_Row != 0) || Right_corner.D_y < ImageProc::Right_BF.LostParam.mid ) Right_corner.D_y = 0;
+                if(Right_corner.D_y != 0 && Right_corner.Curve_Row != 0){
+                    my_draw_line(ImageProc::r_black[Right_corner.D_y],Right_corner.D_y,ImageProc::r_black[Right_corner.Curve_Row],Right_corner.Curve_Row,MODE_TWO_POINTS,DIRECTION_DOWN_RIGHT,0);
+
+                }else if(Right_corner.D_y != 0){
+                    my_draw_line(ImageProc::r_black[Right_corner.D_y],Right_corner.D_y,0,0,MODE_AUTO_SLOPE,DIRECTION_DOWN_RIGHT,0);
+                   
+                }else if(Right_corner.Curve_Row !=0){
+                    my_draw_line(ImageProc::r_black[Right_corner.Curve_Row],Right_corner.Curve_Row,0,0,MODE_FIXED_SLOPE,DIRECTION_UP_RIGHT,-ImageProc::Left_BF.Slope);
+                     
                 }else{
                     Error::Err.mode = -1;
                 }
-
+                
                 if (ImageProc::Right_BF.LostParam.sum > 30 && ImageProc::Right_BF.LostParam.start > 67){
                     Right_Island.State = 2;
                     Error::Err.mode = 0;
+
                 }
+
                 break;
             }
+            //靠近补线（突变点，上拐点）
             case 2:{
-                //右上拐点位置
-                static uint8_t state_count = 0;
-                Right_corner.Curve_Row = Circular_Detection(1, 0, HEIGHT - 5, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::r_black);
-                if (ImageProc::Right_BF.LostParam.mid > Right_corner.Curve_Row &&
-                     ImageProc::Right_BF.LostParam.start < 50){
+                Right_corner.Curve_Row = Circular_Detection(1, 0, ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::r_black);
+                Right_corner.U_y = island_Up(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff , 1, ImageProc::r_black);
+                if(ImageProc::Right_BF.LostParam.mid > Right_corner.Curve_Row && ImageProc::Right_BF.LostParam.start < 50){
                     Right_corner.Curve_Row = 0;
                 }
-                Right_corner.U_y = island_Up(ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 1 ,ImageProc::r_black);
-                
-                if (Right_corner.Curve_Row != 0){
-                    my_draw_line(ImageProc::r_black[Right_corner.Curve_Row], Right_corner.Curve_Row, 
-                                0, 0, 
-                                MODE_FIXED_SLOPE, DIRECTION_UP_RIGHT, -ImageProc::Left_BF.Slope);
+                if(Right_corner.Curve_Row != 0){
+                    my_draw_line(ImageProc::r_black[Right_corner.Curve_Row],Right_corner.Curve_Row,0,0,MODE_FIXED_SLOPE,DIRECTION_UP_RIGHT,-ImageProc::Left_BF.Slope);
                 }
 
-                if (Right_corner.U_y != 0 && Right_corner.Curve_Row != 0){
-                    my_draw_line(ImageProc::l_black[Right_corner.Curve_Row], Right_corner.Curve_Row, 
-                                ImageProc::r_black[Right_corner.U_y], Right_corner.U_y, 
-                                MODE_TWO_POINTS, DIRECTION_UP_LEFT, 0);
-                }else if (Right_corner.U_y != 0){
-                    my_draw_line(ImageProc::r_black[Right_corner.U_y], Right_corner.U_y, 
-                                ImageProc::l_black[HEIGHT - 10], HEIGHT - 10, 
-                                MODE_TWO_POINTS, DIRECTION_UP_LEFT, 0);
+                else if(Right_corner.U_y != 0){
+                    my_draw_line(ImageProc::r_black[Right_corner.U_y],Right_corner.U_y,ImageProc::l_black[HEIGHT-10],HEIGHT-10,MODE_TWO_POINTS,DIRECTION_DOWN_LEFT,0);
                 }
-
-                if ((Right_corner.Curve_Row == 0 || Right_corner.Curve_Row > 40) && state_count > 3){
-                    Right_Island.State = 3;
-                }
-
-                if (Right_corner.Curve_Row != 0){
-                    state_count++;
-                }else{
-                    state_count = 0;
+                if(Right_corner.Curve_Row == 0 || Right_corner.Curve_Row > 40){
+                    Right_Island.State=3;
                 }
                 break;
             }
+            //准备入环（上拐点）
             case 3:{
-                //右下角再次大面积丢线
-                Right_corner.U_y = island_Up(ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 1 ,ImageProc::r_black);
-                if (Right_corner.U_y != 0){
+                Right_corner.U_y = island_Up(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff + 2 , 1, ImageProc::r_black);
+                if(Right_corner.U_y != 0 && ImageProc::Right_BF.LostParam.start > 60){
                     Error::Err.limit = HEIGHT - Right_corner.U_y;
-                    my_draw_line(ImageProc::r_black[Right_corner.U_y], Right_corner.U_y, 
-                                ImageProc::l_black[HEIGHT - 10], HEIGHT - 10, 
-                                MODE_TWO_POINTS, DIRECTION_UP_LEFT, 0);
+
+                    my_draw_line(ImageProc::r_black[Right_corner.U_y],Right_corner.U_y,ImageProc::l_black[HEIGHT-15],HEIGHT-15,MODE_TWO_POINTS,DIRECTION_DOWN_LEFT,0);
+                    
                 }
 
-                if (ImageProc::Left_BF.LostParam.sum > 30){
+                if (ImageProc::Left_BF.LostParam.sum > 30 ){
                     Right_Island.State = 4;
                     ImageProc::state.range_l = ImageProc::r_black[Right_corner.U_y - 2];
                     Left_corner.U_y = Right_corner.U_y;
                 }
                 break;
             }
+            //入环（左上拐点变右上拐点）
             case 4:{
-                Error::Err.limit = HEIGHT - 1;
-                Left_corner.U_y = island_sideUp(ImageProc::Left_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 0 ,ImageProc::l_black);
+                Error::Err.limit = HEIGHT - 1; 
+                Left_corner.U_y = island_Up(ImageProc::Left_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 0 ,ImageProc::l_black);
                 if (Left_corner.U_y == 0) { Left_corner.U_y = Right_corner.U_y; }
-                if (Left_corner.U_y != 0){
-                    my_draw_line(ImageProc::l_black[Left_corner.U_y - 1], Left_corner.U_y - 1,
-                                 ImageProc::l_black[HEIGHT - 5], HEIGHT - 5, 
-                                 MODE_TWO_POINTS, DIRECTION_UP_LEFT, 0);
+                if(Left_corner.U_y != 0){
+                    my_draw_line(ImageProc::l_black[Left_corner.U_y-1],Left_corner.U_y-1,ImageProc::l_black[HEIGHT-5],HEIGHT-5,MODE_TWO_POINTS,DIRECTION_UP_LEFT,0);
                 }
-                if (ImageProc::Left_BF.LostParam.sum < 15 || 
-                    (ImageProc::l_black[ImageProc::Left_BF.LostParam.end - 2] < 5 )){
+
+                if (ImageProc::Left_BF.LostParam.sum < 5 ){
                     Right_Island.State = 5;
                     ImageProc::state.range_l = 10;
                 }
-                break;
+                break;  //48s
             }
+            //入环成功，找出环标志（有突变点）
             case 5:{
                 Left_corner.Curve_Row = Circular_Detection(0, 1, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::l_black);
                 if (Left_corner.Curve_Row != 0){
-                    my_draw_line(ImageProc::l_black[Left_corner.Curve_Row + 4], Left_corner.Curve_Row + 4, 
-                                0, 0, 
-                                MODE_AUTO_SLOPE, DIRECTION_DOWN_LEFT, 0);
+                    my_draw_line(ImageProc::l_black[Left_corner.Curve_Row + 4], Left_corner.Curve_Row + 4, WIDTH-10, 20, MODE_TWO_POINTS, DIRECTION_DOWN_LEFT, 0);
                 }
-                if (Left_corner.Curve_Row > 25 && ImageProc::Left_BF.LostParam.sum > 2 && ImageProc::Left_BF.LostParam.start < 50){
+                if (Left_corner.Curve_Row > 45 && ImageProc::Left_BF.LostParam.sum > 2 && ImageProc::Left_BF.LostParam.start < 50  ){
                     Right_Island.State = 6;
-                }else if (Left_corner.Curve_Row == 0 && ImageProc::Left_BF.LostParam.sum > 25 && ImageProc::Left_BF.LostParam.start > 65){
+                }else if (Left_corner.Curve_Row == 0 && ImageProc::Left_BF.LostParam.sum > 25 && ImageProc::Left_BF.LostParam.start > 65 && ImageProc::Right_BF.LostParam.start < 55 && ImageProc::Mid_BF.LostParam.sum > 10 ){
                     Right_Island.State = 6;
-                }                
+                }
                 break;
-            } 
+            }
+            //出环标志（无突变点）
             case 6:{
 
-                if (ImageProc::Left_BF.LostParam.sum > 30 && ImageProc::Left_BF.LostParam.start > 65){
+                my_draw_line(ImageProc::l_black[HEIGHT-5],HEIGHT-5,WIDTH-10,20,MODE_TWO_POINTS,DIRECTION_DOWN_LEFT,0);
+                if(ImageProc::Left_BF.LostParam.sum < 10  && ImageProc::Left_BF.Slope < -1  ){
                     Right_Island.State = 7;
                 }
-
-                for (uint8_t i = 10; i < 60; i++){
-                    ImageProc::r_black[i] = WIDTH - 1;
-                    ImageProc::l_black[i] = WIDTH - 1;
-                }
-                my_draw_line(Right_Island.x1, 10, Right_Island.x2, 60,  MODE_TWO_POINTS, DIRECTION_DOWN_LEFT, 0);
-
-                break;
+                break;             
             }
             case 7:{
-                Right_corner.U_y = island_Up(ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 1 ,ImageProc::r_black);
-                if (ImageProc::Left_BF.LostParam.sum < 15 || ( Right_corner.U_y < HEIGHT - 20 && Right_corner.U_y > 5)){
+                Right_corner.U_y = island_Up(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff , 1, ImageProc::r_black);
+                Right_corner.Curve_Row = Circular_Detection(0, 0, HEIGHT-1, Right_corner.U_y, ImageProc::r_black);
+                if(Right_corner.U_y >= Right_corner.Curve_Row)  Right_corner.Curve_Row=0;
+                if(Right_corner.U_y !=0 && Right_corner.Curve_Row != 0){
+                    my_draw_line(ImageProc::r_black[Right_corner.U_y],Right_corner.U_y,ImageProc::l_black[HEIGHT-1],HEIGHT-1,MODE_TWO_POINTS,DIRECTION_DOWN_RIGHT,0);
+                 }else if(Right_corner.U_y !=0){
+                    my_draw_line(ImageProc::r_black[Right_corner.U_y],Right_corner.U_y,0,0,MODE_AUTO_SLOPE,DIRECTION_UP_RIGHT,0);
+                }else if(Right_corner.Curve_Row != 0){
+                    my_draw_line(ImageProc::r_black[Right_corner.Curve_Row],Right_corner.Curve_Row,0,0,MODE_FIXED_SLOPE,DIRECTION_DOWN_RIGHT,-ImageProc::Left_BF.Slope);
+                }
+                if(ImageProc::Right_BF.LostParam.mid > 55 && Right_corner.Curve_Row == 0){
                     Right_Island.State = 8;
                 }
-                for (uint8_t i = 10; i < 60; i++){
-                    ImageProc::r_black[i] = WIDTH - 1;
-                    ImageProc::l_black[i] = WIDTH - 1;
-                }
-                my_draw_line(Right_Island.x1, 10, Right_Island.x2, 60,  MODE_TWO_POINTS, DIRECTION_DOWN_LEFT, 0);
                 break;
             }
+
+
+
             case 8:{
-                Right_corner.U_y = island_sideUp(ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 1 ,ImageProc::r_black);
-                if (Right_corner.U_y != 0){
-                    my_draw_line(ImageProc::r_black[Right_corner.U_y], Right_corner.U_y,
-                                    0, 0, 
-                                    MODE_AUTO_SLOPE, DIRECTION_UP_RIGHT, 0);
-                }
-                if ((ImageProc::Right_BF.LostParam.sum < 30 && Right_corner.U_y < 30) || ImageProc::Right_BF.LostParam.start < 30){
+                if((ImageProc::Mid_BF.LostParam.sum < 2 && ImageProc::Right_BF.Var< 100 && ImageProc::Left_BF.Var< 100) || ImageProc::Left_BF.LostParam.start < 30 || ImageProc::Right_BF.LostParam.start < 30 ){
                     Right_Island.State = 0;
                     clear();
+                    break;
                 }
-                break;
             }
+            
+
         }
+        // printf("%d",Right_Island.State);
+        // if(Right_Island.State > 0 ) printf("右环\n");
+        // ips200_show_int(120,180,Elem::Right_Island.State,1);
+
     }
     
     //-------------------------------------------------------------------------------------------------------------------

@@ -189,7 +189,8 @@ uint8_t island_Up(uint8_t start, uint8_t end, uint8_t mode,
         {
             if (abs(Search_line[i - 2] - Search_line[i - 1]) < maxDelta &&
                 abs(Search_line[i - 1] - Search_line[i]) < maxDelta &&
-                Search_line[i] - Search_line[i + 2] > jumpThreshold
+                Search_line[i] - Search_line[i + 2] > jumpThreshold &&
+                Search_line[i] - Search_line[i + 3] > jumpThreshold && i < 50
                 )
             {
                 U_point = i;
@@ -204,7 +205,8 @@ uint8_t island_Up(uint8_t start, uint8_t end, uint8_t mode,
 
             if (abs(Search_line[i - 2] - Search_line[i - 1]) < maxDelta &&
                 abs(Search_line[i - 1] - Search_line[i]) < maxDelta &&
-                Search_line[i] - Search_line[i + 2] < -jumpThreshold
+                Search_line[i] - Search_line[i + 2] < -jumpThreshold &&
+                Search_line[i] - Search_line[i + 3] < -jumpThreshold && i < 50
                 )
             {
                 U_point = i;
@@ -230,14 +232,15 @@ uint8_t island_Down(uint8_t start, uint8_t end, uint8_t mode,
     if (end < 3) { end = 3; }
     if (start > HEIGHT - 3) { start = HEIGHT - 3; }
     uint8_t maxDelta = 3;
-    uint8_t jumpThreshold = 8;
+    uint8_t jumpThreshold = 10;
     if (mode == 0)
     {
         for (i = start; i > end; i--)
         {
-            if ((Search_line[i - 2] - Search_line[i]) < -jumpThreshold &&
+            if ((Search_line[i] - Search_line[i-2]) >= jumpThreshold &&
+                (Search_line[i] - Search_line[i-3]) >= jumpThreshold &&
                 abs(Search_line[i] - Search_line[i + 1]) < maxDelta &&
-                abs(Search_line[i + 1] - Search_line[i + 2]) < maxDelta
+                abs(Search_line[i + 1] - Search_line[i + 2]) < maxDelta 
                 )
             {
                 D_point = i;
@@ -249,7 +252,8 @@ uint8_t island_Down(uint8_t start, uint8_t end, uint8_t mode,
     {
         for (i = start; i > end; i--)
         {
-            if ((Search_line[i - 2] - Search_line[i]) > jumpThreshold &&
+            if ((Search_line[i] - Search_line[i-3]) <= -jumpThreshold &&
+                (Search_line[i] - Search_line[i-2]) <= -jumpThreshold &&
                 abs(Search_line[i] - Search_line[i + 1]) < maxDelta &&
                 abs(Search_line[i + 1] - Search_line[i + 2]) < maxDelta
                 )

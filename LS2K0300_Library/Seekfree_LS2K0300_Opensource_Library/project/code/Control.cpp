@@ -66,7 +66,7 @@ namespace Control{
     };
     //弯道速度
     Set_Speed CurveSpeed = {
-        .set_speed = 340,
+        .set_speed = 320,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
@@ -77,14 +77,14 @@ namespace Control{
     };
     //环岛速度
     Set_Speed IslandSpeed = {
-        .set_speed = 100,
+        .set_speed = 320,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
-        .l_kp = 13.5,
-        .l_ki = 0.20,
-        .r_kp = 15.0,
-        .r_ki = 0.26
+        .l_kp = 10,
+        .l_ki = 0.24,
+        .r_kp = 10.0,
+        .r_ki = 0.28
 
     };
 
@@ -102,24 +102,24 @@ namespace Control{
     };
     //短直道PID参数
     Set_Pid ShortStrPid = {
-        .kp = 200.0,
+        .kp = 230.0,
         .kp2 = 0.0,
         .gkd = 0.00,
         .kd = 20.0
     };
     //弯道PID参数
     Set_Pid CurvePid = {
-        .kp = 220.0,
-        .kp2 = 1.3,
-        .gkd = 0.0,
-        .kd = 70.0
-    };
-    //环岛PID参数
-    Set_Pid IslandPid = {
-        .kp = 0.0,
+        .kp = 240.0,
         .kp2 = 0.0,
         .gkd = 0.0,
         .kd = 0.0
+    };
+    //环岛PID参数
+    Set_Pid IslandPid = {
+        .kp = 220.0,
+        .kp2 = 0.0,
+        .gkd = 0.0,
+        .kd = 20.0
     };
 
 
@@ -151,12 +151,12 @@ namespace Control{
                         aim_speed.cur_R = LongStrSpeed.set_speed - my_min(LongStrSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
                     }
 
-                    // if(!MenuSystem::Car_flag.test){
-                        PID::speed_pid_L.kp = LongStrSpeed.l_kp;
-                        PID::speed_pid_L.ki = LongStrSpeed.l_ki;
-                        PID::speed_pid_R.kp = LongStrSpeed.r_kp;
-                        PID::speed_pid_R.ki = LongStrSpeed.r_ki;                       
-                    // }
+
+                    PID::speed_pid_L.kp = LongStrSpeed.l_kp;
+                    PID::speed_pid_L.ki = LongStrSpeed.l_ki;
+                    PID::speed_pid_R.kp = LongStrSpeed.r_kp;
+                    PID::speed_pid_R.ki = LongStrSpeed.r_ki;                       
+
 
                     PID::turn_pid.kp = LongStrPid.kp;
                     PID::turn_pid.kp2 = LongStrPid.kp2;
@@ -236,12 +236,12 @@ namespace Control{
                         aim_speed.cur_R = CurveSpeed.set_speed - my_min(CurveSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
                     }
 
-                    // if(!MenuSystem::Car_flag.test){
-                        PID::speed_pid_L.kp = CurveSpeed.l_kp;
-                        PID::speed_pid_L.ki = CurveSpeed.l_ki;
-                        PID::speed_pid_R.kp = CurveSpeed.r_kp;
-                        PID::speed_pid_R.ki = CurveSpeed.r_ki;                       
-                    // }
+
+                    PID::speed_pid_L.kp = CurveSpeed.l_kp;
+                    PID::speed_pid_L.ki = CurveSpeed.l_ki;
+                    PID::speed_pid_R.kp = CurveSpeed.r_kp;
+                    PID::speed_pid_R.ki = CurveSpeed.r_ki;                       
+
 
                     PID::turn_pid.kp = CurvePid.kp;
                     PID::turn_pid.kp2 = CurvePid.kp2;
@@ -276,12 +276,12 @@ namespace Control{
                         aim_speed.cur_R = IslandSpeed.set_speed - my_min(IslandSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
                     }
 
-                    // if(!MenuSystem::Car_flag.test){
-                        PID::speed_pid_L.kp = IslandSpeed.l_kp;
-                        PID::speed_pid_L.ki = IslandSpeed.l_ki;
-                        PID::speed_pid_R.kp = IslandSpeed.r_kp;
-                        PID::speed_pid_R.ki = IslandSpeed.r_ki;                       
-                    // }
+
+                    PID::speed_pid_L.kp = IslandSpeed.l_kp;
+                    PID::speed_pid_L.ki = IslandSpeed.l_ki;
+                    PID::speed_pid_R.kp = IslandSpeed.r_kp;
+                    PID::speed_pid_R.ki = IslandSpeed.r_ki;                       
+
 
                     PID::turn_pid.kp = IslandPid.kp;
                     PID::turn_pid.kp2 = IslandPid.kp2;

@@ -173,7 +173,6 @@ namespace {
             file << file_index++ << "=" << static_cast<int>(Elem::Right_Tilt_Cross.similar_flag) << "\n";
             // file << file_index++ << "=" << static_cast<int>(Elem::black_count) << "\n";
 
-            // file << file_index++ << "=" << static_cast<int>(Control::RoadSegment_t) << "\n";
 
             file << file_index++ << "=" << static_cast<float>(Elem::draw_slope) << "\n";
             file << file_index++ << "=" << static_cast<float>(ImageProc::Left_BF.Slope) << "\n";
@@ -185,6 +184,8 @@ namespace {
             file << file_index++ << "=" << static_cast<int>(ImageProc::Mid_BF.Var) << "\n";
 
             file << file_index++ << "=" << static_cast<int>(Elem::M_y) << "\n";
+
+            file << file_index++ << "=" << static_cast<int>(Control::RoadSegment_t) << "\n";
 
             // file << file_index++ << "=" << static_cast<int>(Elem::raw_count) << "\n";
             // file << file_index++ << "=" << static_cast<float>(Elem::roadblack_slope) << "\n";
