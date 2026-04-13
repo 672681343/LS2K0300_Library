@@ -3,7 +3,7 @@
 
 #include "zf_common_typedef.h"
 
-#define IPS200_DEFAULT_PENCOLOR         (RGB565_PINK   )                        // 默认的画笔颜色
+#define IPS200_DEFAULT_PENCOLOR         (RGB565_PINK    )                        // 默认的画笔颜色
 #define IPS200_DEFAULT_BGCOLOR          (RGB565_BLACK  )                        // 默认的背景颜色
 
 
@@ -19,6 +19,8 @@ void    ips200_show_uint        (uint16 x, uint16 y, const uint32 dat, uint8 num
 void    ips200_show_float       (uint16 x, uint16 y, const double dat, uint8 num, uint8 pointnum);
 
 void    ips200_show_gray_image  (uint16 x, uint16 y, const uint8 *image, uint16 width, uint16 height);
+
+void    ips200_show_rgb565_image   (uint16 x, uint16 y, const uint16 *image, uint16 width, uint16 height, uint16 dis_width, uint16 dis_height, uint8 color_mode);
 
 void    ips200_init             (const char *path);
 

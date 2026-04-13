@@ -488,7 +488,7 @@ uint8_t cross_Up(uint8_t start, uint8_t end, uint8_t mode,
     uint8_t U_point = 0;
     if (end < 3) { end = 3; }
     if (start > HEIGHT - 6) { start = HEIGHT - 6; }
-    int8_t maxDelta = 5;
+    int8_t maxDelta = 7;
     int8_t jumpThreshold = 15;
     if(mode == 0)
     {

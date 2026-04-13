@@ -394,7 +394,7 @@ namespace MenuSystem {
         {"crvgkd", TYPE_FLOAT,  .as_float = &Control::CurvePid.gkd, .persist = true},
 
         {"crvdif", TYPE_FLOAT, .as_float = &Control::CurveSpeed.dif, .persist = true},
-        {"difrep", TYPE_FLOAT, .as_float = &Control::dif_rep, .persist = true},
+
         {"crvspd", TYPE_INT16, .as_int16 = &Control::CurveSpeed.set_speed, .persist = true},
         {"crvErr", TYPE_UINT8, .as_uint8 = &Control::CurveSpeed.err_row, .persist = true},
 

@@ -16,8 +16,11 @@ using namespace cv;
 
 cv::Mat frame_rgb;      // 构建opencv对象 彩色
 cv::Mat frame_rgay;     // 构建opencv对象 灰度
+cv::Mat frame_rgb565;     // 构建opencv对象 彩色565
 
 uint8_t *rgay_image;    // 灰度图像数组指针
+
+uint16_t *rgb565_image;
 
 VideoCapture cap;
 
@@ -70,8 +73,13 @@ int8 wait_image_refresh()
     // rgb转灰度
     cv::cvtColor(frame_rgb, frame_rgay, cv::COLOR_BGR2GRAY);
 
+    cv::cvtColor(frame_rgb, frame_rgb565, cv::COLOR_BGR2BGR565);
+
     // cv对象转指针
     rgay_image = reinterpret_cast<uint8_t *>(frame_rgay.ptr(0));
+
+    rgb565_image = reinterpret_cast<uint16_t *>(frame_rgb565.ptr(0));
+
 
     return 0;
 }

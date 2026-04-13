@@ -67,6 +67,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/TCP.cpp.o.d"
   "CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Tool.cpp.o"
   "CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Tool.cpp.o.d"
+  "CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.cpp.o"
+  "CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.cpp.o.d"
   "CMakeFiles/project.dir/main.cpp.o"
   "CMakeFiles/project.dir/main.cpp.o.d"
   "project"

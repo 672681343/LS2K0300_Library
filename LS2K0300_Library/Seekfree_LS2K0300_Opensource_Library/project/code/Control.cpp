@@ -44,89 +44,90 @@ namespace Control{
 
     //长直道速度
     Set_Speed LongStrSpeed = {
-        .set_speed = 530,
+        .set_speed = 570,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
         .l_kp = 7,
         .l_ki = 0.26,
+        .l_kd = 9.5,
         .r_kp = 7,
-        .r_ki = 0.325
+        .r_ki = 0.25,
+        .r_kd = 9.3,
     };
     //短直道速度
     Set_Speed ShortStrSpeed = {
-        .set_speed = 480,
+        .set_speed = 490,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
-        .l_kp = 7,
+        .l_kp = 7.2,
         .l_ki = 0.26,
+        .l_kd = 9.5,
         .r_kp = 7,
-        .r_ki = 0.325
+        .r_ki = 0.25,
+        .r_kd = 9.3
     };
     //弯道速度
     Set_Speed CurveSpeed = {
-        .set_speed = 320,
+        .set_speed = 335,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
         .l_kp = 10,
         .l_ki = 0.24,
         .r_kp = 10,
-        .r_ki = 0.28
+        .r_ki = 0.24
     };
     //环岛速度
     Set_Speed IslandSpeed = {
-        .set_speed = 320,
+        .set_speed = 325,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
         .l_kp = 10,
         .l_ki = 0.24,
         .r_kp = 10.0,
-        .r_ki = 0.28
+        .r_ki = 0.24
 
     };
-
-
-
 
 /////////////转向pid/////////////////
 
     //长直道PID参数
     Set_Pid LongStrPid = {
-        .kp = 200.0,
+        .kp = 380.0,
         .kp2 = 0.0,
         .gkd = 0.00,
-        .kd = 20.0
+        .kd = 160.0
     };
     //短直道PID参数
     Set_Pid ShortStrPid = {
-        .kp = 230.0,
+        .kp = 320.0,
         .kp2 = 0.0,
         .gkd = 0.00,
-        .kd = 20.0
+        .kd = 180.0
     };
     //弯道PID参数
     Set_Pid CurvePid = {
-        .kp = 240.0,
+        .kp = 230.0,
         .kp2 = 0.0,
         .gkd = 0.0,
-        .kd = 0.0
+        .kd = 160.0
     };
     //环岛PID参数
     Set_Pid IslandPid = {
-        .kp = 220.0,
+        .kp = 215.0,
         .kp2 = 0.0,
         .gkd = 0.0,
-        .kd = 20.0
+        .kd = 0.0
     };
 
 
 
     uint8_t RoadSegment_t = SHORT; 
     uint16_t stop_count = 0; // 停车计帧
-    float dif_rep = 0; // 差速补偿
+
     //-------------------------------------------------------------------------------------------------------------------
     // 函数简介: 控制输出
     // 参数说明:
@@ -136,7 +137,6 @@ namespace Control{
     //-------------------------------------------------------------------------------------------------------------------
     void ControlOutput(uint8_t RoadSegment)
     {
-        const int16_t MAX_DELTA = 100;
         //RoadSegment = CURVE;
         if (MenuSystem::Car_flag.stop == 0){
             switch (RoadSegment)
@@ -144,11 +144,11 @@ namespace Control{
             case LOOG: 
                 if(MenuSystem::Car_flag.speed_loop){
                     if (Error::Err.current > 0){
-                        aim_speed.cur_L = LongStrSpeed.set_speed - my_min(LongStrSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
-                        aim_speed.cur_R = LongStrSpeed.set_speed + my_min(LongStrSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
+                        aim_speed.cur_L = LongStrSpeed.set_speed;
+                        aim_speed.cur_R = LongStrSpeed.set_speed;
                     }else{
-                        aim_speed.cur_L = LongStrSpeed.set_speed + my_min(LongStrSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
-                        aim_speed.cur_R = LongStrSpeed.set_speed - my_min(LongStrSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
+                        aim_speed.cur_L = LongStrSpeed.set_speed;
+                        aim_speed.cur_R = LongStrSpeed.set_speed;
                     }
 
 
@@ -185,11 +185,11 @@ namespace Control{
             case SHORT:
                 if(MenuSystem::Car_flag.speed_loop){
                     if (Error::Err.current > 0){
-                        aim_speed.cur_L = ShortStrSpeed.set_speed - my_min(ShortStrSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
-                        aim_speed.cur_R = ShortStrSpeed.set_speed + my_min(ShortStrSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
+                        aim_speed.cur_L = ShortStrSpeed.set_speed;
+                        aim_speed.cur_R = ShortStrSpeed.set_speed;
                     }else{
-                        aim_speed.cur_L = ShortStrSpeed.set_speed + my_min(ShortStrSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
-                        aim_speed.cur_R = ShortStrSpeed.set_speed - my_min(ShortStrSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
+                        aim_speed.cur_L = ShortStrSpeed.set_speed;
+                        aim_speed.cur_R = ShortStrSpeed.set_speed;
                     }
 
                     if(!MenuSystem::Car_flag.test){
@@ -221,19 +221,17 @@ namespace Control{
                 }
                 
 
- 
-
                 break;
             case CURVE:
                 //分段PD控制器
                 //SmartPD::SegmentPDController(Error::Err.current, CurvePid.kp, CurvePid.kd);
                 if(MenuSystem::Car_flag.speed_loop){
                     if (Error::Err.current > 0){
-                        aim_speed.cur_L = CurveSpeed.set_speed - my_min(CurveSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
-                        aim_speed.cur_R = CurveSpeed.set_speed + my_min(CurveSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
+                        aim_speed.cur_L = CurveSpeed.set_speed;
+                        aim_speed.cur_R = CurveSpeed.set_speed;
                     }else{
-                        aim_speed.cur_L = CurveSpeed.set_speed + my_min(CurveSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
-                        aim_speed.cur_R = CurveSpeed.set_speed - my_min(CurveSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
+                        aim_speed.cur_L = CurveSpeed.set_speed;
+                        aim_speed.cur_R = CurveSpeed.set_speed;
                     }
 
 
@@ -269,11 +267,11 @@ namespace Control{
                 
                 if(MenuSystem::Car_flag.speed_loop){
                     if (Error::Err.current > 0){
-                        aim_speed.cur_L = IslandSpeed.set_speed - my_min(IslandSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
-                        aim_speed.cur_R = IslandSpeed.set_speed + my_min(IslandSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
+                        aim_speed.cur_L = IslandSpeed.set_speed;
+                        aim_speed.cur_R = IslandSpeed.set_speed;
                     }else{
-                        aim_speed.cur_L = IslandSpeed.set_speed + my_min(IslandSpeed.dif * Error::Err.current * (1 + dif_rep), MAX_DELTA);
-                        aim_speed.cur_R = IslandSpeed.set_speed - my_min(IslandSpeed.dif * Error::Err.current * (1 - dif_rep), MAX_DELTA);
+                        aim_speed.cur_L = IslandSpeed.set_speed;
+                        aim_speed.cur_R = IslandSpeed.set_speed;
                     }
 
 
@@ -310,10 +308,7 @@ namespace Control{
                 break;
             }
         }else{
-            // PID::turn_pid.kp = ShortStrPid.kp;
-            // PID::turn_pid.kd = ShortStrPid.kd;
-            // aim_speed.cur_L = -5; // 停车速度
-            // aim_speed.cur_R = -5; // 停车速度
+
                     pwm.L = 0;
                     pwm.R = 0;
         }
@@ -340,17 +335,8 @@ namespace Control{
 
                 }
 
-                //MenuSystem::sh_down();
             }
 
-            // if(Elem::Zebra.count >= 4 && MenuSystem::Car_flag.init == 1 && MenuSystem::Car_flag.stop ==0){
-            //     stop_count ++;
-            //     if (stop_count > 2){ // 停止计数
-            //         MenuSystem::Car_flag.stop = 1;
-            //         stop_count = 0; // 重置停止计数
-            //     }
-            //     //MenuSystem::sh_down();
-            // }
         }
 
         if(MenuSystem::Car_flag.stop == 1){
@@ -443,7 +429,7 @@ namespace Control{
             ImageProc::Left_BF.LostParam.start > 65));
 
         return 
-            (ImageProc::state.cutoff < 60) &&  
+            (ImageProc::state.cutoff < 67) &&  
             (left_condition || right_condition) && 
             (ImageProc::Mid_BF.Var > 50);
     }
@@ -475,10 +461,13 @@ namespace Control{
             ImageProc::Left_BF.LostParam.sum < 5) ;
 
         return 
-            (ImageProc::state.cutoff < 55) && 
+            (ImageProc::state.cutoff < 64) && 
             ((left_condition && Error::Err.current > 25)|| (right_condition && Error::Err.current < -25)) &&
             (ImageProc::Mid_BF.Var < 70);
     }
+    
+
+
     /**
      * @brief 路段分类
      * 
@@ -504,7 +493,7 @@ namespace Control{
         //return CURVE;
         /*---------- 优先级从高到低判断 ----------*/
         // 特殊元素（立即更新lastType）
-        if (Elem::Left_Island.State == 1 || Elem::Right_Island.State == 1 || Elem::Zebra.State != 0) {
+        if (Elem::Left_Island.State == 1 || Elem::Right_Island.State == 1 ) {
             lastType = SHORT;
             return SHORT;
         }
@@ -541,6 +530,7 @@ namespace Control{
             lastType = CURVE;
             return CURVE;
         }
+
         if (isShortStraightCondition1()) { // 短直道判断函数
             lastType = SHORT;
             return SHORT;

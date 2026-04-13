@@ -945,6 +945,30 @@ home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/pro
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Tool.cpp.s
 .PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Tool.cpp.s
 
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.o: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.cpp.o
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.o
+
+# target to build an object file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.cpp.o
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.cpp.o
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.i: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.cpp.i
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.i
+
+# target to preprocess a source file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.cpp.i
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.cpp.i
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.s: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.cpp.s
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.s
+
+# target to generate assembly for a file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.cpp.s
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.cpp.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -1080,6 +1104,9 @@ help:
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Tool.o"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Tool.i"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Tool.s"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.o"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.i"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

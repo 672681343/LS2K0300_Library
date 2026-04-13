@@ -142,15 +142,6 @@ namespace {
             file << file_index++ << "=" << static_cast<int>(ImageProc::Mid_BF.LostParam.end) << "\n";
             file << file_index++ << "=" << static_cast<int>(ImageProc::Mid_BF.LostParam.sum) << "\n";
 
-            // file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_left.LostParam.start) << "\n";
-            // file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_left.LostParam.end) << "\n";
-            // file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_right.LostParam.start) << "\n";
-            // file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_right.LostParam.end) << "\n";
-            // file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_both.LostParam.start) << "\n";
-            // file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_both.LostParam.end) << "\n";
-
-
-
             file << file_index++ << "=" << static_cast<int>(Elem::Left_corner.U_y) << "\n";
             file << file_index++ << "=" << static_cast<int>(Elem::Left_corner.D_y) << "\n";
             file << file_index++ << "=" << static_cast<int>(Elem::Right_corner.U_y) << "\n";
@@ -174,7 +165,7 @@ namespace {
             // file << file_index++ << "=" << static_cast<int>(Elem::black_count) << "\n";
 
 
-            file << file_index++ << "=" << static_cast<float>(Elem::draw_slope) << "\n";
+
             file << file_index++ << "=" << static_cast<float>(ImageProc::Left_BF.Slope) << "\n";
             file << file_index++ << "=" << static_cast<float>(ImageProc::Right_BF.Slope) << "\n";
             file << file_index++ << "=" << static_cast<int>(ImageProc::Left_BF.Var) << "\n";
@@ -187,9 +178,22 @@ namespace {
 
             file << file_index++ << "=" << static_cast<int>(Control::RoadSegment_t) << "\n";
 
-            // file << file_index++ << "=" << static_cast<int>(Elem::raw_count) << "\n";
-            // file << file_index++ << "=" << static_cast<float>(Elem::roadblack_slope) << "\n";
-            // file << file_index++ << "=" << static_cast<int>(my_max(Elem::Left_Roadblock.State,Elem::Right_Roadblock.State)) << "\n";
+            file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_left.LostParam.start) << "\n";
+            file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_left.LostParam.end) << "\n";
+            file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_right.LostParam.start) << "\n";
+            file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_right.LostParam.end) << "\n";
+            file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_both.LostParam.start) << "\n";
+            file << file_index++ << "=" << static_cast<int>(ImageProc::sec_loss_both.LostParam.end) << "\n";
+
+
+            file << file_index++ << "=" << static_cast<int>(imu660ra_gyro_z) << "\n";
+            file << file_index++ << "=" << static_cast<int>(Pit::Err_out) << "\n";
+            file << file_index++ << "=" << static_cast<int>(Pit::Angle_out) << "\n";
+
+            file << file_index++ << "=" << static_cast<int>(Control::aim_speed.cur_L) << "\n";
+            file << file_index++ << "=" << static_cast<float>(Control::aim_speed.cur_R) << "\n";
+            file << file_index++ << "=" << static_cast<int>(Encoder::count.L) << "\n";
+            file << file_index++ << "=" << static_cast<int>(Encoder::count.R) << "\n";
 
             // file << file_index++ << "=" << static_cast<int>(Elem::Ramp.y) << "\n";
             // file << file_index++ << "=" << static_cast<int>(Elem::Ramp.State) << "\n";

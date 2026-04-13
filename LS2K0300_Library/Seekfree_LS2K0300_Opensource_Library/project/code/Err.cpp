@@ -38,7 +38,7 @@ namespace Error {
                  const std::array<bool, HEIGHT>& left_flags,
                  const std::array<bool, HEIGHT>& right_flags) {
         
-        center_line.fill(0); // 初始化为0
+        center_line.fill(WIDTH/2); // 初始化为0
         midline_calculate(state, l_black, r_black, left_flags, right_flags);
 
         Err.current=error_calculate(Err.row, state, Err.limit, center_line);
@@ -168,7 +168,12 @@ namespace Error {
         if (use_override){ temp = Err.rep;}
         else {temp = 1.0f;}
             
-        error_value = static_cast<int16_t>(temp * (WIDTH / 2 - center_line[HEIGHT - Err.tem_row - 1]));
+        if(!boxes.empty()){
+                error_value = static_cast<int16_t>(temp * (WIDTH / 2 - ImageProc::l_black[HEIGHT - Err.tem_row - 1]));   
+        }else{
+                error_value = static_cast<int16_t>(temp * (WIDTH / 2 - center_line[HEIGHT - Err.tem_row - 1]));
+        }
+
         error_value = std::clamp(error_value, static_cast<int16_t>(-MAX_ERROR), MAX_ERROR);
         Err.previous = error_value;
         //std::clamp(error_value, static_cast<int16_t>(-MAX_ERROR), MAX_ERROR);

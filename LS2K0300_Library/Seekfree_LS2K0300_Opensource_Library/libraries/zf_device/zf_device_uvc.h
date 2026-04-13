@@ -15,8 +15,10 @@ int8 wait_image_refresh();
 
 
 extern uint8_t *rgay_image;
+extern uint16_t *rgb565_image;
 
 extern cv::Mat frame_rgb;      
-extern cv::Mat frame_rgay;     
+extern cv::Mat frame_rgay;    
+extern cv::Mat frame_rgb565;  
 
 #endif

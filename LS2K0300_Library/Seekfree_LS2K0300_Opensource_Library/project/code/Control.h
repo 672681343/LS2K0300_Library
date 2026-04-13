@@ -33,9 +33,11 @@ namespace Control{
 
         float l_kp;
         float l_ki;
+        float l_kd;
 
         float r_kp;
         float r_ki;
+        float r_kd;
 
     }Set_Speed;
     
@@ -58,7 +60,6 @@ namespace Control{
 
     extern Motor_PWM BLDC; // BLDC电机PWM
     extern uint8_t RoadSegment_t; // 0:直道 1:弯道
-    extern float dif_rep; // 差速补偿
     
     extern Set_Speed LongStrSpeed;
     extern Set_Speed ShortStrSpeed;

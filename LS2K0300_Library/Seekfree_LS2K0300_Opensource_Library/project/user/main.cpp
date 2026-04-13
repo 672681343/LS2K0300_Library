@@ -1,4 +1,3 @@
-
 #include "zf_common_headfile.h"
 
 
@@ -57,7 +56,8 @@ int main(int, char**)
         ImageProc::image_measurement(Camera::bin_pixels,Camera::lcd_pixels);
         Elem::elem_judge();
         Error::error_get(ImageProc::state, ImageProc::l_black, ImageProc::r_black, ImageProc::left_flags, ImageProc::right_flags);
-        // ips200_show_gray_image(0, 0, Camera::lcd_pixels, WIDTH, HEIGHT);
+        
+        // ips200_show_gray_image(0, 0, rgay_image, UVC_WIDTH, UVC_HEIGHT);
 
         if (MenuSystem::Car_flag.init == 1  ){
 
@@ -73,7 +73,18 @@ int main(int, char**)
         Error::last_error_update();
         MenuSystem::key_shutdown();
         MenuSystem::Menu_display();
+
+        // ips200_show_rgb565_image(0,0,rgb565_image,160,120,60,20,0);
+
+        process_image(rgb565_image);
+        if(!boxes.empty()){
+            // const auto& box = boxes[0];
+            printf("Box: Area=%d at (%d,%d) size %dx%d\n",
+                   boxes[0].area, boxes[0].x, boxes[0].y, boxes[0].w, boxes[0].h);            
+        }
         
 
+        // ips200_show_rgb565_image(0, 0, rgb565_image, 160, 120, 160, 120, 0);
+        
     }
 }

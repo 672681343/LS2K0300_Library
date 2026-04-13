@@ -158,7 +158,7 @@
 
 
 //===================================================用户自定义文件===================================================
-#include "../model/loong_cnn_model_simple.h"
+// #include "../model/loong_cnn_model_simple.h"
 #include "many_define.h"
 #include "Camera.h"
 #include "ImageProc.h"
@@ -174,6 +174,7 @@
 #include "Saving.h"
 #include "TCP.h"
 #include "Control.h"
+#include "red_detecte.h"
 //===================================================用户自定义文件===================================================
 
 
