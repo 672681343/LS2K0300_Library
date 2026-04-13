@@ -22,6 +22,10 @@ namespace ImageProc {
     struct State {
         // 高频访问变量
         uint8_t start_point;       // 当前起始点
+
+        uint8_t start_point_l;
+        uint8_t start_point_r;
+
         uint8_t last_start_point;  // 上次起始点
         uint8_t cutoff;            // 扫描截止行
 

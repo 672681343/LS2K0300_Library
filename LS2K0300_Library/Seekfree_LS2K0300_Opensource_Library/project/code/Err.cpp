@@ -168,12 +168,7 @@ namespace Error {
         if (use_override){ temp = Err.rep;}
         else {temp = 1.0f;}
             
-        if(!boxes.empty()){
-                error_value = static_cast<int16_t>(temp * (WIDTH / 2 - ImageProc::l_black[HEIGHT - Err.tem_row - 1]));   
-        }else{
-                error_value = static_cast<int16_t>(temp * (WIDTH / 2 - center_line[HEIGHT - Err.tem_row - 1]));
-        }
-
+        error_value = static_cast<int16_t>(temp * (WIDTH / 2 - center_line[HEIGHT - Err.tem_row - 1]));
         error_value = std::clamp(error_value, static_cast<int16_t>(-MAX_ERROR), MAX_ERROR);
         Err.previous = error_value;
         //std::clamp(error_value, static_cast<int16_t>(-MAX_ERROR), MAX_ERROR);

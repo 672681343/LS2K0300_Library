@@ -122,6 +122,9 @@ namespace ImageProc {
         constexpr uint8_t max_col = WIDTH - BORDER_MARGIN - 1;
         state.start_point = (selected_col < BORDER_MARGIN) ? BORDER_MARGIN : 
                         (selected_col > max_col) ? max_col : selected_col;
+                    
+        state.start_point_l = L_longest;
+        state.start_point_r = R_longest;
 
 
         state.last_start_point = state.start_point;
@@ -146,10 +149,16 @@ namespace ImageProc {
     void finding_boundary(uint8_t* bin, uint8_t* lcd, uint8_t cut_off) {
         constexpr uint8_t FEATURE_MARGIN = 3;  // 特征检测安全边界
         uint8_t start;
+        uint8_t start_l;
+        uint8_t start_r;
         if(state.set_start_point == 0 ){
             start = state.start_point;
+            start_l = state.start_point_l;
+            start_r = state.start_point_r;
         }else{
             start = state.set_start_point;
+            start_l = state.set_start_point;
+            start_r = state.set_start_point;
         }
         if (start < FEATURE_MARGIN) start = FEATURE_MARGIN;
         
@@ -163,7 +172,7 @@ namespace ImageProc {
             uint8_t* row = bin + i * WIDTH;
             
             // 左侧扫描（start-2向左搜索）
-            for(uint8_t j = start + FEATURE_MARGIN; j > 0; --j) {
+            for(uint8_t j = start_l + FEATURE_MARGIN; j > 0; --j) {
                 uint8_t* pix = row + j;
                 // 检测黑-黑-白特征
                 if(pix[0] == 0 && pix[1] == 0 && pix[2] == 255) {
@@ -179,7 +188,7 @@ namespace ImageProc {
             }
     
             // 右侧扫描（start-2向左搜索）
-            for(uint8_t j = start - FEATURE_MARGIN; j < WIDTH-1; ++j) {
+            for(uint8_t j = start_r - FEATURE_MARGIN; j < WIDTH-1; ++j) {
                 uint8_t* pix = row + j;
                 // 检测黑-黑-白特征（反向）
                 if(pix[0] == 0 && pix[-1] == 0 && pix[-2] == 255) {
