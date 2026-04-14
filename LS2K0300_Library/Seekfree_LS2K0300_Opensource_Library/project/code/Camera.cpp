@@ -3,7 +3,7 @@
 #include <array>
 #include <algorithm>
 #include <cstdint>
-//测试
+//
 namespace Camera {
     // 全局变量定义
     uint8_t threshold = 128;                // 默认阈值(补偿后的值)
