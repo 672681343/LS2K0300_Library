@@ -15,7 +15,7 @@ namespace ImageProc {
     std::array<bool, HEIGHT> left_flags;        // 左边线丢线标志位
     std::array<bool, HEIGHT> right_flags;       // 右边线丢线标志位
 
-    State state;                                // 图像基础参数
+    State state;                                // 图像基础参数 --> 内有边界裁剪值
     BoundaryFeature Left_BF {};                 // 左边线特征
     BoundaryFeature Right_BF {};                // 右边线特征
     BoundaryFeature Mid_BF {};                  // 中线特征
@@ -57,7 +57,7 @@ namespace ImageProc {
     //-------------------------------------------------------------------------------------------------------------------
     void find_starting_point(uint8_t* bin, uint8_t* lcd, uint8_t start_L, uint8_t start_R, uint8_t start_mode) {
         const uint8_t center = (start_L + start_R) / 2; // 中心位置
-        uint8_t L_longest = center, R_longest = center; // 最长白列
+        uint8_t L_longest = center, R_longest = center; // 最长白列X坐标
         bool L_found = false, R_found = false;          // 是否找到
         uint8_t* last_row = bin + (HEIGHT-1) * WIDTH;   // 最后一行指针（相当于最底下的一行）
         white_line.fill(0);                             // 初始化为0
@@ -86,7 +86,7 @@ namespace ImageProc {
         }
         
         //查找右侧最长白列（镜像对称逻辑）
-        for(uint8_t j = center + 1; j < start_R; j++) {  // end_R 需要定义，可能是右侧终止位置
+        for(uint8_t j = center + 1; j < start_R; j++) {  // 右侧终止位置
             // 提前终止条件优化
             if(R_found &&                      
             last_row[j] == 0 &&                

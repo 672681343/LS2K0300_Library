@@ -21,19 +21,19 @@ namespace ImageProc {
     // 核心状态结构体
     struct State {
         // 高频访问变量
-        uint8_t start_point;       // 当前起始点
+        uint8_t start_point;       // 经过选择后的起始点（默认为屏幕中间列，就是最长白列0~185）
 
-        uint8_t start_point_l;
-        uint8_t start_point_r;
+        uint8_t start_point_l;     // 左侧起始点（左侧最长白列）
+        uint8_t start_point_r;     // 右侧起始点（右侧最长白列）
 
         uint8_t last_start_point;  // 上次起始点
-        uint8_t cutoff;            // 扫描截止行
+        uint8_t cutoff;            // 扫描截止行（默认是HEIGHT-1）
 
-        uint8_t set_start_point;   // 设置起始点
+        uint8_t set_start_point;   // 设置的起始点(实际使用的最长白列，默认为0)
         
         // 低频访问变量
-        uint8_t range_l;           // 左边界限制
-        uint8_t range_r;           // 右边界限制
+        uint8_t range_l;           // 左边界限制（默认10）
+        uint8_t range_r;           // 右边界限制（默认WIDTH-10）
         
         uint8_t mode;               // 起始点模式
         
@@ -63,7 +63,7 @@ namespace ImageProc {
     extern _SecLossDetect sec_loss_right; // 二次丢线区域
     extern _SecLossDetect sec_loss_both;  // 二次丢线区域
     // 外部可见的边界数据
-    extern std::array<uint8_t, WIDTH> white_line;  // 长白列记录
+    extern std::array<uint8_t, WIDTH> white_line;  // 长白列记录（0~69）
     
     extern std::array<uint16_t, HEIGHT> l_black;  // 左边界记录
     extern std::array<uint16_t, HEIGHT> r_black;  // 右边界记录
