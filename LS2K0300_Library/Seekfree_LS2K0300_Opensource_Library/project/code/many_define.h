@@ -7,9 +7,9 @@
 //上位机保存参数 1：图像参数 0：控制参数
 #define Saving_param    (1)
 //TCP传参  1：启动  0关闭
-#define TCP_MODE        (0)
+#define TCP_MODE        (1)
 // 配置参数（类型与SDK保持一致）
-#define SERVER_IP "192.168.1.105"
+#define SERVER_IP "192.168.1.102"
 // 端口号
 #define PORT            (8888)
 //图像处理模式 0：opencv图像处理 1：使用自己的图像处理 

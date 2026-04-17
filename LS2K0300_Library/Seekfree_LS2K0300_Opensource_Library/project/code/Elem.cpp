@@ -481,9 +481,9 @@ namespace Elem {
                 }
 
 
-                else if(Left_corner.U_y != 0){
-                    my_draw_line(ImageProc::l_black[Left_corner.U_y],Left_corner.U_y,ImageProc::r_black[HEIGHT-10],HEIGHT-10,MODE_TWO_POINTS,DIRECTION_DOWN_RIGHT,0);
-                }
+                // else if(Left_corner.U_y != 0){
+                //     my_draw_line(ImageProc::l_black[Left_corner.U_y],Left_corner.U_y,ImageProc::r_black[HEIGHT-10],HEIGHT-10,MODE_TWO_POINTS,DIRECTION_DOWN_RIGHT,0);
+                // }
                 if(Left_corner.Curve_Row == 0 || Left_corner.Curve_Row > 40){
                     Left_Island.State=3;
                 }
@@ -505,15 +505,16 @@ namespace Elem {
             }
             //入环（左上拐点变右上拐点）
             case 4:{
-                Error::Err.limit = HEIGHT - 1; 
+            
                 Right_corner.U_y = island_Up(ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 1 ,ImageProc::r_black);
-                if (Right_corner.U_y == 0) { Right_corner.U_y = Left_corner.U_y; }
+
                 if(Right_corner.U_y != 0){
                     my_draw_line(ImageProc::r_black[Right_corner.U_y-1],Right_corner.U_y-1,ImageProc::r_black[HEIGHT-5],HEIGHT-5,MODE_TWO_POINTS,DIRECTION_UP_RIGHT,0);
                 }
                 if (ImageProc::Right_BF.LostParam.sum < 5 ){
                     Left_Island.State = 5;
                     ImageProc::state.range_r = WIDTH - 10;
+                    Error::Err.limit = HEIGHT - 1; 
                 }
                 break;
             }
@@ -629,9 +630,9 @@ namespace Elem {
                     my_draw_line(ImageProc::r_black[Right_corner.Curve_Row],Right_corner.Curve_Row,0,0,MODE_FIXED_SLOPE,DIRECTION_UP_RIGHT,-ImageProc::Left_BF.Slope);
                 }
 
-                else if(Right_corner.U_y != 0){
-                    my_draw_line(ImageProc::r_black[Right_corner.U_y],Right_corner.U_y,ImageProc::l_black[HEIGHT-10],HEIGHT-10,MODE_TWO_POINTS,DIRECTION_DOWN_LEFT,0);
-                }
+                // else if(Right_corner.U_y != 0){
+                //     my_draw_line(ImageProc::r_black[Right_corner.U_y],Right_corner.U_y,ImageProc::l_black[HEIGHT-10],HEIGHT-10,MODE_TWO_POINTS,DIRECTION_DOWN_LEFT,0);
+                // }
                 if(Right_corner.Curve_Row == 0 || Right_corner.Curve_Row > 40){
                     Right_Island.State=3;
                 }
@@ -656,9 +657,8 @@ namespace Elem {
             }
             //入环（左上拐点变右上拐点）
             case 4:{
-                Error::Err.limit = HEIGHT - 1; 
+                
                 Left_corner.U_y = island_Up(ImageProc::Left_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 0 ,ImageProc::l_black);
-                if (Left_corner.U_y == 0) { Left_corner.U_y = Right_corner.U_y; }
                 if(Left_corner.U_y != 0){
                     my_draw_line(ImageProc::l_black[Left_corner.U_y-1],Left_corner.U_y-1,ImageProc::l_black[HEIGHT-5],HEIGHT-5,MODE_TWO_POINTS,DIRECTION_UP_LEFT,0);
                 }
@@ -666,6 +666,7 @@ namespace Elem {
                 if (ImageProc::Left_BF.LostParam.sum < 5 ){
                     Right_Island.State = 5;
                     ImageProc::state.range_l = 10;
+                    Error::Err.limit = HEIGHT - 1; 
                 }
                 break;  //48s
             }

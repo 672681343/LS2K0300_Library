@@ -181,7 +181,7 @@ uint8_t island_Up(uint8_t start, uint8_t end, uint8_t mode,
     uint8_t U_point = 0;
     if (end < 3) { end = 3; }
     if (start > HEIGHT - 5) { start = HEIGHT - 5; }
-    uint8_t maxDelta = 3;
+    uint8_t maxDelta = 5;
     int jumpThreshold = 15;
     if (mode == 0)
     {
@@ -770,11 +770,11 @@ static inline void update_visual(uint8_t y, uint8_t hx,
         if (hx <= other[y]) other[y] = 1;  // 右边界覆盖左边界时，左边界同步到右边界坐标[1,5](@ref)
     }
 
-    // 安全写入可视化数据（保持不变）
-    uint32_t index = (uint32_t)y * WIDTH + hx;
-    if (index < WIDTH * HEIGHT) {
-        Camera::lcd_pixels[index] = 1;
-    }
+    // // 安全写入可视化数据（保持不变）
+    // uint32_t index = (uint32_t)y * WIDTH + hx;
+    // if (index < WIDTH * HEIGHT) {
+    //     Camera::lcd_pixels[index] = 1;
+    // }
 }
 //补线内部函数--------------------------------------------------------------------------------------
 

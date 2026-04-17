@@ -8,8 +8,8 @@ namespace Error {
         .previous = 0,
         .mode = 0,          
         .limit = HEIGHT - 1,
-        .row = 37,
-        .tem_row = 37,
+        .row = 40,
+        .tem_row = 40,
         .rep = 1.00
     };
     alignas(8) std::array<uint16_t, HEIGHT> center_line;    //中线数组
@@ -168,7 +168,16 @@ namespace Error {
         if (use_override){ temp = Err.rep;}
         else {temp = 1.0f;}
             
-        error_value = static_cast<int16_t>(temp * (WIDTH / 2 - center_line[HEIGHT - Err.tem_row - 1]));
+        if(!boxes.empty()){
+
+            error_value = static_cast<int16_t>(temp * (WIDTH / 2 - ImageProc::l_black[HEIGHT - Err.tem_row - 1]));
+        
+        }else{
+
+            error_value = static_cast<int16_t>(temp * (WIDTH / 2 - center_line[HEIGHT - Err.tem_row - 1]));
+
+        }
+
         error_value = std::clamp(error_value, static_cast<int16_t>(-MAX_ERROR), MAX_ERROR);
         Err.previous = error_value;
         //std::clamp(error_value, static_cast<int16_t>(-MAX_ERROR), MAX_ERROR);

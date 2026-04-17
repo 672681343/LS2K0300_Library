@@ -179,7 +179,7 @@ namespace Control{
 
                 }
 
-
+                Error::Err.row = LongStrSpeed.err_row;
  
                 break;
             case SHORT:
@@ -220,7 +220,8 @@ namespace Control{
 
                 }
                 
-
+                Error::Err.row = ShortStrSpeed.err_row;
+                
                 break;
             case CURVE:
                 //分段PD控制器
@@ -247,6 +248,9 @@ namespace Control{
                     PID::turn_pid.kd = CurvePid.kd;
 
 
+                    
+
+
 
                 }else{
 
@@ -261,6 +265,8 @@ namespace Control{
                     }
 
                 }
+
+                Error::Err.row = CurveSpeed.err_row;
 
                 break;
             case ISLAND:
@@ -278,7 +284,9 @@ namespace Control{
                     PID::speed_pid_L.kp = IslandSpeed.l_kp;
                     PID::speed_pid_L.ki = IslandSpeed.l_ki;
                     PID::speed_pid_R.kp = IslandSpeed.r_kp;
-                    PID::speed_pid_R.ki = IslandSpeed.r_ki;                       
+                    PID::speed_pid_R.ki = IslandSpeed.r_ki; 
+                    
+                    
 
 
                     PID::turn_pid.kp = IslandPid.kp;
@@ -301,6 +309,8 @@ namespace Control{
                     }
 
                 }
+
+                Error::Err.row = IslandSpeed.err_row;
 
                 break;
 

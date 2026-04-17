@@ -67,6 +67,10 @@ namespace ImageProc {
     
     extern std::array<uint16_t, HEIGHT> l_black;  // 左边界记录
     extern std::array<uint16_t, HEIGHT> r_black;  // 右边界记录
+
+    extern std::array<uint16_t, HEIGHT> last_l_black;  // 前一帧左边界记录
+    extern std::array<uint16_t, HEIGHT> last_r_black;  // 前一帧右边界记录
+
     extern std::array<uint16_t, HEIGHT> fit_l_black; // 左边界拟合
     extern std::array<uint16_t, HEIGHT> fit_r_black; // 右边界拟合
     extern std::array<bool, HEIGHT> left_flags;  // 左边界标志
@@ -79,4 +83,14 @@ namespace ImageProc {
     void finding_boundary(uint8_t* bin, uint8_t* lcd, uint8_t cut_off);
     void lost_line_statistics(uint8_t cut_off);
     void sec_lost_line_statistics(const uint8_t* bin, uint8_t x_left, uint8_t x_right, uint8_t cut_off);
+
+    void find_Left_Line(uint8_t* bin,uint8_t* lcd,uint8_t cut_off);
+    void find_Right_Line(uint8_t* bin,uint8_t* lcd,uint8_t cut_off);
+
+    void find_lane_boundary(uint8_t* bin, uint8_t* lcd, uint8_t cut_off);
+
+    void last_line_update(void);
+
+    void eight_sfinding_boundary(uint8_t* bin, uint8_t* lcd);
+
 }

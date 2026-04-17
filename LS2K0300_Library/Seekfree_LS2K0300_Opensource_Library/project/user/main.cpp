@@ -69,8 +69,9 @@ int main(int, char**)
             }
             Control::stop(0);
         }
-
+        ImageProc::last_line_update();
         Error::last_error_update();
+
         MenuSystem::key_shutdown();
         MenuSystem::Menu_display();
 

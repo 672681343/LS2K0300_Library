@@ -217,9 +217,9 @@ void save_rgb565_as_jpg(const char* filename, uint16_t* rgb565, int w, int h) {
 
 void process_image(uint16_t* rgb565_image) {
     
-    detect_red_regions(rgb565_image, IMG_WIDTH, IMG_HEIGHT, boxes, 40, 1100);
+    detect_red_regions(rgb565_image, IMG_WIDTH, IMG_HEIGHT, boxes, 20, 1100);
 
-    printf("Detected %zu boxes\n", boxes.size());
+    // printf("Detected %zu boxes\n", boxes.size());
     
     static int frame_count = 0;
     frame_count++;
@@ -251,3 +251,186 @@ void process_image(uint16_t* rgb565_image) {
     
 
 }
+
+// #include "red_detecte.h"
+// #include <queue>
+// #include <cstring>
+// #include <algorithm>
+// #include <cmath>
+// #include <opencv2/opencv.hpp>
+
+// #define IMG_WIDTH  160
+// #define IMG_HEIGHT 120
+// #define RGB565_YELLOW  0xFFE0
+// #define RGB565_WHITE   0xFFFF
+
+// // 红色像素判断
+// static bool is_red(uint16_t p) {
+//     uint8_t r = (p >> 11) & 0x1F;
+//     uint8_t g = (p >> 5) & 0x3F;
+//     uint8_t b = p & 0x1F;
+//     return (r >= 20) && (r > g + 8) && (r > b + 8);
+// }
+
+// // 计算OBB
+// static RotatedRedBox compute_obb(const std::vector<std::pair<int,int>>& pts) {
+//     int n = pts.size();
+//     float cx = 0, cy = 0;
+//     for (auto& p : pts) { cx += p.first; cy += p.second; }
+//     cx /= n; cy /= n;
+    
+//     float xx = 0, xy = 0, yy = 0;
+//     for (auto& p : pts) {
+//         float dx = p.first - cx, dy = p.second - cy;
+//         xx += dx*dx; xy += dx*dy; yy += dy*dy;
+//     }
+//     xx/=n; xy/=n; yy/=n;
+    
+//     float tr = xx + yy, dt = xx*yy - xy*xy;
+//     float la = (tr + sqrtf(tr*tr - 4*dt)) * 0.5f;
+//     float ang = atan2f(la - xx, xy);
+    
+//     float c = cosf(ang), s = sinf(ang), min_u=1e9, max_u=-1e9, min_v=1e9, max_v=-1e9;
+//     for (auto& p : pts) {
+//         float dx = p.first - cx, dy = p.second - cy;
+//         float u = dx*c + dy*s, v = -dx*s + dy*c;
+//         min_u = std::min(min_u, u); max_u = std::max(max_u, u);
+//         min_v = std::min(min_v, v); max_v = std::max(max_v, v);
+//     }
+    
+//     RotatedRedBox b;
+//     b.cx = cx; b.cy = cy;
+//     b.w = (max_u - min_u) * 0.5f;
+//     b.h = (max_v - min_v) * 0.5f;
+//     b.angle = ang;
+//     if (b.w < b.h) { std::swap(b.w, b.h); b.angle += 3.14159f/2; }
+//     while (b.angle > 3.14159f/2) b.angle -= 3.14159f;
+//     return b;
+// }
+
+// void detect_red_regions_rotated(uint16_t* img, int w, int h,
+//                                std::vector<RotatedRedBox>& boxes,
+//                                int min_a, int max_a) {
+//     int n = w*h;
+//     uint8_t *mask = new uint8_t[n], *vis = new uint8_t[n]();
+//     for (int i=0;i<n;i++) mask[i] = is_red(img[i]) ? 255 : 0;
+    
+//     boxes.clear();
+//     const int dx[4]={0,0,-1,1}, dy[4]={-1,1,0,0};
+    
+//     for (int y=0;y<h;y+=2) {
+//         for (int x=0;x<w;x+=2) {
+//             int id = y*w+x;
+//             if (!mask[id] || vis[id]) continue;
+            
+//             std::vector<std::pair<int,int>> pts;
+//             std::queue<std::pair<int,int>> q;
+//             q.push({x,y}); vis[id]=1;
+            
+//             while (!q.empty()) {
+//                 auto [cx,cy] = q.front(); q.pop();
+//                 pts.push_back({cx,cy});
+//                 for (int i=0;i<4;i++) {
+//                     int nx=cx+dx[i], ny=cy+dy[i];
+//                     if (nx<0||nx>=w||ny<0||ny>=h) continue;
+//                     int nid=ny*w+nx;
+//                     if (mask[nid] && !vis[nid]) { vis[nid]=1; q.push({nx,ny}); }
+//                 }
+//             }
+            
+//             if ((int)pts.size()<min_a || (int)pts.size()>max_a) continue;
+//             auto b = compute_obb(pts);
+//             b.area = pts.size();
+//             float dens = (4*b.w*b.h)>0 ? pts.size()/(4*b.w*b.h) : 0;
+//             if (dens > 0.3f) boxes.push_back(b);
+//         }
+//     }
+//     delete[] mask; delete[] vis;
+// }
+
+// void draw_rotated_rect_rgb565(uint16_t* img, int w, int h,
+//                              const RotatedRedBox& b, uint16_t col, int thick) {
+//     float c=cosf(b.angle), s=sinf(b.angle);
+//     float dx1=b.w*c, dy1=b.w*s, dx2=-b.h*s, dy2=b.h*c;
+//     int p[4][2] = {
+//         {(int)(b.cx+dx1+dx2), (int)(b.cy+dy1+dy2)},
+//         {(int)(b.cx+dx1-dx2), (int)(b.cy+dy1-dy2)},
+//         {(int)(b.cx-dx1-dx2), (int)(b.cy-dy1-dy2)},
+//         {(int)(b.cx-dx1+dx2), (int)(b.cy-dy1+dy2)}
+//     };
+    
+//     auto line = [&](int x0,int y0,int x1,int y1) {
+//         int dx=abs(x1-x0), sx=x0<x1?1:-1;
+//         int dy=-abs(y1-y0), sy=y0<y1?1:-1;
+//         int err=dx+dy;
+//         while (1) {
+//             if (x0>=0&&x0<w&&y0>=0&&y0<h) img[y0*w+x0]=col;
+//             if (x0==x1&&y0==y1) break;
+//             int e2=2*err;
+//             if (e2>=dy) { err+=dy; x0+=sx; }
+//             if (e2<=dx) { err+=dx; y0+=sy; }
+//         }
+//     };
+    
+//     for (int t=0;t<thick;t++)
+//         for (int i=0;i<4;i++)
+//             line(p[i][0]+(i<2?t:-t), p[i][1]+(i==0||i==3?t:-t),
+//                  p[(i+1)%4][0]+((i+1)%4<2?t:-t), p[(i+1)%4][1]+((i+1)%4==0||(i+1)%4==3?t:-t));
+// }
+
+// uint16_t* crop_rotated_image(uint16_t* src, int sw, int sh, const RotatedRedBox& b, int margin) {
+//     int dw = (int)(b.w*2+0.5f)+ 2*margin, dh = (int)(b.h*2+0.5f)+ 2*margin;
+//     if (dw<=0||dh<=0) return nullptr;
+//     uint16_t* dst = (uint16_t*)malloc(dw*dh*sizeof(uint16_t));
+//     if (!dst) return nullptr;
+    
+//     float c=cosf(b.angle), s=sinf(b.angle);
+//     for (int y=0;y<dh;y++) {
+//         for (int x=0;x<dw;x++) {
+//             float dx=x-dw*0.5f, dy=y-dh*0.5f;
+//             int sx=(int)(b.cx+(dx*c-dy*s)+0.5f);
+//             int sy=(int)(b.cy+(dx*s+dy*c)+0.5f);
+//             dst[y*dw+x] = (sx>=0&&sx<sw&&sy>=0&&sy<sh) ? src[sy*sw+sx] : 0;
+//         }
+//     }
+//     return dst;
+// }
+
+// // 你的原有保存函数
+// void save_rgb565_as_jpg(const char* fn, uint16_t* rgb565, int w, int h) {
+//     cv::Mat bgr(h, w, CV_8UC3);
+//     for (int y=0;y<h;y++) {
+//         for (int x=0;x<w;x++) {
+//             uint16_t p = rgb565[y*w+x];
+//             uint8_t r = ((p>>11)&0x1F)<<3, g = ((p>>5)&0x3F)<<2, b = (p&0x1F)<<3;
+//             bgr.at<cv::Vec3b>(y,x) = cv::Vec3b(b,g,r);
+//         }
+//     }
+//     std::vector<int> params = {cv::IMWRITE_JPEG_QUALITY, 95};
+//     cv::imwrite(fn, bgr, params);
+// }
+
+// void process_image(uint16_t* rgb565_image) {
+//     static std::vector<RotatedRedBox> boxes;
+//     static int frame_count = 0;
+    
+//     detect_red_regions_rotated(rgb565_image, IMG_WIDTH, IMG_HEIGHT, boxes, 40, 1100);
+    
+//     if (!boxes.empty()) {
+//         const auto& b = boxes[0];
+//         frame_count++;
+        
+//         // 画旋转框
+//         draw_rotated_rect_rgb565(rgb565_image, IMG_WIDTH, IMG_HEIGHT, b, RGB565_WHITE, 2);
+        
+//         // 裁剪并保存
+//         uint16_t* cropped = crop_rotated_image(rgb565_image, IMG_WIDTH, IMG_HEIGHT, b,20);
+//         if (cropped) {
+//             char path[128];
+//             int dw=(int)(b.w*2+0.5f) + 40, dh=(int)(b.h*2+0.5f) + 40;
+//             snprintf(path, sizeof(path), "/tmp/redbox_%d_%d.jpg", frame_count, b.area);
+//             save_rgb565_as_jpg(path, cropped, dw, dh);
+//             free(cropped);
+//         }
+//     }
+// }

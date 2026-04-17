@@ -12,6 +12,9 @@ namespace ImageProc {
     std::array<uint16_t, HEIGHT> r_black;       // 右边线数组
     std::array<uint16_t, HEIGHT> fit_r_black;   // 右边线拟合数组
 
+    std::array<uint16_t, HEIGHT> last_l_black;
+    std::array<uint16_t, HEIGHT> last_r_black;
+
     std::array<bool, HEIGHT> left_flags;        // 左边线丢线标志位
     std::array<bool, HEIGHT> right_flags;       // 右边线丢线标志位
 
@@ -31,10 +34,18 @@ namespace ImageProc {
     // 备注信息:
     //-------------------------------------------------------------------------------------------------------------------
     void image_measurement(uint8_t* bin, uint8_t* lcd) {
-        //找起始点
+        // //找起始点
         find_starting_point(bin, lcd, state.range_l, state.range_r, state.mode);
-        //找边界
-        finding_boundary(bin, lcd, state.cutoff);
+        // //找边界
+        if(!boxes.empty()){
+            if(state.cutoff > 10){
+                eight_sfinding_boundary(bin, lcd);            
+            }
+        }else{
+            finding_boundary(bin, lcd, state.cutoff);
+        }
+
+        
         //丢线统计
         lost_line_statistics(state.cutoff);
         //二次丢线统计
@@ -67,19 +78,20 @@ namespace ImageProc {
             // 提前终止条件优化
             if(L_found && 
             last_row[j] == 0 && 
-            last_row[j+1] == 0 && 
-            last_row[j+2] == 0) break;
+            last_row[j-1] == 0 && 
+            last_row[j-2] == 0) break;
             
             // 纵向扫描优化：使用行指针连续访问
             uint8_t* current_row = last_row + j; // 列初始位置
             for(uint8_t i = 0; i < HEIGHT; ++i) {
-                if ((*(current_row + WIDTH) == 255 &&  *current_row == 0) || (*(current_row + WIDTH) == 0 && *current_row == 0)) break;
+                if (*current_row == 0 &&  *(current_row - WIDTH) == 0) break; 
                 white_line[j]++; // 统计白列长度
                 current_row -= WIDTH; // 向上移动一行（从底部到顶部）
             }
             //printf("j=%d,count=%d\n",j,white_line[j]);
             // 合并更新逻辑
             if(white_line[j] > white_line[L_longest]) {
+
                 L_longest = j;
                 L_found = true;
             }
@@ -90,8 +102,8 @@ namespace ImageProc {
             // 提前终止条件优化
             if(R_found &&                      
             last_row[j] == 0 &&                
-            last_row[j-1] == 0 && 
-            last_row[j-2] == 0) break;         
+            last_row[j+1] == 0 && 
+            last_row[j+2] == 0) break;         
             
             // 纵向扫描优化：使用行指针连续访问
             uint8_t* current_row = last_row + j; // 列初始位置
@@ -103,6 +115,7 @@ namespace ImageProc {
             //printf("j=%d,count=%d\n",j,white_line[j]);
             // 合并更新逻辑
             if(white_line[j] > white_line[R_longest]) { 
+
                 R_longest = j;
                 R_found = true;
             }
@@ -122,21 +135,17 @@ namespace ImageProc {
         constexpr uint8_t max_col = WIDTH - BORDER_MARGIN - 1;
         state.start_point = (selected_col < BORDER_MARGIN) ? BORDER_MARGIN : 
                         (selected_col > max_col) ? max_col : selected_col;
-                    
-        state.start_point_l = L_longest;
-        state.start_point_r = R_longest;
-
 
         state.last_start_point = state.start_point;
 
         // // 5. 可视化标记优化（指针操作代替二维索引）
-        // const uint8_t col_pos = state.start_point;
-        // uint8_t* ptr = lcd + (HEIGHT - 1) * WIDTH + col_pos; // 初始位置：最底部
+        const uint8_t col_pos = state.start_point;
+        uint8_t* ptr = lcd + (HEIGHT - 1) * WIDTH + col_pos; // 初始位置：最底部
 
-        // for(uint8_t i = 0; i < state.cutoff; ++i) {
-        //     *ptr = 0;                // 写当前像素
-        //     ptr -= WIDTH;            // 指针上移一行
-        // }
+        for(uint8_t i = 0; i < state.cutoff; ++i) {
+            *ptr = 0;                // 写当前像素
+            ptr -= WIDTH;            // 指针上移一行
+        }
     }
 
     //-------------------------------------------------------------------------------------------------------------------
@@ -149,16 +158,10 @@ namespace ImageProc {
     void finding_boundary(uint8_t* bin, uint8_t* lcd, uint8_t cut_off) {
         constexpr uint8_t FEATURE_MARGIN = 3;  // 特征检测安全边界
         uint8_t start;
-        uint8_t start_l;
-        uint8_t start_r;
         if(state.set_start_point == 0 ){
             start = state.start_point;
-            start_l = state.start_point_l;
-            start_r = state.start_point_r;
         }else{
             start = state.set_start_point;
-            start_l = state.set_start_point;
-            start_r = state.set_start_point;
         }
         if (start < FEATURE_MARGIN) start = FEATURE_MARGIN;
         
@@ -172,7 +175,7 @@ namespace ImageProc {
             uint8_t* row = bin + i * WIDTH;
             
             // 左侧扫描（start-2向左搜索）
-            for(uint8_t j = start_l + FEATURE_MARGIN; j > 0; --j) {
+            for(uint8_t j = start + FEATURE_MARGIN; j > 0; --j) {
                 uint8_t* pix = row + j;
                 // 检测黑-黑-白特征
                 if(pix[0] == 0 && pix[1] == 0 && pix[2] == 255) {
@@ -188,7 +191,7 @@ namespace ImageProc {
             }
     
             // 右侧扫描（start-2向左搜索）
-            for(uint8_t j = start_r - FEATURE_MARGIN; j < WIDTH-1; ++j) {
+            for(uint8_t j = start - FEATURE_MARGIN; j < WIDTH-1; ++j) {
                 uint8_t* pix = row + j;
                 // 检测黑-黑-白特征（反向）
                 if(pix[0] == 0 && pix[-1] == 0 && pix[-2] == 255) {
@@ -204,7 +207,175 @@ namespace ImageProc {
             
         }
     }
-    
+
+void eight_sfinding_boundary(uint8_t* bin, uint8_t* lcd){
+    // 初始化默认值
+    l_black.fill(0);          // 左边默认：最左侧
+    r_black.fill(WIDTH-1);    // 右边默认：最右侧
+    left_flags.fill(false);
+    right_flags.fill(false);
+
+    // 八方向数组
+    const int8_t Dx_l[8] = {1, 1, 0, -1, -1, -1, 0, 1};
+    const int8_t Dy_l[8] = {0, -1, -1, -1, 0, 1, 1, 1};
+    const int8_t Dx_r[8] = {-1, -1, 0, 1, 1, 1, 0, -1};
+    const int8_t Dy_r[8] = {0, -1, -1, -1, 0, 1, 1, 1};
+
+    uint8_t Rx_l = 0;         // 左边当前X
+    uint8_t Ry_l = HEIGHT - 3;
+    uint8_t Rx_r = WIDTH - 1; // 右边当前X
+    uint8_t Ry_r = HEIGHT - 3;
+
+    // 核心丢线标志位
+    bool left_found = false;
+    bool right_found = false;
+
+    const uint8_t scan_start = 0;
+    const uint8_t scan_end = WIDTH - 1;
+    const uint8_t SEARCH_LIMIT = 12;  // 丢线搜索范围限制（可微调）
+
+    // --------------------- 底部起点 ---------------------
+    // 左起点
+    for(uint8_t j = scan_start; j < scan_end; j++){
+        if(bin[(HEIGHT-3)*WIDTH + j] == 255 && bin[(HEIGHT-3)*WIDTH + j-1] == 0){
+            l_black[HEIGHT-3] = j;
+            left_flags[HEIGHT-3] = true;
+            Rx_l = j;
+            left_found = true;
+            break;
+        }
+    }
+    // 右起点
+    for(uint8_t j = scan_end-1; j > scan_start; j--){
+        if(bin[(HEIGHT-3)*WIDTH + j] == 255 && bin[(HEIGHT-3)*WIDTH + j+1] == 0){
+            r_black[HEIGHT-3] = j;
+            right_flags[HEIGHT-3] = true;
+            Rx_r = j;
+            right_found = true;
+            break;
+        }
+    }
+
+    // --------------------- 左边界追踪 ---------------------
+    uint16_t iter_l = 0;
+    const uint16_t MAX_ITER = 300;
+    while(Ry_l > HEIGHT - state.cutoff && iter_l < MAX_ITER) {
+        iter_l++;
+        bool moved = false;
+
+        // 左边丢线 → 向上搜索，X只能变大（向右），且有限制
+        if(!left_found) {
+            l_black[Ry_l] = Rx_l;  // 使用上一行X作为默认
+            left_flags[Ry_l] = false;
+            Ry_l--;
+
+            // 向上重新搜索：左边X必须 > 原来X，且在限制范围内
+            if(Ry_l > HEIGHT - state.cutoff) {
+                int start_x = Rx_l;
+                int end_x = Rx_l + SEARCH_LIMIT;
+                if(end_x >= WIDTH) end_x = WIDTH-1;
+
+                for(int x = start_x; x <= end_x; x++){
+                    if(bin[Ry_l * WIDTH + x] == 255) {
+                        left_found = true;
+                        Rx_l = x;
+                        break;
+                    }
+                }
+            }
+            continue;
+        }
+
+        // 正常搜边
+        for(uint8_t d = 0; d < 8; d++) {
+            int new_x = Rx_l + Dx_l[d];
+            int new_y = Ry_l + Dy_l[d];
+            if(new_x < 0 || new_x >= WIDTH || new_y < 0 || new_y >= HEIGHT) continue;
+
+            // 左边约束：新X必须 >= 旧X（向右走，不回头）
+            if(new_x < Rx_l - 1) continue;
+
+            if(bin[new_y * WIDTH + new_x] == 255 &&
+               bin[(Ry_l + Dy_l[(d+1)%8]) * WIDTH + (Rx_l + Dx_l[(d+1)%8])] == 0)
+            {
+                if(d > 0 && d < 4) {
+                    l_black[new_y] = new_x;
+                    left_flags[new_y] = true;
+                    uint8_t lcd_col = new_x + 2;
+                    if(lcd_col < WIDTH) lcd[new_y * WIDTH + lcd_col] = 0;
+                }
+                Rx_l = new_x;
+                Ry_l = new_y;
+                moved = true;
+                break;
+            }
+        }
+
+        if(!moved) {
+            left_found = false;
+        }
+    }
+
+    // --------------------- 右边界追踪 ---------------------
+    uint16_t iter_r = 0;
+    while(Ry_r > HEIGHT - state.cutoff && iter_r < MAX_ITER) {
+        iter_r++;
+        bool moved = false;
+
+        // 右边丢线 → 向上搜索，X只能变小（向左），且有限制
+        if(!right_found) {
+            r_black[Ry_r] = Rx_r;  // 使用上一行X作为默认
+            right_flags[Ry_r] = false;
+            Ry_r--;
+
+            // 向上重新搜索：右边X必须 < 原来X，且在限制范围内
+            if(Ry_r > HEIGHT - state.cutoff) {
+                int start_x = Rx_r;
+                int end_x = Rx_r - SEARCH_LIMIT;
+                if(end_x < 0) end_x = 0;
+
+                for(int x = start_x; x >= end_x; x--){
+                    if(bin[Ry_r * WIDTH + x] == 255) {
+                        right_found = true;
+                        Rx_r = x;
+                        break;
+                    }
+                }
+            }
+            continue;
+        }
+
+        // 正常搜边
+        for(uint8_t d = 0; d < 8; d++) {
+            int new_x = Rx_r + Dx_r[d];
+            int new_y = Ry_r + Dy_r[d];
+            if(new_x < 0 || new_x >= WIDTH || new_y < 0 || new_y >= HEIGHT) continue;
+
+            // 右边约束：新X必须 <= 旧X（向左走，不回头）
+            if(new_x > Rx_r + 1) continue;
+
+            if(bin[new_y * WIDTH + new_x] == 255 &&
+               bin[(Ry_r + Dy_r[(d+1)%8]) * WIDTH + (Rx_r + Dx_r[(d+1)%8])] == 0)
+            {
+                if(d > 0 && d < 4) {
+                    r_black[new_y] = new_x;
+                    right_flags[new_y] = true;
+                    uint8_t lcd_col = new_x - 2;
+                    if(lcd_col >= 0) lcd[new_y * WIDTH + lcd_col] = 0;
+                }
+                Rx_r = new_x;
+                Ry_r = new_y;
+                moved = true;
+                break;
+            }
+        }
+
+        if(!moved) {
+            right_found = false;
+        }
+    }
+}
+
     //-------------------------------------------------------------------------------------------------------------------
     // 函数简介: 丢线统计
     // 参数说明: 截止行
@@ -501,4 +672,24 @@ namespace ImageProc {
             sec_loss_both = {0};  // 任意一侧无丢线则清零
         }
     }
+
+
+    //-------------------------------------------------------------------------------------------------------------------
+    // 函数简介: 获取上一帧边线数据
+    // 参数说明: 
+    // 返回参数: 
+    // 使用示例: 
+    // 备注信息: 
+    //-------------------------------------------------------------------------------------------------------------------
+    void last_line_update(){
+
+        for(uint8_t i = 0 ; i < HEIGHT-1 ; i++){
+            last_l_black[i] = l_black[i];
+            last_r_black[i] = r_black[i];
+        }
+
+    }
+
+
 }
+    
