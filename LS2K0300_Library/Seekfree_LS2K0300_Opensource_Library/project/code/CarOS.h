@@ -54,6 +54,7 @@ namespace MenuSystem {
         ELEM_CROSS,
         ELEM_LEFT_ISLAND,
         ELEM_RIGHT_ISLAND,
+        ELEM_ZEBRA,
 
         ERR,
         SYSTEM,

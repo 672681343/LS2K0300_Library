@@ -35,13 +35,13 @@ namespace ImageProc {
         find_starting_point(bin, lcd, state.range_l, state.range_r, state.mode);
         //找边界
         finding_boundary(bin, lcd, state.cutoff);
-        //丢线统计
+        //丢线统计 - 统计丢失的线条数量
         lost_line_statistics(state.cutoff);
-        //二次丢线统计
+        //二次丢线统计 - 在特定区域内再次统计丢失的线条
         sec_lost_line_statistics(bin, 30, WIDTH-30, state.cutoff);
         //计算边界特征
         uint8_t start = HEIGHT - 10;
-        uint8_t end = HEIGHT - state.cutoff + 5;
+        uint8_t end = HEIGHT - state.cutoff + 5; //也就是说，丢线计算范围是最下10行到丢线截止行下5行
         Left_BF.Slope = two_segment_fitting_int(start,end,0,0,l_black,fit_l_black);
         Right_BF.Slope = two_segment_fitting_int(start,end,0,0,r_black,fit_r_black);
         Left_BF.Var  = fangcha(start,end,l_black,fit_l_black);
@@ -236,7 +236,7 @@ namespace ImageProc {
         Left_BF.LostParam.start = HEIGHT - 1;
         Left_BF.LostParam.end = HEIGHT - 1;
         Left_BF.LostParam.count = 0;
-        // 处理逻辑
+        // 处理逻辑 用来计算丢线区域数量
         auto process_side = [cut_off](auto& tracker, auto* regions, const auto& flags) -> uint8_t {
             uint8_t region_count = 0;
             bool prev_lost = false;
@@ -292,21 +292,21 @@ namespace ImageProc {
         const uint8_t R_lose_num = right_regions;   // 右丢线区域数量
         uint8_t mix_lose_num = std::max(L_lose_num, R_lose_num);
     
-        int16_t min_left_dist = INT16_MAX, min_right_dist = INT16_MAX;
-        uint8_t best_L_idx = 0, best_R_idx = 0;
+        int16_t min_left_dist = INT16_MAX, min_right_dist = INT16_MAX; //记录左侧丢线区域的最小中心距离，初始化用来确保任何实际计算的距离都会小于这个初始值
+        uint8_t best_L_idx = 0, best_R_idx = 0; //  初始化最佳左右区域的索引为0
     
         // 遍历所有区域，寻找距离中心最近的补偿后区域
         for (uint8_t i = 0; i < mix_lose_num; ++i) {
             // 左区域计算（防越界）
             if (i < L_lose_num) {
-                const auto& L = left_lose[i];
+                const auto& L = left_lose[i]; //  获取左侧缺失区域的引用
                 const int16_t lose_LU = L.start;  // 上边界（靠近底部）
                 const int16_t lose_LD = L.end;    // 下边界（靠近顶部）
                 const int16_t L_compensation = lose_LU - lose_LD; // 补偿值
                 
                 // 计算补偿后中心距离
-                const int16_t center_dist = abs((lose_LU + lose_LD)/2 - image_center_y)
-                                          - static_cast<int8_t>(L_compensation * 0.5);
+                const int16_t center_dist = abs((lose_LU + lose_LD)/2 - image_center_y) //  计算中心点距离，使用左上角和左下角的平均值减去补偿值的一半
+                                          - static_cast<int8_t>(L_compensation * 0.5); // 丢线区域越靠近图像中心，丢线区域越大越重要
                 
                 if (center_dist < min_left_dist) {
                     min_left_dist = center_dist;
@@ -351,8 +351,8 @@ namespace ImageProc {
             Right_BF.LostParam.start = R.start;
             Right_BF.LostParam.end = R.end;
             Right_BF.LostParam.count = R.count;
-            Right_BF.LostParam.mid = R.mid;
-            Right_BF.LostParam.reparation = static_cast<int8_t>((R.start - R.end) * 0.5);
+            Right_BF.LostParam.mid = R.mid; //  设置丢失中间值
+            Right_BF.LostParam.reparation = static_cast<int8_t>((R.start - R.end) * 0.5); //  设置修复值，计算起始和结束点的差值的一半
             Right_BF.LostParam.sum = (R.start > R.end) ? (R.start - R.end) : 0;
         }
 
@@ -362,17 +362,17 @@ namespace ImageProc {
             const auto& R = Right_BF.LostParam;
             
             // 取上下边界交集
-            const uint8_t lose_both_U = std::min(L.start, R.start);
-            const uint8_t lose_both_D = std::max(L.end, R.end);
+            const uint8_t lose_both_U = std::min(L.start, R.start); //  计算上边界，取左右上边界的较小值
+            const uint8_t lose_both_D = std::max(L.end, R.end); //  计算下边界，取左右下边界的较大值
             const uint8_t sum_both = (lose_both_U > lose_both_D) ? 
-                                    (lose_both_U - lose_both_D) : 0;
+                                    (lose_both_U - lose_both_D) : 0; //  计算总和，如果上边界大于下边界则计算差值，否则为0
             
-            Mid_BF.LostParam.start = lose_both_U;
-            Mid_BF.LostParam.end = lose_both_D;
-            Mid_BF.LostParam.count = sum_both;
-            Mid_BF.LostParam.mid = static_cast<uint8_t>((lose_both_U + lose_both_D) >> 1);
-            Mid_BF.LostParam.reparation = static_cast<int8_t>(L.reparation + R.reparation);
-            Mid_BF.LostParam.sum = sum_both;
+            Mid_BF.LostParam.start = lose_both_U; //  设置上边界
+            Mid_BF.LostParam.end = lose_both_D; //  设置下边界
+            Mid_BF.LostParam.count = sum_both; //  设置丢失计数
+            Mid_BF.LostParam.mid = static_cast<uint8_t>((lose_both_U + lose_both_D) >> 1); //  计算中间值，使用位运算除以2
+            Mid_BF.LostParam.reparation = static_cast<int8_t>(L.reparation + R.reparation); //  设置修复值，为左右修复值之和
+            Mid_BF.LostParam.sum = sum_both; //  设置总和
         }        
     }
 
@@ -395,14 +395,18 @@ namespace ImageProc {
         sec_loss_right = {0};
         
         // 左侧检测
-        bool l_found_white = false;
+        bool l_found_white = false; //  标记是否找到白色区域
         
-        for (uint8_t idx = 5; idx < cut_off - 2; ++idx) {
+        for (uint8_t idx = 5; idx < cut_off - 2; ++idx) { //  从第5行开始检测到cut_off-2行，避免边界问题
             uint8_t row = HEIGHT - 1 - idx;  // 从底部开始计算当前行
             uint16_t pixel_offset = row * WIDTH + x_left;
             
             // 阶段1：检测跳变点开始记录（必须满足前黑后白）
-            if (!l_found_white && l_black[row - 2] < x_left - 1 &&
+            //  条件说明：  1. l_black[row - 2] < x_left - 1：确保上两行有黑线
+                         //2. bin[pixel_offset]==0：当前点是黑线             
+                         //3. bin[pixel_offset - WIDTH]==255：上一行是白色             
+                         //4. bin[pixel_offset - 2 * WIDTH]==255：上两行是白色
+            if (!l_found_white && l_black[row - 2] < x_left - 1 && 
                 bin[pixel_offset]==0 && 
                 bin[pixel_offset - WIDTH]==255 && 
                 bin[pixel_offset - 2 * WIDTH]==255) {

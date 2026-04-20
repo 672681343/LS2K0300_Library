@@ -1,0 +1,92 @@
+{
+    "speed_pid_L": {
+        "kp": 5.500000,
+        "ki": 0.220000,
+        "kd": 9.500000
+    },
+    "speed_pid_R": {
+        "kp": 5.300000,
+        "ki": 0.220000,
+        "kd": 9.300000
+    },
+    "angle_pid": {
+        "kp": 0.603000,
+        "ki": 0.000000,
+        "kd": 0.000000
+    },
+    "car_flag": {
+        "turn": 1,
+        "speedloop": 1,
+        "pwm": 0,
+        "menu": 0,
+        "protect": 0,
+        "set_time": 0,
+        "saving": 1,
+        "beep": 0,
+        "thr": 95,
+        "thrcamp": 0
+    },
+    "Err": {
+        "row": 22,
+        "rep": 1.000000
+    },
+    "elem_left_tilt": {
+        "enable": 1,
+        "black": 0
+    },
+    "elem_right_tilt": {
+        "enable": 1,
+        "black": 0
+    },
+    "elem_cross": {
+        "enable": 1
+    },
+    "elem_left_island": {
+        "enable": 1,
+        "x1": 0,
+        "x2": 0
+    },
+    "elem_right_island": {
+        "enable": 1,
+        "x1": 0,
+        "x2": 0
+    },
+    "Group": {
+        "logkp": 380.000000,
+        "logkp2": 0.000000,
+        "logkd": 0.000000,
+        "loggkd": 0.000000,
+        "logdif": 0.000000,
+        "logspd": 600,
+        "logErr": 30,
+        "pwm_ll": 0,
+        "pwm_lr": 0,
+        "shtkp": 325.000000,
+        "shtkp2": 0.000000,
+        "shtkd": 120.000000,
+        "shtgkd": 0.000000,
+        "shtdif": 0.000000,
+        "shtspd": 520,
+        "shtErr": 30,
+        "pwm_sl": 0,
+        "pwm_sr": 0,
+        "crvkp": 288.000000,
+        "crvkp2": 0.000000,
+        "crvkd": 200.000000,
+        "crvgkd": 0.000000,
+        "crvdif": 0.000000,
+        "crvspd": 355,
+        "crvErr": 22,
+        "pwm_cl": 0,
+        "pwm_cr": 0,
+        "islandkp": 240.000000,
+        "islandkp2": 0.000000,
+        "islandkd": 0.000000,
+        "islandgkd": 0.000000,
+        "islanddif": 0.000000,
+        "islandspd": 325,
+        "islandErr": 30,
+        "pwm_il": 0,
+        "pwm_ir": 0
+    }
+}

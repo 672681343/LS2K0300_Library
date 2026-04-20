@@ -752,6 +752,17 @@ static inline void clamp_coords(uint8_t *x, uint8_t *y) {
     *y = (*y >= HEIGHT - 1) ? HEIGHT - 1 : (*y < 0) ? 0 : *y;
 }
 
+
+/******************************************************************************
+* 概述：该函数用于更新可视化边界，处理左右边界的冲突情况，并将边界位置写入显示缓冲区。
+* 参数：
+*    y：垂直坐标，uint8_t 类型
+*    hx：水平坐标，uint8_t 类型
+*    target：目标边界数组指针，uint16_t 类型
+*    other：另一个边界数组指针，uint16_t 类型
+*    is_left：布尔值，表示是否为左边界，int 类型
+* 返回值：无返回值（void）
+******************************************************************************/
 static inline void update_visual(uint8_t y, uint8_t hx, 
     uint16_t *target, uint16_t *other, 
     int is_left) {
@@ -765,26 +776,30 @@ static inline void update_visual(uint8_t y, uint8_t hx,
 
     // 修正后的冲突处理（容差机制）
     if (is_left) {
-        if (hx >= other[y]) other[y] = WIDTH - 1;  // 左边界覆盖右边界时，右边界同步到左边界坐标[1,5](@ref)
+        if (hx >= other[y]) other[y] = WIDTH - 1;//  当左边界大于等于右边界时，将右边界同步到最右侧(WIDTH-1)         这种处理可以避免边界重叠或交叉的情况，确保边界清晰
     } else {
-        if (hx <= other[y]) other[y] = 1;  // 右边界覆盖左边界时，左边界同步到右边界坐标[1,5](@ref)
+        if (hx <= other[y]) other[y] = 1;  //  当右边界小于等于左边界时，将左边界同步到最左侧(1)
     }
 
     // 安全写入可视化数据（保持不变）
     uint32_t index = (uint32_t)y * WIDTH + hx;
     if (index < WIDTH * HEIGHT) {
-        Camera::lcd_pixels[index] = 1;
+        Camera::lcd_pixels[index] = 1;  //注意这里是将目标像素设为 1 
     }
-}
+} //  将对应像素点设置为1（激活像素）
 //补线内部函数--------------------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------------------------------------
 // 函数简介: 补线函数
 // 参数说明: 起始点1坐标，起始点2坐标，斜率类型，斜率方向，初始斜率
 // 返回参数: 图像补线画线
-// 使用示例: 
+// 使用示例: 将对应的像素点设为1
 // 备注信息: 两点模式不在乎绘制方向，一点延长模式和斜率模式需要注意绘制方向，一点延长模式y1是自动获取
+//          有三个模式：两点模式，一点延长模式，斜率模式
+//           注意一共有三个模式    MODE_TWO_POINTS = 0, MODE_AUTO_SLOPE = 1, MODE_FIXED_SLOPE = 2
+//           注意只有固定斜率模式才用到最后一个参数slope
 //-------------------------------------------------------------------------------------------------------------------
+
 float my_draw_line(uint8_t x1, 
                   uint8_t y1, 
                   uint8_t x2, 
@@ -793,27 +808,27 @@ float my_draw_line(uint8_t x1,
                   LineDirection dir, 
                   float slope) {
     uint8_t start, end;
-    int is_left = (dir == DIRECTION_UP_LEFT || dir == DIRECTION_DOWN_LEFT);
-    int is_upward = (dir == DIRECTION_UP_LEFT || dir == DIRECTION_UP_RIGHT);
+    int is_left = (dir == DIRECTION_UP_LEFT || dir == DIRECTION_DOWN_LEFT); //  判断是否为左侧方向：上左或下左 （感觉可能是一个有问题的地方）
+    int is_upward = (dir == DIRECTION_UP_LEFT || dir == DIRECTION_UP_RIGHT); //  判断是否为向上方向：上左或上右
     uint16_t *target = is_left ? ImageProc::l_black.data() : ImageProc::r_black.data();
-    uint16_t *other = is_left ? ImageProc::r_black.data() : ImageProc::l_black.data();
+    uint16_t *other = is_left ? ImageProc::r_black.data() : ImageProc::l_black.data(); //  根据方向选择另一个指针：如果是左侧则指向右侧黑色数据，否则指向左侧黑色数据
     float k = 0.0f;
     switch (mode) {
-        case MODE_TWO_POINTS: {
-            clamp_coords(&x1, &y1);
-            clamp_coords(&x2, &y2);
+        case MODE_TWO_POINTS: {  //  处理两点模式的情况
+            clamp_coords(&x1, &y1); //  对坐标1进行范围限制
+            clamp_coords(&x2, &y2); //  对坐标2进行范围限制
 
             // 保持y降序（适配左上角坐标系）
-            if (y1 < y2) {
-                SWAP(y1, y2);
-                SWAP(x1, x2);
+            if (y1 < y2) { //  确保y1大于y2（也就是比y2低）
+                SWAP(y1, y2); //  交换y1和y2，确保y1高于y2
+                SWAP(x1, x2); //  交换x1和x2，保持对应关系
             }
 
             k = (y1 == y2) ? 0 : (float)(x2 - x1) / (y1 - y2);  // 注意分母取反
 
-            for (uint8_t y = y1; y >= y2; --y) {
-                uint8_t dx = x1 + (uint8_t)(k * (y1 - y));
-                update_visual(y, dx, target, other, is_left);
+            for (uint8_t y = y1; y >= y2; --y) { //  使用for循环从y1到y2遍历，每次递减y值
+                uint8_t dx = x1 + (uint8_t)(k * (y1 - y)); //  计算x坐标，使用线性方程x = x1 + k*(y1 - y)
+                update_visual(y, dx, target, other, is_left); //  更新可视化效果，传入当前y坐标、计算得到的x坐标、目标对象、其他对象以及是否为左侧的标志
             }
             break;
         }
@@ -823,17 +838,17 @@ float my_draw_line(uint8_t x1,
             clamp_coords(&x1, &y1);
 
             // 自动获取参考点（适配坐标系方向）
-            int y_offset = is_upward ? -5 : 5;
-            uint8_t ref_y = y1 + y_offset;
-            if (ref_y >= HEIGHT || ref_y < 0) break;
-            x1 = (uint8_t)target[y1];
-            x2 = (uint8_t)target[ref_y];
-            y2 = ref_y;
+            int y_offset = is_upward ? -5 : 5; //  根据方向决定y轴偏移量：向上则减5，向下则加5
+            uint8_t ref_y = y1 + y_offset; //  计算参考点的y坐标
+            if (ref_y >= HEIGHT || ref_y < 0) break; //  检查参考点是否超出边界
+            x1 = (uint8_t)target[y1]; //  当前点的x坐标
+            x2 = (uint8_t)target[ref_y]; //  参考点的x坐标
+            y2 = ref_y; //  参考点的y坐标
 
             k = (y1 == y2) ? 0 : (float)(x2 - x1) / (y1 - y2);
 
-            start = y1;
-            end = is_upward ? my_min(HEIGHT-1, y1 + 50) : my_max(1, y1 - 50);
+            start = y1; //  从当前y坐标开始
+            end = is_upward ? my_min(HEIGHT-1, y1 + 50) : my_max(1, y1 - 50); //  根据方向决定结束点：最多只计算50行，如果不是是下点向上补线，>50向上补50行，否则向上补到第1行
             
             if (is_upward) {
                 for (uint8_t y = start; y <= end; ++y) {
@@ -937,7 +952,7 @@ float my_draw_line(uint8_t x1,
                         if (dx >= 185 || dx <= 1) break; // 右边线遇到左侧则停止
                     }
                     update_visual(y, dx, target, other, is_left);
-                }
+                }  // 否则是右边线
             } else {
                 for (uint8_t y = start; y >= end; --y) {
                     uint8_t dx = x1 + (uint8_t)(slope * (y1 - y));
@@ -961,6 +976,7 @@ float my_draw_line(uint8_t x1,
     }
     return k;  // 返回斜率
 }
+
 
 //-------------------------------------------------------------------------------------------------------------------
 // 函数简介: 斜入十字上的抖M拐点

@@ -339,6 +339,17 @@ namespace Control{
 
         }
 
+        if(Elem::Zebra.count >= 2 && MenuSystem::Car_flag.init == 1 && MenuSystem::Car_flag.stop ==0){
+            stop_count ++;
+            printf("stop_count = %d", stop_count);
+            if (stop_count > 2){ // 停止计数
+                MenuSystem::Car_flag.stop = 1;
+                stop_count = 0; // 重置停止计数
+                printf("斑马线停车！");
+            }
+            //MenuSystem::sh_down();
+        }
+
         if(MenuSystem::Car_flag.stop == 1){
             if(Encoder::count.L < 3 &&  Encoder::count.R < 3){
                 stop_count ++;
@@ -493,7 +504,7 @@ namespace Control{
         //return CURVE;
         /*---------- 优先级从高到低判断 ----------*/
         // 特殊元素（立即更新lastType）
-        if (Elem::Left_Island.State == 1 || Elem::Right_Island.State == 1 ) {
+        if (Elem::Left_Island.State == 1 || Elem::Right_Island.State == 1 || Elem::Zebra.State != 0) {
             lastType = SHORT;
             return SHORT;
         }
@@ -516,6 +527,13 @@ namespace Control{
             lastType = SHORT;
             return SHORT;
         }
+
+        if (Elem::Zebra.State == 1 || Elem::Zebra.State == 2) {
+            lastType = SHORT;
+            return SHORT;
+        }
+
+
         // 普通赛道类型（仅更新有效类型）
 
         if (isLongStraightCondition()) { // 长直道判断函数

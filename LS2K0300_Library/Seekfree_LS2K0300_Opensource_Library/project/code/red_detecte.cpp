@@ -219,7 +219,7 @@ void process_image(uint16_t* rgb565_image) {
     
     detect_red_regions(rgb565_image, IMG_WIDTH, IMG_HEIGHT, boxes, 40, 1100);
 
-    printf("Detected %zu boxes\n", boxes.size());
+    // printf("Detected %zu boxes\n", boxes.size());
     
     static int frame_count = 0;
     frame_count++;

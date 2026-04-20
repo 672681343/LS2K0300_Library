@@ -12,6 +12,7 @@ namespace Elem {
 
     _Cross Cross = {};
 
+    _Zebra Zebra = {};
 
     uint8_t isHandling = 0; // 是否正在处理元素
  
@@ -30,6 +31,9 @@ namespace Elem {
 
         Left_Island.similar_flag = 0;
         Right_Island.similar_flag = 0;
+
+        zebra_detection();
+
 
         tilt_cross_detection();
         island_detection();
@@ -50,7 +54,10 @@ namespace Elem {
         ImageProc::state.range_l = 5;
         ImageProc::state.range_r = WIDTH - 5;
 
+        Zebra.State = 0;
+        Zebra.y = 0;
 
+        
         Cross.State = 0;
         Left_Island.State = 0;
         Right_Island.State = 0;
@@ -77,6 +84,7 @@ namespace Elem {
                 {
                     if (isHandling == 0 && Right_Tilt_Cross.enable &&
                         Left_Island.State == 0 && Right_Island.State == 0 && Cross.State == 0 && Left_Tilt_Cross.State == 0 &&
+                        Zebra.State == 0 &&
                         ImageProc::Left_BF.Slope < -0.2 && ImageProc::Left_BF.Var > 80 && ImageProc::Right_BF.Var < 50 &&
                         ImageProc::Right_BF.LostParam.sum >= 24
 
@@ -152,7 +160,7 @@ namespace Elem {
                 {
                     if (isHandling == 0 && Left_Tilt_Cross.enable &&
                         Left_Island.State == 0 && Right_Island.State == 0 && Cross.State == 0 && Left_Tilt_Cross.State == 0 &&
-                       
+                        Zebra.State == 0 &&
                         ImageProc::Right_BF.Slope > 0.5 && ImageProc::Right_BF.Var > 80 && ImageProc::Left_BF.Var < 30 &&
                         ImageProc::Left_BF.LostParam.sum >= 24
                         )
@@ -261,8 +269,8 @@ namespace Elem {
         }
 
         //左无
-        else{
-
+        else{ //  左上角和左下角点都为0时，不执行任何补线操作
+            
         }
 
         //右两点
@@ -285,7 +293,8 @@ namespace Elem {
         }
 
         //右无
-        else{
+        else{   //  左上角和左下角点都为0时执行的代码块
+        //还没添加任何内容（不清楚会不会是一处bug）
 
         }
 
@@ -307,7 +316,7 @@ namespace Elem {
             case 0:{
                 if( isHandling == 0 && Cross.enable &&
                     Left_Island.State == 0 && Right_Island.State == 0 && Left_Tilt_Cross.State == 0 && Right_Tilt_Cross.State == 0 &&
-                    
+                    Zebra.State == 0 &&
                     (ImageProc::Mid_BF.LostParam.sum > 1 &&
                     ImageProc::Left_BF.LostParam.sum < 35 && ImageProc::Right_BF.LostParam.sum < 35) && //
                     (ImageProc::Left_BF.Var > 100 || ImageProc::Right_BF.Var > 100) )
@@ -426,6 +435,7 @@ namespace Elem {
             //判断圆环
             case 0:{
                 if(  Right_Tilt_Cross.State==0 && Left_Tilt_Cross.State==0 && Left_Island.enable &&
+                    Zebra.State == 0 &&
                     Right_Island.State==0 && Cross.State == 0 && ImageProc::state.cutoff >= 65 &&  
                     ((ImageProc::Right_BF.LostParam.start > 67 && ImageProc::Right_BF.LostParam.sum < 15) ||
                      ImageProc::Right_BF.LostParam.sum < 2) && 
@@ -572,6 +582,7 @@ namespace Elem {
             //判断圆环
             case 0:{
                 if((Right_Tilt_Cross.State==0 && Left_Tilt_Cross.State==0 && Right_Island.enable &&
+                    Zebra.State == 0 &&
                     Left_Island.State == 0 && Cross.State == 0  &&
                     ImageProc::state.cutoff >= 65 && 
                     ((ImageProc::Left_BF.LostParam.start > 67 && ImageProc::Left_BF.LostParam.sum < 15) ||
@@ -725,5 +736,200 @@ namespace Elem {
 
     }
     
+
+
+
+
+
+
+
+
+
+    //-------------------------------------------------------------------------------------------------------------------
+    // 函数简介: 寻找斑马线位置（内部函数）
+    // 参数说明: 
+    // 返回参数: 
+    // 使用示例: 
+    // 备注信息: 
+    //-------------------------------------------------------------------------------------------------------------------
+    uint8_t find_zebra(uint8_t start_row, uint8_t end_row) {
+        // 参数校验
+
+        const uint8_t MIN_CONSECUTIVE = 1;  // 最小连续行数
+        const uint8_t MAX_JUMP = 2;         // 最大允许跳变行数
+        const uint8_t FIXED_START_ROW = 69; // 固定插值起点
+        const uint8_t FIXED_END_ROW = 15;   // 固定插值终点
+        const uint8_t near_threshold = 15;   // 远端阈值
+        const uint8_t far_threshold = 30;   // 近端阈值
+
+        uint8_t state = 0;          // 状态机：0=未开始，1=检测中
+        uint8_t segment_start = 0;  // 连续段的起始行
+        uint8_t segment_end = 0;    // 连续段的结束行
+        uint8_t valid_count = 0;    // 当前连续段的有效行数
+        uint8_t gap_count = 0;      // 当前连续段的跳变计数
+        // printf("start_row = %d, end_row = %d\n", start_row, end_row);
+        for (uint8_t y = start_row; y > end_row; y--) {
+            // 固定线性插值计算（基于69→15）
+            uint8_t threshold = far_threshold - 
+                (far_threshold - near_threshold) * 
+                (FIXED_START_ROW - y) / 
+                (FIXED_START_ROW - FIXED_END_ROW);
+
+            // 使用动态阈值检测斑马线
+            bool condition_met = (ImageProc::r_black[y] - ImageProc::l_black[y] < threshold); //就是说，边界差小于阈值，就认为是斑马线
+            // printf("threshold = %d, condition_met = %d\n", threshold, condition_met);
+
+            if (state == 0) {
+                // 状态0：寻找连续段起点
+                if (condition_met) {
+                    state = 1;
+                    segment_start = y;
+                    segment_end = y;
+                    valid_count = 1;
+                    gap_count = 0;
+                }
+            } else { //  非状态1，即不在连续段检测中
+                // 状态1：已进入连续段检测
+                if (condition_met) {
+                    // 有效行：更新结束位置，重置跳变计数
+                    segment_end = y;
+                    valid_count++;
+                    gap_count = 0;
+                    
+                    // 检查是否达到最小连续长度
+                    if (valid_count >= MIN_CONSECUTIVE) { //  如果有效行数达到最小连续长度阈值（目前是至少找到一行）
+                        // 计算中间行：避免整数溢出 (start+end)/2
+                        uint8_t mid_row = segment_start - (segment_start - segment_end) / 2;
+                        return mid_row;
+                    }
+                } else {
+                    // 不满足条件：计入跳变
+                    gap_count++;
+                    
+                    // 检查跳变次数是否超过阈值
+                    if (gap_count > MAX_JUMP) {
+                        state = 0; // 跳变过多，重置状态
+                    }
+                }
+            }
+        }
+
+        //调试信息
+        // for(int j = 0; j < 185; j++) { 
+        //     Camera::lcd_pixels[segment_start * WIDTH + j] = 1;
+        // }
+        // for(int j = 0; j < 185; j++) { 
+        //     Camera::lcd_pixels[segment_end * WIDTH + j] = 1;
+        // }
+
+        // 循环结束后检查是否有有效段
+        if (state == 1 && valid_count >= MIN_CONSECUTIVE) {
+            uint8_t mid_row = segment_start - (segment_start - segment_end) / 2;
+            return mid_row;
+        }
+
+        return 0; // 未检测到有效斑马线
+    }
+
+
+
+
+    //-------------------------------------------------------------------------------------------------------------------
+    // 函数简介: 元素（斑马线）
+    // 参数说明: 
+    // 返回参数: 
+    // 使用示例: 
+    // 备注信息: 
+    //-------------------------------------------------------------------------------------------------------------------
+    void zebra_detection(void)
+    {
+        switch(Zebra.State){
+            case 0:{
+                Zebra.y = find_zebra(69, HEIGHT -ImageProc::state.cutoff+ 5);
+                for(int j = 0; j < 185; j++) { 
+                    Camera::lcd_pixels[Zebra.y * WIDTH + j] = 155;
+                }
+
+                // printf("Zebra.y = %d\n", Zebra.y);
+                if (Zebra.y != 0 && Zebra.y < 50 && MenuSystem::Car_flag.start == 1  && Zebra.enable) {
+                    // 在斑马线位置的上下5行范围内进行检测
+                    for (int dy = -5; dy <= 5; dy++) {
+                        uint8_t current_y = Zebra.y + dy;
+                        
+                        // 边界检查
+                        if (current_y >= HEIGHT) continue;
+                        
+                        uint8_t black_stripe_count = 0;
+                        uint8_t current_stripe_length = 0;
+                        bool in_black = false;
+                        uint8_t threshold = ImageProc::r_black[current_y] - ImageProc::l_black[current_y];
+                        // 扫描单行像素
+                        for (uint8_t x = 0; x < WIDTH; x++) { //横向扫描
+                            uint16_t index = current_y * WIDTH + x;
+                            if (Camera::bin_pixels[index] == 0) { // 黑色像素
+                                if (!in_black) {
+                                    in_black = true;
+                                    current_stripe_length = 1;
+                                } else {
+                                    current_stripe_length++;
+                                }
+                            } else { // 白色像素
+                                if (in_black) {
+                                    if (current_stripe_length >= threshold - 2 && current_stripe_length <= threshold + 2) {
+                                        black_stripe_count++;
+                                    }
+                                    in_black = false;
+                                }
+                            }
+                        }
+                        
+                        // 处理行末未闭合的条纹
+                        if (in_black && current_stripe_length >= threshold - 2 && current_stripe_length <= threshold + 2) {
+                            black_stripe_count++;
+                        }
+                        
+                        // 如果当前行检测到斑马线特征，记录为有效行
+                        if (black_stripe_count >= 4) {
+                            Zebra.State = 1; // 切换到下一个状态
+                            MenuSystem::beep_on();
+                            break; // 找到斑马线后退出循环
+                        }
+                    }
+                }
+                break;
+            }
+            case 1:{
+                Zebra.y = find_zebra(69, HEIGHT - ImageProc::state.cutoff + 5);
+                
+                if(Zebra.y > 20){
+                    Zebra.State = 2;
+                }
+                break;
+            }
+            case 2:{
+                Zebra.y = find_zebra(69, HEIGHT - ImageProc::state.cutoff + 5);
+                uint8_t start_row = HEIGHT - 1;
+                uint8_t end_row = 20;
+                Left_corner.U_y  = zebra_Up(Zebra.y, end_row, 0, ImageProc::l_black) - 2;
+                Right_corner.U_y = zebra_Up(Zebra.y, end_row, 1, ImageProc::r_black) - 2;
+                Left_corner.D_y  = zebra_Down(start_row, Zebra.y,0, ImageProc::l_black) + 5;
+                Right_corner.D_y = zebra_Down(start_row, Zebra.y,1, ImageProc::r_black) + 5;
+                // 钳制到 [0, HEIGHT-1] 范围
+                // 确保下角y不小于上角y，否则钳制下角y为0
+                Left_corner.D_y = my_min(Left_corner.D_y, (Left_corner.U_y > Left_corner.D_y) ? 0 : Left_corner.D_y);
+                Right_corner.D_y = my_min(Right_corner.D_y, (Right_corner.U_y > Right_corner.D_y) ? 0 : Right_corner.D_y);
+                Crosshairs();
+                if(Zebra.y > 40 || Zebra.y == 0){
+                    Zebra.State = 0;
+                    MenuSystem::beep_off();
+                    clear();
+                    Zebra.count++;
+                    // printf("Zebra.y = %d , Elem::Zebra.count = %d\n", Zebra.y, Zebra.count);
+                }
+                break;
+            }
+        }
+        printf("Zebra.y = %d , Elem::Zebra.count = %d, Elem::Zebra.State = %d\n", Zebra.y, Zebra.count, Zebra.State);
+    }
 
 }
