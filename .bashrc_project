@@ -1,0 +1,108 @@
+#!/bin/bash
+# ============================================
+# LS2K0300 项目专用配置文件 - 精简版
+# 保留：快捷键 + 基本Git + 核心功能
+# 用法：source ~/桌面/LS2K0300_Library_mycode/.bashrc_project
+# ============================================
+
+# 颜色定义
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
+CYAN='\033[1;36m'
+NC='\033[0m'
+
+# 项目路径
+PROJECT="$HOME/桌面/LS2K0300_Library/LS2K0300_Library"
+SEEKFREE="$PROJECT/Seekfree_LS2K0300_Opensource_Library"
+USER_DIR="$SEEKFREE/project/user"
+BUILD_SCRIPT="$USER_DIR/build.sh"
+
+# ============================================
+# 1. 核心编译功能（Ctrl+L）
+# ============================================
+
+quick_build() {
+    echo -e "${GREEN}🔨 开始编译...${NC}"
+    
+    if [ -f "$BUILD_SCRIPT" ]; then
+        cd "$USER_DIR" && ./build.sh
+    else
+        echo -e "${RED}❌ 编译脚本不存在: $BUILD_SCRIPT${NC}"
+        return 1
+    fi
+}
+
+bind_quick_build() {
+    bind -x '"\C-l":quick_build' 2>/dev/null
+}
+
+# ============================================
+# 2. Git 上传功能
+# ============================================
+
+# 一键上传github
+gp() {
+    local cur_dir=$(pwd)
+    cd "$PROJECT"
+    
+    # 检查是否有修改
+    if [ -z "$(git status --short)" ]; then
+        echo -e "${YELLOW}⚠️  没有需要提交的修改${NC}"
+        cd "$cur_dir"
+        return
+    fi
+    
+    # 显示修改
+    echo -e "${CYAN}📁 修改的文件：${NC}"
+    git status --short
+    echo ""
+    
+    # 获取提交信息
+    echo -n "请输入commit信息: "
+    read commit_msg
+    [ -z "$commit_msg" ] && commit_msg="更新: $(date '+%Y-%m-%d %H:%M')"
+    
+    # 执行Git操作
+    git add .
+    git commit -m "$commit_msg"
+    
+    if git push; then
+        echo -e "${GREEN}✅ 上传成功 | $(date '+%H:%M:%S')${NC}"
+    else
+        echo -e "${RED}❌ 上传失败${NC}"
+    fi
+    
+    cd "$cur_dir"
+}
+
+# 快速提交
+gpm() {
+    [ -z "$1" ] && echo "用法: gpm \"提交信息\"" && return 1
+    git add . && git commit -m "$1" && git push
+}
+
+# ============================================
+# 3. 快速导航命令
+# ============================================
+
+cdp() { cd "$USER_DIR" && echo -e "${GREEN}📁 $(pwd)${NC}" && ls --color=auto; }
+cdr() { cd "$PROJECT" && echo -e "${GREEN}📁 $(pwd)${NC}" && ls --color=auto; }
+build() { cd "$USER_DIR" && ./build.sh; }
+
+# ============================================
+# 4. 自动初始化
+# ============================================
+
+# 绑定快捷键
+PROMPT_COMMAND='bind_quick_build 2>/dev/null'
+
+# 启动信息
+echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${CYAN}🚀 LS2K0300 项目环境已加载${NC}"
+echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "📁 项目目录: $USER_DIR"
+echo -e "🔨 编译: Ctrl+L 或 build 命令"
+echo -e "📦 Git上传: gp 命令"
+echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
