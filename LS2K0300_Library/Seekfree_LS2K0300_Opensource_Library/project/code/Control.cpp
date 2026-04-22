@@ -44,40 +44,42 @@ namespace Control{
 
     //长直道速度
     Set_Speed LongStrSpeed = {
-        .set_speed = 570,
+        .set_speed = 680,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
-        .l_kp = 7,
-        .l_ki = 0.26,
+        .l_kp = 6.5,
+        .l_ki = 0.32,
         .l_kd = 9.5,
         .r_kp = 7,
-        .r_ki = 0.25,
+        .r_ki = 0.31,
         .r_kd = 9.3,
     };
     //短直道速度
     Set_Speed ShortStrSpeed = {
-        .set_speed = 490,
+        .set_speed = 680,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
-        .l_kp = 7.2,
-        .l_ki = 0.26,
+        .l_kp = 6.50,
+        .l_ki = 0.32,
         .l_kd = 9.5,
-        .r_kp = 7,
-        .r_ki = 0.25,
+        .r_kp = 6.3,
+        .r_ki = 0.31,
         .r_kd = 9.3
     };
     //弯道速度
     Set_Speed CurveSpeed = {
-        .set_speed = 335,
+        .set_speed = 380,
         .dif = 0.0,
         .BLDC_duty = 0,
         .err_row = 35,
-        .l_kp = 10,
-        .l_ki = 0.24,
-        .r_kp = 10,
-        .r_ki = 0.24
+        .l_kp = 5.5,
+        .l_ki = 0.22,
+        .l_kd = 9.5,
+        .r_kp = 5.3,
+        .r_ki = 0.22,
+        .r_kd = 9.3
     };
     //环岛速度
     Set_Speed IslandSpeed = {
@@ -152,10 +154,11 @@ namespace Control{
                     }
 
 
+                    
                     PID::speed_pid_L.kp = LongStrSpeed.l_kp;
                     PID::speed_pid_L.ki = LongStrSpeed.l_ki;
-                    PID::speed_pid_R.kp = LongStrSpeed.r_kp;
-                    PID::speed_pid_R.ki = LongStrSpeed.r_ki;                       
+                    PID::speed_pid_L.kp = LongStrSpeed.r_kp;
+                    PID::speed_pid_L.ki = LongStrSpeed.r_ki;                       
 
 
                     PID::turn_pid.kp = LongStrPid.kp;
@@ -192,12 +195,14 @@ namespace Control{
                         aim_speed.cur_R = ShortStrSpeed.set_speed;
                     }
 
-                    if(!MenuSystem::Car_flag.test){
+                    // if(!MenuSystem::Car_flag.test){
                         PID::speed_pid_L.kp = ShortStrSpeed.l_kp;
                         PID::speed_pid_L.ki = ShortStrSpeed.l_ki;
-                        PID::speed_pid_R.kp = ShortStrSpeed.r_kp;
-                        PID::speed_pid_R.ki = ShortStrSpeed.r_ki;                       
-                    }
+                        PID::speed_pid_L.kd = ShortStrSpeed.l_kd;
+                        PID::speed_pid_L.kp = ShortStrSpeed.r_kp;
+                        PID::speed_pid_L.ki = ShortStrSpeed.r_ki; 
+                        PID::speed_pid_L.kd = ShortStrSpeed.r_kd;                      
+                    // }
 
                     PID::turn_pid.kp = ShortStrPid.kp;
                     PID::turn_pid.kp2 = ShortStrPid.kp2;
@@ -238,19 +243,16 @@ namespace Control{
 
                     PID::speed_pid_L.kp = CurveSpeed.l_kp;
                     PID::speed_pid_L.ki = CurveSpeed.l_ki;
-                    PID::speed_pid_R.kp = CurveSpeed.r_kp;
-                    PID::speed_pid_R.ki = CurveSpeed.r_ki;                       
+                    PID::speed_pid_L.kd = CurveSpeed.l_kd;
+                    PID::speed_pid_L.kp = CurveSpeed.r_kp;
+                    PID::speed_pid_L.ki = CurveSpeed.r_ki;  
+                    PID::speed_pid_L.kd = CurveSpeed.r_kd;                     
 
 
                     PID::turn_pid.kp = CurvePid.kp;
                     PID::turn_pid.kp2 = CurvePid.kp2;
                     PID::turn_pid.gkd = CurvePid.gkd;
                     PID::turn_pid.kd = CurvePid.kd;
-
-
-                    
-
-
 
                 }else{
 
@@ -283,8 +285,8 @@ namespace Control{
 
                     PID::speed_pid_L.kp = IslandSpeed.l_kp;
                     PID::speed_pid_L.ki = IslandSpeed.l_ki;
-                    PID::speed_pid_R.kp = IslandSpeed.r_kp;
-                    PID::speed_pid_R.ki = IslandSpeed.r_ki; 
+                    PID::speed_pid_L.kp = IslandSpeed.r_kp;
+                    PID::speed_pid_L.ki = IslandSpeed.r_ki; 
                     
                     
 
@@ -514,8 +516,8 @@ namespace Control{
             return SHORT;
         }
 
-        if ((Elem::Left_Island.State >= 3 && Elem::Left_Island.State <= 8) ||
-            (Elem::Right_Island.State >= 3 && Elem::Right_Island.State <= 8)) {
+        if ((Elem::Left_Island.State >= 3 && Elem::Left_Island.State <= 7) ||
+            (Elem::Right_Island.State >= 3 && Elem::Right_Island.State <= 7)) {
             lastType = ISLAND;
             return ISLAND;
         }

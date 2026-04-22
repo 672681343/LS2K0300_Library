@@ -83,6 +83,9 @@ namespace MenuSystem {
         {"dif",   ACTION_ADJUST, "Group.crvdif", {0.0f, 100.0f}, MenuID::NONE},
         {"rep" , ACTION_ADJUST, "Group.difrep", {0.0f, 1.0f}, MenuID::NONE},
         {"speed", ACTION_ADJUST, "Group.crvspd", {0,0}, MenuID::NONE},
+        {"crvspp",  ACTION_ADJUST, "Group.crvspkp", {0.0f, 1000.0f}, MenuID::NONE},
+        {"crvspi",  ACTION_ADJUST, "Group.crvspki", {0.0f, 100.0f}, MenuID::NONE},
+        {"crvspD",  ACTION_ADJUST, "Group.crvspkd", {0.0f, 1000.0f}, MenuID::NONE},
         {"Err",   ACTION_ADJUST, "Group.crvErr", {10, 70}, MenuID::NONE},
         {"pwm_cl",  ACTION_ADJUST, "Group.pwm_cl", {0.0f, 5000.0f}, MenuID::NONE},
         {"pwm_cr",  ACTION_ADJUST, "Group.pwm_cr", {0.0f, 5000.0f}, MenuID::NONE},
@@ -96,6 +99,9 @@ namespace MenuSystem {
         {"shtGD", ACTION_ADJUST, "Group.shtgkd", {0.0f, 100.0f}, MenuID::NONE},
         {"dif" , ACTION_ADJUST, "Group.shtdif", {0.0f, 100.0f}, MenuID::NONE},
         {"speed",ACTION_ADJUST, "Group.shtspd", {0,0}, MenuID::NONE},
+        {"shtspp",  ACTION_ADJUST, "Group.shtspkp", {0.0f, 1000.0f}, MenuID::NONE},
+        {"shtspi",  ACTION_ADJUST, "Group.shtspki", {0.0f, 100.0f}, MenuID::NONE},
+        {"shtspD",  ACTION_ADJUST, "Group.shtspkd", {0.0f, 1000.0f}, MenuID::NONE},
         {"Err",  ACTION_ADJUST, "Group.shtErr", {10, 70}, MenuID::NONE},
         {"pwm_sl",  ACTION_ADJUST, "Group.pwm_sl", {0.0f, 5000.0f}, MenuID::NONE},
         {"pwm_sr",  ACTION_ADJUST, "Group.pwm_sr", {0.0f, 5000.0f}, MenuID::NONE},
@@ -109,6 +115,9 @@ namespace MenuSystem {
         {"logGD", ACTION_ADJUST, "Group.loggkd", {0.0f, 100.0f}, MenuID::NONE},
         {"dif" , ACTION_ADJUST, "Group.logdif", {0.0f, 100.0f}, MenuID::NONE},
         {"speed",ACTION_ADJUST, "Group.logspd", {0,0}, MenuID::NONE},
+        {"logspp",  ACTION_ADJUST, "Group.logspkp", {0.0f, 1000.0f}, MenuID::NONE},
+        {"logspi",  ACTION_ADJUST, "Group.logspki", {0.0f, 100.0f}, MenuID::NONE},
+        {"logspD",  ACTION_ADJUST, "Group.logspkd", {0.0f, 1000.0f}, MenuID::NONE},
         {"Err",  ACTION_ADJUST, "Group.logErr", {10, 70}, MenuID::NONE},
         {"pwm_ll",  ACTION_ADJUST, "Group.pwm_ll", {0.0f, 5000.0f}, MenuID::NONE},
         {"pwm_lr",  ACTION_ADJUST, "Group.pwm_lr", {0.0f, 5000.0f}, MenuID::NONE},
@@ -122,6 +131,9 @@ namespace MenuSystem {
         {"islGD", ACTION_ADJUST, "Group.islandgkd", {0.0f, 100.0f}, MenuID::NONE},
         {"dif", ACTION_ADJUST, "Group.islanddif", {0.0f, 100.0f}, MenuID::NONE},
         {"speed", ACTION_ADJUST, "Group.islandspd", {0,0}, MenuID::NONE},
+        {"islspp",  ACTION_ADJUST, "Group.islandspkp", {0.0f, 1000.0f}, MenuID::NONE},
+        {"islspi",  ACTION_ADJUST, "Group.islandspki", {0.0f, 100.0f}, MenuID::NONE},
+        {"islspD",  ACTION_ADJUST, "Group.islandspkd", {0.0f, 1000.0f}, MenuID::NONE},
         {"Err", ACTION_ADJUST, "Group.islandErr", {10, 70}, MenuID::NONE},
         {"pwm_il",  ACTION_ADJUST, "Group.pwm_il", {0.0f, 5000.0f}, MenuID::NONE},
         {"pwm_ir",  ACTION_ADJUST, "Group.pwm_ir", {0.0f, 5000.0f}, MenuID::NONE},
@@ -372,6 +384,11 @@ namespace MenuSystem {
         {"logspd", TYPE_INT16, .as_int16 = &Control::LongStrSpeed.set_speed, .persist = true},
         {"logErr", TYPE_UINT8, .as_uint8 = &Control::LongStrSpeed.err_row, .persist = true},
 
+        {"logspkp", TYPE_FLOAT, .as_float = &Control::LongStrSpeed.l_kp, .persist = true},
+        {"logspki", TYPE_FLOAT, .as_float = &Control::LongStrSpeed.l_ki, .persist = true},
+        {"logspkd", TYPE_FLOAT, .as_float = &Control::LongStrSpeed.l_kd, .persist = true},
+
+
         {"pwm_ll", TYPE_INT16, .as_int16 = &Control::LongStr_pwm.L, .persist = true},
         {"pwm_lr", TYPE_INT16, .as_int16 = &Control::LongStr_pwm.R, .persist = true},
 
@@ -383,6 +400,11 @@ namespace MenuSystem {
         {"shtdif", TYPE_FLOAT, .as_float = &Control::ShortStrSpeed.dif, .persist = true},
         {"shtspd", TYPE_INT16, .as_int16 = &Control::ShortStrSpeed.set_speed, .persist = true},
         {"shtErr", TYPE_UINT8, .as_uint8 = &Control::ShortStrSpeed.err_row, .persist = true},
+
+        {"shtspkp", TYPE_FLOAT, .as_float = &Control::ShortStrSpeed.l_kp, .persist = true},
+        {"shtspki", TYPE_FLOAT, .as_float = &Control::ShortStrSpeed.l_ki, .persist = true},
+        {"shtspkd", TYPE_FLOAT, .as_float = &Control::ShortStrSpeed.l_kd, .persist = true},
+
 
         {"pwm_sl", TYPE_INT16, .as_int16 = &Control::ShortStr_pwm.L, .persist = true},
         {"pwm_sr", TYPE_INT16, .as_int16 = &Control::ShortStr_pwm.R, .persist = true},
@@ -398,6 +420,10 @@ namespace MenuSystem {
         {"crvspd", TYPE_INT16, .as_int16 = &Control::CurveSpeed.set_speed, .persist = true},
         {"crvErr", TYPE_UINT8, .as_uint8 = &Control::CurveSpeed.err_row, .persist = true},
 
+        {"crvspkp", TYPE_FLOAT, .as_float = &Control::CurveSpeed.l_kp, .persist = true},
+        {"crvspki", TYPE_FLOAT, .as_float = &Control::CurveSpeed.l_ki, .persist = true},
+        {"crvspkd", TYPE_FLOAT, .as_float = &Control::CurveSpeed.l_kd, .persist = true},
+
         {"pwm_cl", TYPE_INT16, .as_int16 = &Control::Curve_pwm.L, .persist = true},
         {"pwm_cr", TYPE_INT16, .as_int16 = &Control::Curve_pwm.R, .persist = true},
 
@@ -409,6 +435,10 @@ namespace MenuSystem {
         {"islanddif", TYPE_FLOAT, .as_float = &Control::IslandSpeed.dif, .persist = true},
         {"islandspd", TYPE_INT16, .as_int16 = &Control::IslandSpeed.set_speed, .persist = true},
         {"islandErr", TYPE_UINT8, .as_uint8 = &Control::IslandSpeed.err_row, .persist = true},
+
+        {"islandspkp", TYPE_FLOAT, .as_float = &Control::IslandSpeed.l_kp, .persist = true},
+        {"islandspki", TYPE_FLOAT, .as_float = &Control::IslandSpeed.l_ki, .persist = true},
+        {"islandspkd", TYPE_FLOAT, .as_float = &Control::IslandSpeed.l_kd, .persist = true},
 
         {"pwm_il", TYPE_INT16, .as_int16 = &Control::Island_pwm.L, .persist = true},
         {"pwm_ir", TYPE_INT16, .as_int16 = &Control::Island_pwm.R, .persist = true},

@@ -18,6 +18,17 @@ void cleanup()
 int main(int, char**) 
 {
 
+    // 时间统计结构体--------------------------------
+    // auto loop_start_time = std::chrono::high_resolution_clock::now();
+    // auto loop_end_time = std::chrono::high_resolution_clock::now();
+    // auto image_process_start_time = std::chrono::high_resolution_clock::now();
+    // auto image_process_end_time = std::chrono::high_resolution_clock::now();
+    // std::chrono::duration<double, std::milli> loop_time_elapsed;
+    // std::chrono::duration<double, std::milli> image_process_time_elapsed;
+    // 时间统计结构体--------------------------------
+
+
+
     // 注册清理函数
     atexit(cleanup);
 
@@ -45,6 +56,9 @@ int main(int, char**)
     while(1)
     {
 
+        //统计开始时间
+        // loop_start_time = std::chrono::high_resolution_clock::now();
+
         // 阻塞式等待，图像刷新
         if(wait_image_refresh() < 0)
         {
@@ -69,7 +83,6 @@ int main(int, char**)
             }
             Control::stop(0);
         }
-        ImageProc::last_line_update();
         Error::last_error_update();
 
         MenuSystem::key_shutdown();
@@ -78,14 +91,30 @@ int main(int, char**)
         // ips200_show_rgb565_image(0,0,rgb565_image,160,120,60,20,0);
 
         process_image(rgb565_image);
-        if(!boxes.empty()){
-            // const auto& box = boxes[0];
-            printf("Box: Area=%d at (%d,%d) size %dx%d\n",
-                   boxes[0].area, boxes[0].x, boxes[0].y, boxes[0].w, boxes[0].h);            
-        }
+        // if(!boxes.empty()){
+        //     // const auto& box = boxes[0];
+        //     printf("Box: Area=%d at (%d,%d) size %dx%d\n",
+        //            boxes[0].area, boxes[0].x, boxes[0].y, boxes[0].w, boxes[0].h);            
+        // }
         
 
         // ips200_show_rgb565_image(0, 0, rgb565_image, 160, 120, 160, 120, 0);
+
+
+
+
+
+
+        //统计结束时间
+        // loop_end_time = std::chrono::high_resolution_clock::now();
+
+//---------------------------------时间统计--------------------------------
+        // loop_time_elapsed = loop_end_time - loop_start_time;
+
+        // //输出时间信息
+        // std::cout << "主循环运行时间: " << loop_time_elapsed.count() << " 毫秒" << std::endl;
+        
+// ---------------------------------时间统计--------------------------------
         
     }
 }

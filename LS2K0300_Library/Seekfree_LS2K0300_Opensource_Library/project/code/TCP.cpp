@@ -27,20 +27,22 @@ namespace TCP {
     //-------------------------------------------------------------------------------------------------------------------
     void send_data() {
         if(TCP_MODE){
-            seekfree_assistant_oscilloscope_data.data[0] = Control::ShortStrSpeed.set_speed;
-            seekfree_assistant_oscilloscope_data.data[1] = Encoder::count.L;
-            seekfree_assistant_oscilloscope_data.data[2] = Control::ShortStrSpeed.set_speed;
-            seekfree_assistant_oscilloscope_data.data[3] = Encoder::count.R;
-            
-            seekfree_assistant_oscilloscope_data.data[4] = PID::speed_pid_L.p_term ;
-            seekfree_assistant_oscilloscope_data.data[5] =  PID::speed_pid_L.i_term;
-            seekfree_assistant_oscilloscope_data.data[6] =  PID::speed_pid_L.d_term;
+            seekfree_assistant_oscilloscope_data.data[0] = (Control::aim_speed.cur_L+Control::aim_speed.cur_R)/2;
+            seekfree_assistant_oscilloscope_data.data[1] = (Encoder::count.L+Encoder::count.R)/2;
+            seekfree_assistant_oscilloscope_data.data[2] = Pit::Err_out;
+            seekfree_assistant_oscilloscope_data.data[3] = imu660ra_gyro_z;
 
-            // seekfree_assistant_oscilloscope_data.data[7] = PID::speed_pid_L.p_term;
+            seekfree_assistant_oscilloscope_data.data[4] = Pit::Angle_out;
+            seekfree_assistant_oscilloscope_data.data[5] = Error::Err.current;
+
+            seekfree_assistant_oscilloscope_data.data[6] =  Control::pwm.L-Pit::Angle_out;
+            seekfree_assistant_oscilloscope_data.data[7] =  Control::pwm.L+Pit::Angle_out;
+
+
             // seekfree_assistant_oscilloscope_data.data[8] = PID::speed_pid_R.i_term;
             // seekfree_assistant_oscilloscope_data.data[9] = PID::speed_pid_R.d_term;
             
-            seekfree_assistant_oscilloscope_data.channel_num = 7;
+            seekfree_assistant_oscilloscope_data.channel_num = 8;
 
             seekfree_assistant_oscilloscope_send(&seekfree_assistant_oscilloscope_data);
         }

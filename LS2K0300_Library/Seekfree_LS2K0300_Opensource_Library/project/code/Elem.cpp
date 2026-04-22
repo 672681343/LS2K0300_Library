@@ -441,6 +441,9 @@ namespace Elem {
                     }
                 }
 
+
+    
+
                 break;
             }
 
@@ -511,7 +514,7 @@ namespace Elem {
                 if(Right_corner.U_y != 0){
                     my_draw_line(ImageProc::r_black[Right_corner.U_y-1],Right_corner.U_y-1,ImageProc::r_black[HEIGHT-5],HEIGHT-5,MODE_TWO_POINTS,DIRECTION_UP_RIGHT,0);
                 }
-                if (ImageProc::Right_BF.LostParam.sum < 5 ){
+                if (ImageProc::Right_BF.LostParam.sum < 1 ){
                     Left_Island.State = 5;
                     ImageProc::state.range_r = WIDTH - 10;
                     Error::Err.limit = HEIGHT - 1; 
@@ -545,13 +548,13 @@ namespace Elem {
                 Left_corner.U_y = island_Up(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff , 0, ImageProc::l_black);
                 Left_corner.Curve_Row = Circular_Detection(0, 0, ImageProc::Left_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::l_black);
                 if(Left_corner.U_y !=0 && Left_corner.Curve_Row != 0){
-                    my_draw_line(ImageProc::l_black[Left_corner.U_y],Left_corner.U_y,ImageProc::r_black[HEIGHT-1],HEIGHT-1,MODE_TWO_POINTS,DIRECTION_DOWN_LEFT,0);
+                    my_draw_line(ImageProc::l_black[Left_corner.U_y],Left_corner.U_y,ImageProc::l_black[HEIGHT-1],HEIGHT-1,MODE_TWO_POINTS,DIRECTION_DOWN_LEFT,0);
                 }else if(Left_corner.U_y !=0){
                     my_draw_line(ImageProc::l_black[Left_corner.U_y],Left_corner.U_y,0,0,MODE_AUTO_SLOPE,DIRECTION_UP_LEFT,0);
                 }else if(Left_corner.Curve_Row != 0){
                     my_draw_line(ImageProc::l_black[Left_corner.Curve_Row],Left_corner.Curve_Row,0,0,MODE_FIXED_SLOPE,DIRECTION_DOWN_LEFT,-ImageProc::Right_BF.Slope);
                 }
-                if(ImageProc::Left_BF.LostParam.mid > 55 && Left_corner.Curve_Row == 0){
+                if(ImageProc::Left_BF.LostParam.mid > 55 && (Left_corner.Curve_Row == 0 || Left_corner.Curve_Row < 20)){
                     Left_Island.State = 8;
                 }
                 break;
@@ -663,7 +666,7 @@ namespace Elem {
                     my_draw_line(ImageProc::l_black[Left_corner.U_y-1],Left_corner.U_y-1,ImageProc::l_black[HEIGHT-5],HEIGHT-5,MODE_TWO_POINTS,DIRECTION_UP_LEFT,0);
                 }
 
-                if (ImageProc::Left_BF.LostParam.sum < 5 ){
+                if (ImageProc::Left_BF.LostParam.sum < 1 ){
                     Right_Island.State = 5;
                     ImageProc::state.range_l = 10;
                     Error::Err.limit = HEIGHT - 1; 
@@ -698,13 +701,13 @@ namespace Elem {
                 Right_corner.Curve_Row = Circular_Detection(0, 0, HEIGHT-1, Right_corner.U_y, ImageProc::r_black);
                 if(Right_corner.U_y >= Right_corner.Curve_Row)  Right_corner.Curve_Row=0;
                 if(Right_corner.U_y !=0 && Right_corner.Curve_Row != 0){
-                    my_draw_line(ImageProc::r_black[Right_corner.U_y],Right_corner.U_y,ImageProc::l_black[HEIGHT-1],HEIGHT-1,MODE_TWO_POINTS,DIRECTION_DOWN_RIGHT,0);
+                    my_draw_line(ImageProc::r_black[Right_corner.U_y],Right_corner.U_y,ImageProc::r_black[HEIGHT-1],HEIGHT-1,MODE_TWO_POINTS,DIRECTION_DOWN_RIGHT,0);
                  }else if(Right_corner.U_y !=0){
                     my_draw_line(ImageProc::r_black[Right_corner.U_y],Right_corner.U_y,0,0,MODE_AUTO_SLOPE,DIRECTION_UP_RIGHT,0);
                 }else if(Right_corner.Curve_Row != 0){
                     my_draw_line(ImageProc::r_black[Right_corner.Curve_Row],Right_corner.Curve_Row,0,0,MODE_FIXED_SLOPE,DIRECTION_DOWN_RIGHT,-ImageProc::Left_BF.Slope);
                 }
-                if(ImageProc::Right_BF.LostParam.mid > 55 && Right_corner.Curve_Row == 0){
+                if(ImageProc::Right_BF.LostParam.mid > 55 && (Right_corner.Curve_Row == 0 || Right_corner.Curve_Row < 20)){
                     Right_Island.State = 8;
                 }
                 break;

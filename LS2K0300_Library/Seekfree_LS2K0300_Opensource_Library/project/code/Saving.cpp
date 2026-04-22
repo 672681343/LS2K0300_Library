@@ -195,7 +195,13 @@ namespace {
             file << file_index++ << "=" << static_cast<int>(Encoder::count.L) << "\n";
             file << file_index++ << "=" << static_cast<int>(Encoder::count.R) << "\n";
 
-            // file << file_index++ << "=" << static_cast<int>(Elem::Ramp.y) << "\n";
+            file << file_index++ << "=" << static_cast<int>(PID::speed_pid_L.p_term) << "\n";
+            file << file_index++ << "=" << static_cast<int>(PID::speed_pid_L.i_term) << "\n";
+            file << file_index++ << "=" << static_cast<int>(PID::speed_pid_L.i_term) << "\n";
+            file << file_index++ << "=" << static_cast<int>(Control::pwm.L) << "\n";
+            file << file_index++ << "=" << static_cast<int>(Pit::Angle_out) << "\n";
+            file << file_index++ << "=" << static_cast<int>(Pit::Err_out) << "\n";
+
             // file << file_index++ << "=" << static_cast<int>(Elem::Ramp.State) << "\n";
         #else 
             // // file << file_index++ << "=" << static_cast<int>(Servo::duty.cur) << "\n";

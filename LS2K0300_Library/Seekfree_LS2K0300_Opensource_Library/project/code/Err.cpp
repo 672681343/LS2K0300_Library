@@ -145,7 +145,7 @@ namespace Error {
     //-------------------------------------------------------------------------------------------------------------------
     int16_t error_calculate(uint8_t row, const ImageProc::State& state, uint8_t limit,
                             const std::array<uint16_t, HEIGHT>& center_line){
-        constexpr int16_t MAX_ERROR = 75;
+        constexpr int16_t MAX_ERROR = 55;
         constexpr uint8_t MIN_VALID_CUTOFF = 10;
         constexpr uint8_t ROW_OFFSET = 5;
         int16_t error_value = 0;

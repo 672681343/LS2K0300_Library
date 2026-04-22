@@ -14,7 +14,8 @@ namespace Pit{
     void Init(){
         pit_ms_init(5 , callback_5ms);
         pit_ms_init(10 ,callback_10ms);
-        pit_ms_init(50, callback_50ms);
+        // pit_ms_init(20 ,callback_20ms);
+        // pit_ms_init(50, callback_50ms);
     }
     //-------------------------------------------------------------------------------------------------------------------
     // 函数简介: 5ms中断
@@ -23,12 +24,24 @@ namespace Pit{
     // 使用示例: pit_ms_init(5, callback_5ms);
     // 备注信息: 
     //-------------------------------------------------------------------------------------------------------------------
+
+//     #define FILTER_A 0.9f    
+//     float gyro_filter(float new_val) {
+//         static float last = 0;  // 上一次滤波后的值
+//         last = last * FILTER_A + new_val * (1 - FILTER_A);
+//         return last;
+// }
+
     void callback_5ms()
     {
         Encoder::update();
         imu660ra_get_gyro();
 
+
+        Err_out = -PID::TurnPID(0, Error::Err.current, &PID::turn_pid);
         Angle_out = PID::AnglePID(Err_out, imu660ra_gyro_z, &PID::angle_pid);
+
+
 
 
         // // 公共停机逻辑
@@ -49,16 +62,15 @@ namespace Pit{
 
         // 测试模式分发
         if (MenuSystem::Car_flag.test && MenuSystem::Car_flag.init && MenuSystem::Car_flag.start) {
-            if (MenuSystem::Car_flag.speed_loop ) {
+            if (MenuSystem::Car_flag.speed_loop == 1) {
                 
                 // 闭环测试（允许左右轮独立 PID 参数）
-                Control::pwm.L = PID::Speed_loc_PID(Control::aim_speed.cur_L, Encoder::count.L, &PID::speed_pid_L);
-                Control::pwm.R = PID::Speed_loc_PID(Control::aim_speed.cur_R, Encoder::count.R, &PID::speed_pid_R);
+                
 
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.R); 
                 }else{
-                    Motor::goMotor(Control::pwm.L-Angle_out, Control::pwm.R+Angle_out);
+                    Motor::goMotor(Control::pwm.L-Angle_out, Control::pwm.L+Angle_out);
                 }
 
 
@@ -68,7 +80,7 @@ namespace Pit{
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.R); 
                 }else{
-                    Motor::goMotor(Control::pwm.L-Angle_out, Control::pwm.R+Angle_out);
+                    Motor::goMotor(Control::pwm.L-Angle_out, Control::pwm.L+Angle_out);
                 }
 
             } else {
@@ -85,13 +97,11 @@ namespace Pit{
                 if (MenuSystem::Car_flag.speed_loop ) {
                 
                 // 闭环测试（允许左右轮独立 PID 参数）
-                Control::pwm.L = PID::Speed_loc_PID(Control::aim_speed.cur_L, Encoder::count.L, &PID::speed_pid_L);
-                Control::pwm.R = PID::Speed_loc_PID(Control::aim_speed.cur_R, Encoder::count.R, &PID::speed_pid_R);
  
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.R); 
                 }else{
-                    Motor::goMotor(Control::pwm.L+Angle_out, Control::pwm.R-Angle_out);
+                    Motor::goMotor(Control::pwm.L+Angle_out, Control::pwm.L-Angle_out);
                 }
 
             } else if(MenuSystem::Car_flag.stop == 0){
@@ -100,7 +110,7 @@ namespace Pit{
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.R); 
                 }else{
-                    Motor::goMotor(Control::pwm.L+Angle_out, Control::pwm.R-Angle_out);
+                    Motor::goMotor(Control::pwm.L+Angle_out, Control::pwm.L-Angle_out);
                 }
             }
 
@@ -114,9 +124,26 @@ namespace Pit{
     // 使用示例: pit_ms_init(10, callback_50ms);
     // 备注信息: 
     //-------------------------------------------------------------------------------------------------------------------
+
     void callback_10ms()
     {
-        Err_out = -PID::TurnPID(0, Error::Err.current, &PID::turn_pid); 
+        Control::pwm.L = PID::Speed_loc_PID((Control::aim_speed.cur_L+Control::aim_speed.cur_R)/2, (Encoder::count.L+Encoder::count.R)/2, &PID::speed_pid_L);
+
+    }
+
+
+
+    //-------------------------------------------------------------------------------------------------------------------
+    // 函数简介: 20ms中断
+    // 参数说明: 无
+    // 返回参数: 无
+    // 使用示例: pit_ms_init(10, callback_50ms);
+    // 备注信息: 
+    //-------------------------------------------------------------------------------------------------------------------
+    void callback_20ms()
+    {
+        // Err_out = -PID::TurnPID(0, Error::Err.current, &PID::turn_pid);
+
     }
 
 

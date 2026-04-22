@@ -20,7 +20,7 @@ namespace PID {
         angle_pid.integral = 0;
         angle_pid.prev_error = 0;
         angle_pid.I_limit = 0;
-        angle_pid.out_limit = 0;
+        angle_pid.out_limit = 4000;
 
         turn_pid.kp = 1.6;
         turn_pid.kp2 = 0.0;
@@ -30,23 +30,23 @@ namespace PID {
         turn_pid.integral = 0;
         turn_pid.prev_error = 0;
         turn_pid.I_limit = 0;
-        turn_pid.out_limit = 0;
+        turn_pid.out_limit = 6000;
 
         speed_pid_L.kp = 0.0;
         speed_pid_L.ki = 0.0;
         speed_pid_L.kd = 0.0;
         speed_pid_L.integral = 0;
         speed_pid_L.prev_error = 0;
-        speed_pid_L.I_limit = 7000;
-        speed_pid_L.out_limit = 9000;
+        speed_pid_L.I_limit = 6000;
+        speed_pid_L.out_limit = 6000;
 
         speed_pid_R.kp = 0.0;
         speed_pid_R.ki = 0.0;
         speed_pid_R.kd = 0.0;
         speed_pid_R.integral = 0;
         speed_pid_R.prev_error = 0;
-        speed_pid_R.I_limit = 7000;
-        speed_pid_R.out_limit = 9000;
+        speed_pid_R.I_limit = 6000;
+        speed_pid_R.out_limit = 6000;
     }
 
 
@@ -162,41 +162,41 @@ namespace PID {
         return output;
     }
 
-    //-------------------------------------------------------------------------------------------------------------------
-    // 函数简介: 速度环增量PID
-    // 参数说明: 
-    // 返回参数: 
-    // 使用示例: 
-    // 备注信息: 
-    //-------------------------------------------------------------------------------------------------------------------
-    #if 0
-    int16_t Speed_inc_PID(int16_t target, int16_t current, PIDParams* pid) {
-        int16_t error = target - current;
+    // //-------------------------------------------------------------------------------------------------------------------
+    // // 函数简介: 速度环增量PID
+    // // 参数说明: 
+    // // 返回参数: 
+    // // 使用示例: 
+    // // 备注信息: 
+    // //-------------------------------------------------------------------------------------------------------------------
+    // #if 0
+    // int16_t Speed_inc_PID(int16_t target, int16_t current, PIDParams* pid) {
+    //     int16_t error = target - current;
 
-        // 计算各分量
-        float p_term = pid->kp * (error - pid->prev_error);
-        float i_term = pid->ki * error;
-        float d_term = pid->kd * (error - 2*pid->prev_error + pid->prev_prev_error);
+    //     // 计算各分量
+    //     float p_term = pid->kp * (error - pid->prev_error);
+    //     float i_term = pid->ki * error;
+    //     float d_term = pid->kd * (error - 2*pid->prev_error + pid->prev_prev_error);
         
-        // 总输出
-        pid->prev_output += (p_term + i_term + d_term);
+    //     // 总输出
+    //     pid->prev_output += (p_term + i_term + d_term);
         
-        // 输出限幅
-        if(pid->out_limit > 0) {
-            if(pid->prev_output > pid->out_limit) {
-                pid->prev_output = pid->out_limit;
-            } 
-            else if(pid->prev_output < -pid->out_limit) {
-                pid->prev_output = -pid->out_limit;
-            }
-        }
+    //     // 输出限幅
+    //     if(pid->out_limit > 0) {
+    //         if(pid->prev_output > pid->out_limit) {
+    //             pid->prev_output = pid->out_limit;
+    //         } 
+    //         else if(pid->prev_output < -pid->out_limit) {
+    //             pid->prev_output = -pid->out_limit;
+    //         }
+    //     }
 
-        pid->prev_prev_error = pid->prev_error;
-        // 保存误差记录
-        pid->prev_error = error;
+    //     pid->prev_prev_error = pid->prev_error;
+    //     // 保存误差记录
+    //     pid->prev_error = error;
 
-        return pid->prev_output;
-    }
-    #endif
+    //     return pid->prev_output;
+    // }
+    // #endif
 }
 

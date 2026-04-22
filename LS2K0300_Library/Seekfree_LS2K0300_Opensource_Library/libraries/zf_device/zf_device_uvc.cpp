@@ -47,6 +47,11 @@ int8 uvc_camera_init(const char *path)
     printf("get uvc height = %f.\r\n", cap.get(CAP_PROP_FRAME_HEIGHT));
     printf("get uvc fps = %f.\r\n",    cap.get(CAP_PROP_FPS));
 
+    printf("Actual: %.0fx%.0f @ %.0f FPS\n", 
+            cap.get(CAP_PROP_FRAME_WIDTH),
+            cap.get(CAP_PROP_FRAME_HEIGHT),
+            cap.get(CAP_PROP_FPS));
+
     return 0;
 }
 
