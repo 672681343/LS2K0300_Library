@@ -152,6 +152,10 @@ int main(int, char**)
             continue;  // 跳过空帧，不退出程序
         }
 
+        // ===== 显示原始彩色图像 =====
+        
+
+
         // ======================== 图像预处理 ========================
         // 1. 先缩放图像到模型要求的输入尺寸
         resize(frame_rgb, resized_img, Size(MODEL_INPUT_WIDTH, MODEL_INPUT_HEIGHT), INTER_LINEAR);

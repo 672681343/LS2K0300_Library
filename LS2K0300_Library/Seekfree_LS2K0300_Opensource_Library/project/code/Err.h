@@ -11,7 +11,7 @@ namespace ImageProc {
     struct State;  // 关键：前置声明结构体
 }
 
-namespace Error {
+namespace Err {
     /* Exported types ------------------------------------------------------------*/
     // 误差相关变量
 

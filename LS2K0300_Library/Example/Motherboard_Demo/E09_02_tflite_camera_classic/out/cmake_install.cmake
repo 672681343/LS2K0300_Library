@@ -1,4 +1,4 @@
-# Install script for directory: /home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E09_02_tflite_camera_classic/user
+# Install script for directory: /home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Example/Motherboard_Demo/E09_02_tflite_camera_classic/user
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E09_02_tflite_camera_classic/out/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Example/Motherboard_Demo/E09_02_tflite_camera_classic/out/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

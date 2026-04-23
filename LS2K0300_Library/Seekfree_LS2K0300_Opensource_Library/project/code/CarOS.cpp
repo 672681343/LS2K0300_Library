@@ -450,10 +450,10 @@ namespace MenuSystem {
     };
 
     static const ParamMapping err_params[] = {
-        {"cur",     TYPE_INT16, .as_int16 = &Error::Err.current, .persist = false},
-        {"pre",     TYPE_INT16, .as_int16 = &Error::Err.previous, .persist = false},
-        {"row",     TYPE_UINT8, .as_uint8 = &Error::Err.row, .persist = true},
-        {"rep",     TYPE_FLOAT, .as_float = &Error::Err.rep, .persist = true},
+        {"cur",     TYPE_INT16, .as_int16 = &Err::Err.current, .persist = false},
+        {"pre",     TYPE_INT16, .as_int16 = &Err::Err.previous, .persist = false},
+        {"row",     TYPE_UINT8, .as_uint8 = &Err::Err.row, .persist = true},
+        {"rep",     TYPE_FLOAT, .as_float = &Err::Err.rep, .persist = true},
     };
 
 
@@ -944,6 +944,8 @@ namespace MenuSystem {
         const uint16_t mode_x = 200;    // 模式显示起始X坐标
 
         //显示lcd
+
+        // ips200_show_gray_image(camera_x,camera_y,rgay_image,186,70);
         ips200_show_gray_image(camera_x,camera_y,Camera::lcd_pixels,186,70);
         ips200_draw_line(camera_x-1,camera_y,camera_x-1,camera_y+70,0xFFFF);
         ips200_draw_line(camera_x+186,camera_y,camera_x+186,camera_y+70,0xFFFF);

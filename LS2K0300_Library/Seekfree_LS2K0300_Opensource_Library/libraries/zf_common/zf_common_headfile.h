@@ -144,21 +144,21 @@
 
 
 //===================================================TFLITE组件库===================================================
-// #include "tensorflow/lite/core/c/common.h"
-// #include "tensorflow/lite/micro/micro_interpreter.h"
-// #include "tensorflow/lite/micro/micro_log.h"
-// #include "tensorflow/lite/micro/micro_mutable_op_resolver.h"
-// #include "tensorflow/lite/micro/micro_profiler.h"
-// #include "tensorflow/lite/micro/recording_micro_interpreter.h"
-// #include "tensorflow/lite/micro/system_setup.h"
-// #include "tensorflow/lite/micro/cortex_m_generic/debug_log_callback.h"
-// #include "tensorflow/lite/schema/schema_generated.h"
+#include "tensorflow/lite/core/c/common.h"
+#include "tensorflow/lite/micro/micro_interpreter.h"
+#include "tensorflow/lite/micro/micro_log.h"
+#include "tensorflow/lite/micro/micro_mutable_op_resolver.h"
+#include "tensorflow/lite/micro/micro_profiler.h"
+#include "tensorflow/lite/micro/recording_micro_interpreter.h"
+#include "tensorflow/lite/micro/system_setup.h"
+#include "tensorflow/lite/micro/cortex_m_generic/debug_log_callback.h"
+#include "tensorflow/lite/schema/schema_generated.h"
 
 //===================================================TFLITE组件库===================================================
 
 
 //===================================================用户自定义文件===================================================
-// #include "../model/loong_cnn_model_simple.h"
+#include "../model/loong_cnn_model_simple.h"
 #include "many_define.h"
 #include "Camera.h"
 #include "ImageProc.h"
@@ -175,6 +175,8 @@
 #include "TCP.h"
 #include "Control.h"
 #include "red_detecte.h"
+#include "Recognize.h" 
+
 //===================================================用户自定义文件===================================================
 
 

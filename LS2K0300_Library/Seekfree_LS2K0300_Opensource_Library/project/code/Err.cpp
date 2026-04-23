@@ -1,6 +1,6 @@
 #include "Err.h"
 
-namespace Error {
+namespace Err {
     // 变量定义
 
     Error_parm Err = {

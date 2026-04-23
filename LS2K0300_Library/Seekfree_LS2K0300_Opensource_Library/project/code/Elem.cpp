@@ -48,8 +48,8 @@ namespace Elem {
         Left_corner = {};
         Right_corner.Curve_Row = 0;
         Left_corner.Curve_Row = 0;
-        Error::Err.mode = 0;
-        Error::Err.limit = HEIGHT - 1;
+        Err::Err.mode = 0;
+        Err::Err.limit = HEIGHT - 1;
         ImageProc::state.mode = 0;
         ImageProc::state.range_l = 5;
         ImageProc::state.range_r = WIDTH - 5;
@@ -401,7 +401,7 @@ namespace Elem {
                 
                 if (ImageProc::Mid_BF.LostParam.sum < 10 || ImageProc::Left_BF.LostParam.start < 30 || ImageProc::Right_BF.LostParam.start < 30){
                     Cross.State = 0;
-                    Error::Err.mode = 0;
+                    Err::Err.mode = 0;
                     clear();
                     break;
                 }
@@ -473,7 +473,7 @@ namespace Elem {
                 
                 if (ImageProc::Left_BF.LostParam.sum > 30 && ImageProc::Left_BF.LostParam.start > 67){
                     Left_Island.State = 2;
-                    Error::Err.mode = 0;
+                    Err::Err.mode = 0;
 
                 }
 
@@ -503,7 +503,7 @@ namespace Elem {
             case 3:{
                 Left_corner.U_y = island_Up(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff + 2 , 0, ImageProc::l_black);
                 if(Left_corner.U_y != 0 && ImageProc::Left_BF.LostParam.start > 60){
-                    Error::Err.limit = HEIGHT - Left_corner.U_y;
+                    Err::Err.limit = HEIGHT - Left_corner.U_y;
                     my_draw_line(ImageProc::l_black[Left_corner.U_y],Left_corner.U_y,ImageProc::r_black[HEIGHT-10],HEIGHT-10,MODE_TWO_POINTS,DIRECTION_DOWN_RIGHT,0);
                 }
                 if (ImageProc::Right_BF.LostParam.sum > 36 && Left_corner.U_y != 0){
@@ -515,7 +515,7 @@ namespace Elem {
             }
             //入环（左上拐点变右上拐点）
             case 4:{
-                Error::Err.limit = HEIGHT - 1; 
+                Err::Err.limit = HEIGHT - 1; 
                 Right_corner.U_y = island_Up(ImageProc::Right_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 1 ,ImageProc::r_black);
                 if (Right_corner.U_y == 0) { Right_corner.U_y = Left_corner.U_y; }
                 if(Right_corner.U_y != 0){
@@ -623,7 +623,7 @@ namespace Elem {
                 
                 if (ImageProc::Right_BF.LostParam.sum > 30 && ImageProc::Right_BF.LostParam.start > 67){
                     Right_Island.State = 2;
-                    Error::Err.mode = 0;
+                    Err::Err.mode = 0;
 
                 }
 
@@ -652,7 +652,7 @@ namespace Elem {
             case 3:{
                 Right_corner.U_y = island_Up(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff + 2 , 1, ImageProc::r_black);
                 if(Right_corner.U_y != 0 && ImageProc::Right_BF.LostParam.start > 60){
-                    Error::Err.limit = HEIGHT - Right_corner.U_y;
+                    Err::Err.limit = HEIGHT - Right_corner.U_y;
 
                     my_draw_line(ImageProc::r_black[Right_corner.U_y],Right_corner.U_y,ImageProc::l_black[HEIGHT-15],HEIGHT-15,MODE_TWO_POINTS,DIRECTION_DOWN_LEFT,0);
                     
@@ -667,7 +667,7 @@ namespace Elem {
             }
             //入环（左上拐点变右上拐点）
             case 4:{
-                Error::Err.limit = HEIGHT - 1; 
+                Err::Err.limit = HEIGHT - 1; 
                 Left_corner.U_y = island_Up(ImageProc::Left_BF.LostParam.mid, HEIGHT - ImageProc::state.cutoff + 2, 0 ,ImageProc::l_black);
                 if (Left_corner.U_y == 0) { Left_corner.U_y = Right_corner.U_y; }
                 if(Left_corner.U_y != 0){

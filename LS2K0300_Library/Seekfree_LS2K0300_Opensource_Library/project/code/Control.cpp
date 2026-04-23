@@ -143,7 +143,7 @@ namespace Control{
             {
             case LOOG: 
                 if(MenuSystem::Car_flag.speed_loop){
-                    if (Error::Err.current > 0){
+                    if (Err::Err.current > 0){
                         aim_speed.cur_L = LongStrSpeed.set_speed;
                         aim_speed.cur_R = LongStrSpeed.set_speed;
                     }else{
@@ -184,7 +184,7 @@ namespace Control{
                 break;
             case SHORT:
                 if(MenuSystem::Car_flag.speed_loop){
-                    if (Error::Err.current > 0){
+                    if (Err::Err.current > 0){
                         aim_speed.cur_L = ShortStrSpeed.set_speed;
                         aim_speed.cur_R = ShortStrSpeed.set_speed;
                     }else{
@@ -226,7 +226,7 @@ namespace Control{
                 //分段PD控制器
                 //SmartPD::SegmentPDController(Error::Err.current, CurvePid.kp, CurvePid.kd);
                 if(MenuSystem::Car_flag.speed_loop){
-                    if (Error::Err.current > 0){
+                    if (Err::Err.current > 0){
                         aim_speed.cur_L = CurveSpeed.set_speed;
                         aim_speed.cur_R = CurveSpeed.set_speed;
                     }else{
@@ -266,7 +266,7 @@ namespace Control{
             case ISLAND:
                 
                 if(MenuSystem::Car_flag.speed_loop){
-                    if (Error::Err.current > 0){
+                    if (Err::Err.current > 0){
                         aim_speed.cur_L = IslandSpeed.set_speed;
                         aim_speed.cur_R = IslandSpeed.set_speed;
                     }else{
@@ -473,7 +473,7 @@ namespace Control{
 
         return 
             (ImageProc::state.cutoff < 64) && 
-            ((left_condition && Error::Err.current > 25)|| (right_condition && Error::Err.current < -25)) &&
+            ((left_condition && Err::Err.current > 25)|| (right_condition && Err::Err.current < -25)) &&
             (ImageProc::Mid_BF.Var < 70);
     }
     
@@ -496,9 +496,9 @@ namespace Control{
 
         // 计算中线特征参数
         ImageProc::Mid_BF.Slope = two_segment_fitting_int(start, end, 0, 0, 
-                                Error::center_line, Error::fit_center_line);
+                                Err::center_line, Err::fit_center_line);
         ImageProc::Mid_BF.Var = fangcha(start, end, 
-                                Error::center_line, Error::fit_center_line);
+                                Err::center_line, Err::fit_center_line);
         
         //return SHORT;
         //return CURVE;
