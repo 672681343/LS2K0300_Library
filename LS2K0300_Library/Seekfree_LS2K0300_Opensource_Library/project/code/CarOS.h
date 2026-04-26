@@ -131,7 +131,7 @@ namespace MenuSystem {
         uint16_t stop_times = 0;
         uint8_t saving    ;
         uint8_t beep      ; 
-        uint8_t version   ; // 版本号
+        uint8_t version   ; // 版本号z
     };
     //菜单模块定义-----------------------------------------
 

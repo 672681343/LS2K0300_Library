@@ -15,7 +15,7 @@ namespace Pit{
         pit_ms_init(5 , callback_5ms);
         pit_ms_init(10 ,callback_10ms);
         // pit_ms_init(20 ,callback_20ms);
-        // pit_ms_init(50, callback_50ms);
+        pit_ms_init(50, callback_50ms);
     }
     //-------------------------------------------------------------------------------------------------------------------
     // 函数简介: 5ms中断
@@ -39,7 +39,9 @@ namespace Pit{
 
 
         Err_out = -PID::TurnPID(0, Error::Err.current, &PID::turn_pid);
-        Angle_out = PID::AnglePID(Err_out, imu660ra_gyro_z, &PID::angle_pid);
+        Angle_out = -PID::AnglePID(Err_out,imu660ra_gyro_z, &PID::angle_pid);  //imu660ra_gyro_z
+        Control::pwm.L = PID::Speed_loc_PID((Control::aim_speed.cur_L+Control::aim_speed.cur_R)/2, (Encoder::count.L+Encoder::count.R)/2, &PID::speed_pid_L);
+                
 
 
 
@@ -68,9 +70,9 @@ namespace Pit{
                 
 
                 if(MenuSystem::Car_flag.turn == 0){
-                    Motor::goMotor(Control::pwm.L, Control::pwm.R); 
+                    Motor::goMotor(Control::pwm.L, Control::pwm.L ); 
                 }else{
-                    Motor::goMotor(Control::pwm.L-Angle_out, Control::pwm.L+Angle_out);
+                    Motor::goMotor((Control::pwm.L - Angle_out)*(1 + Control::CurveSpeed.dif) , (Control::pwm.L + Angle_out)*(1 - Control::CurveSpeed.dif) );
                 }
 
 
@@ -78,16 +80,16 @@ namespace Pit{
                 // 开环测试（允许左右轮独立 PWM）
 
                 if(MenuSystem::Car_flag.turn == 0){
-                    Motor::goMotor(Control::pwm.L, Control::pwm.R); 
+                    Motor::goMotor(1100, 1100); //Control::pwm.L
                 }else{
-                    Motor::goMotor(Control::pwm.L-Angle_out, Control::pwm.L+Angle_out);
+                    Motor::goMotor(1600 - Angle_out , 1600 + Angle_out );
                 }
 
             } else {
-                // 停止测试模式
+                // 停止测试模式s
                 Control::pwm.L = 0;
                 Control::pwm.R = 0;
-                Motor::goMotor(Control::pwm.L, Control::pwm.R);
+                Motor::goMotor(Control::pwm.L, Control::pwm.L );
             }
             
         } 
@@ -99,18 +101,18 @@ namespace Pit{
                 // 闭环测试（允许左右轮独立 PID 参数）
  
                 if(MenuSystem::Car_flag.turn == 0){
-                    Motor::goMotor(Control::pwm.L, Control::pwm.R); 
+                    Motor::goMotor(Control::pwm.L, Control::pwm.L ); 
                 }else{
-                    Motor::goMotor(Control::pwm.L+Angle_out, Control::pwm.L-Angle_out);
+                    Motor::goMotor(Control::pwm.L - Angle_out , Control::pwm.L + Angle_out );
                 }
 
             } else if(MenuSystem::Car_flag.stop == 0){
                 // 开环测试（允许左右轮独立 PWM）
 
                 if(MenuSystem::Car_flag.turn == 0){
-                    Motor::goMotor(Control::pwm.L, Control::pwm.R); 
+                    Motor::goMotor(Control::pwm.L, Control::pwm.L ); 
                 }else{
-                    Motor::goMotor(Control::pwm.L+Angle_out, Control::pwm.L-Angle_out);
+                    Motor::goMotor(Control::pwm.L - Angle_out , Control::pwm.L + Angle_out );
                 }
             }
 
@@ -127,7 +129,8 @@ namespace Pit{
 
     void callback_10ms()
     {
-        Control::pwm.L = PID::Speed_loc_PID((Control::aim_speed.cur_L+Control::aim_speed.cur_R)/2, (Encoder::count.L+Encoder::count.R)/2, &PID::speed_pid_L);
+
+        // Control::pwm.L = PID::Speed_loc_PID((Control::aim_speed.cur_L+Control::aim_speed.cur_R)/2, (Encoder::count.L+Encoder::count.R)/2, &PID::speed_pid_L);
 
     }
 

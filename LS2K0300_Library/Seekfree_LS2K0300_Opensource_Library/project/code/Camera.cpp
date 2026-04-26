@@ -12,6 +12,7 @@ namespace Camera {
     
     uint8_t bin_pixels[WIDTH * HEIGHT]{};   // 受处理图像
     uint8_t lcd_pixels[WIDTH * HEIGHT]{};   // 可视化图像
+    uint8_t huidu[WIDTH * HEIGHT]{};
 
         uint8_t original_pixels[UVC_WIDTH * UVC_HEIGHT]{};
         void basic_image_processing(uint8_t* image) {
@@ -82,6 +83,7 @@ namespace Camera {
                 uint8_t pv = image[i * UVC_WIDTH + xs];
                 bin_pixels[i * WIDTH + j] = (pv > threshold) ? 255 : 0;
                 lcd_pixels[i * WIDTH + j] = (pv > threshold) ? 255 : 0;
+                huidu[i * WIDTH + j] = pv;
             }
         }
     }

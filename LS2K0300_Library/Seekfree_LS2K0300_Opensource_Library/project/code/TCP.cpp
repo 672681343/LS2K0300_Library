@@ -29,13 +29,13 @@ namespace TCP {
         if(TCP_MODE){
             seekfree_assistant_oscilloscope_data.data[0] = (Control::aim_speed.cur_L+Control::aim_speed.cur_R)/2;
             seekfree_assistant_oscilloscope_data.data[1] = (Encoder::count.L+Encoder::count.R)/2;
-            seekfree_assistant_oscilloscope_data.data[2] = Pit::Err_out;
+            seekfree_assistant_oscilloscope_data.data[2] = Pit::Err_out; //转向环输出
             seekfree_assistant_oscilloscope_data.data[3] = imu660ra_gyro_z;
 
-            seekfree_assistant_oscilloscope_data.data[4] = Pit::Angle_out;
-            seekfree_assistant_oscilloscope_data.data[5] = Error::Err.current;
+            seekfree_assistant_oscilloscope_data.data[4] = Pit::Angle_out;//角度环输出
+            seekfree_assistant_oscilloscope_data.data[5] = PID::speed_pid_L.i_term;
 
-            seekfree_assistant_oscilloscope_data.data[6] =  Control::pwm.L-Pit::Angle_out;
+            seekfree_assistant_oscilloscope_data.data[6] =  Control::pwm.L;
             seekfree_assistant_oscilloscope_data.data[7] =  Control::pwm.L+Pit::Angle_out;
 
 

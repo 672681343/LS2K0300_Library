@@ -10,6 +10,7 @@ namespace Camera {
     
     extern uint8_t bin_pixels[WIDTH*HEIGHT];
     extern uint8_t lcd_pixels[WIDTH*HEIGHT];
+    extern uint8_t huidu[WIDTH * HEIGHT];
 
         void basic_image_processing(uint8_t* image);
         uint8_t calculate_otsu_threshold(uint8_t* image);

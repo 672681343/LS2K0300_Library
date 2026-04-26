@@ -129,6 +129,7 @@ namespace Control{
 
     uint8_t RoadSegment_t = SHORT; 
     uint16_t stop_count = 0; // 停车计帧
+ 
 
     //-------------------------------------------------------------------------------------------------------------------
     // 函数简介: 控制输出
@@ -144,6 +145,7 @@ namespace Control{
             switch (RoadSegment)
             {
             case LOOG: 
+                CurveSpeed.dif = 0;
                 if(MenuSystem::Car_flag.speed_loop){
                     if (Error::Err.current > 0){
                         aim_speed.cur_L = LongStrSpeed.set_speed;
@@ -157,8 +159,10 @@ namespace Control{
                     
                     PID::speed_pid_L.kp = LongStrSpeed.l_kp;
                     PID::speed_pid_L.ki = LongStrSpeed.l_ki;
-                    PID::speed_pid_L.kp = LongStrSpeed.r_kp;
-                    PID::speed_pid_L.ki = LongStrSpeed.r_ki;                       
+                    PID::speed_pid_L.kd = LongStrSpeed.l_kd;
+                    PID::speed_pid_R.kp = LongStrSpeed.r_kp;
+                    PID::speed_pid_R.ki = LongStrSpeed.r_ki;      
+                    PID::speed_pid_R.kd = LongStrSpeed.r_kd;                   
 
 
                     PID::turn_pid.kp = LongStrPid.kp;
@@ -186,6 +190,7 @@ namespace Control{
  
                 break;
             case SHORT:
+                CurveSpeed.dif = 0;
                 if(MenuSystem::Car_flag.speed_loop){
                     if (Error::Err.current > 0){
                         aim_speed.cur_L = ShortStrSpeed.set_speed;
@@ -199,9 +204,9 @@ namespace Control{
                         PID::speed_pid_L.kp = ShortStrSpeed.l_kp;
                         PID::speed_pid_L.ki = ShortStrSpeed.l_ki;
                         PID::speed_pid_L.kd = ShortStrSpeed.l_kd;
-                        PID::speed_pid_L.kp = ShortStrSpeed.r_kp;
-                        PID::speed_pid_L.ki = ShortStrSpeed.r_ki; 
-                        PID::speed_pid_L.kd = ShortStrSpeed.r_kd;                      
+                        PID::speed_pid_R.kp = ShortStrSpeed.l_kp;
+                        PID::speed_pid_R.ki = ShortStrSpeed.l_ki; 
+                        PID::speed_pid_R.kd = ShortStrSpeed.l_kd;                      
                     // }
 
                     PID::turn_pid.kp = ShortStrPid.kp;
@@ -235,18 +240,20 @@ namespace Control{
                     if (Error::Err.current > 0){
                         aim_speed.cur_L = CurveSpeed.set_speed;
                         aim_speed.cur_R = CurveSpeed.set_speed;
+                        CurveSpeed.dif = -0;
                     }else{
                         aim_speed.cur_L = CurveSpeed.set_speed;
                         aim_speed.cur_R = CurveSpeed.set_speed;
+                        CurveSpeed.dif = 0;
                     }
 
 
                     PID::speed_pid_L.kp = CurveSpeed.l_kp;
                     PID::speed_pid_L.ki = CurveSpeed.l_ki;
                     PID::speed_pid_L.kd = CurveSpeed.l_kd;
-                    PID::speed_pid_L.kp = CurveSpeed.r_kp;
-                    PID::speed_pid_L.ki = CurveSpeed.r_ki;  
-                    PID::speed_pid_L.kd = CurveSpeed.r_kd;                     
+                    PID::speed_pid_R.kp = CurveSpeed.l_kp;
+                    PID::speed_pid_R.ki = CurveSpeed.l_ki;  
+                    PID::speed_pid_R.kd = CurveSpeed.l_kd;                     
 
 
                     PID::turn_pid.kp = CurvePid.kp;
@@ -268,25 +275,27 @@ namespace Control{
 
                 }
 
-                Error::Err.row = CurveSpeed.err_row;
-
                 break;
             case ISLAND:
-                
+                CurveSpeed.dif = 0;
                 if(MenuSystem::Car_flag.speed_loop){
                     if (Error::Err.current > 0){
                         aim_speed.cur_L = IslandSpeed.set_speed;
                         aim_speed.cur_R = IslandSpeed.set_speed;
+                        CurveSpeed.dif = -0;
                     }else{
                         aim_speed.cur_L = IslandSpeed.set_speed;
                         aim_speed.cur_R = IslandSpeed.set_speed;
+                        CurveSpeed.dif = 0;
                     }
 
 
                     PID::speed_pid_L.kp = IslandSpeed.l_kp;
                     PID::speed_pid_L.ki = IslandSpeed.l_ki;
-                    PID::speed_pid_L.kp = IslandSpeed.r_kp;
-                    PID::speed_pid_L.ki = IslandSpeed.r_ki; 
+                    PID::speed_pid_L.kd = IslandSpeed.l_kd;
+                    PID::speed_pid_R.kp = IslandSpeed.r_kp;
+                    PID::speed_pid_R.ki = IslandSpeed.r_ki;
+                    PID::speed_pid_R.kd = IslandSpeed.r_kd;  
                     
                     
 

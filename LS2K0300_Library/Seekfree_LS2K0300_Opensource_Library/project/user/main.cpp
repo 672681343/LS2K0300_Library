@@ -53,6 +53,12 @@ int main(int, char**)
     MenuSystem::init();                         // 菜单初始化
     Pit::Init();                                // 中断初始化
 
+    // uint32_t sum;
+    // for(uint8_t i =0;i<200;i++){
+    //     sum+=imu660ra_gyro_z;
+    // }
+
+
     while(1)
     {
 
@@ -90,7 +96,7 @@ int main(int, char**)
 
         // ips200_show_rgb565_image(0,0,rgb565_image,160,120,60,20,0);
 
-        process_image(rgb565_image);
+        // process_image(rgb565_image);
         // if(!boxes.empty()){
         //     // const auto& box = boxes[0];
         //     printf("Box: Area=%d at (%d,%d) size %dx%d\n",

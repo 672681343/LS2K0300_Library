@@ -338,7 +338,7 @@ namespace {
         void fitting_image_save(int index)
         {
             char path_buf[256];
-            cv::Mat src(HEIGHT, WIDTH, CV_8UC1, Camera::lcd_pixels);
+            cv::Mat src(HEIGHT, WIDTH, CV_8UC1, Camera::lcd_pixels); //Camera::lcd_pixels
             cv::imwrite(build_path(path_buf, sizeof(path_buf), FITTING_DIR, index, ".bmp"), src);
         }
     #endif
@@ -361,7 +361,7 @@ namespace DataSaving {
     void saveTask(uint8_t mode) {
         // 保持原有数据初始化方式
         if(mode){
-            binary_image_save(img_index,Camera::bin_pixels);
+            binary_image_save(img_index,Camera::lcd_pixels);//Camera::huidu
             fitting_image_save(img_index);
             data_save(img_index,ImageProc::l_black,Error::center_line,ImageProc::r_black,
                 ImageProc::fit_l_black,ImageProc::fit_r_black);

@@ -28,7 +28,7 @@ namespace MenuSystem {
         .protect  = 0,
         .set_time = 0,       // 普通成员变量
         .saving = 0,
-        .version = 0, // 版本号
+        .version = 0, // 版本号zz
     };
     uint8_t menu_state = 1;
     // 菜单项声明-------------------------------------------------

@@ -76,19 +76,19 @@ namespace Motor {
         
             // 控制右电机
             if(R_PWM >= 0) {
-                gpio_set_level(MOTOR2_DIR, 1);
+                gpio_set_level(MOTOR2_DIR, 0);
                 pwm_set_duty(MOTOR2_PWM, R_PWM);
             } else {
-                gpio_set_level(MOTOR2_DIR, 0);
+                gpio_set_level(MOTOR2_DIR, 1);
                 pwm_set_duty(MOTOR2_PWM, -R_PWM);
             }
         
             // 控制左边电机
             if(L_PWM >= 0) {
-                gpio_set_level(MOTOR1_DIR, 0);
+                gpio_set_level(MOTOR1_DIR, 1);
                 pwm_set_duty(MOTOR1_PWM, L_PWM);
             } else {
-                gpio_set_level(MOTOR1_DIR, 1);
+                gpio_set_level(MOTOR1_DIR, 0);
                 pwm_set_duty(MOTOR1_PWM, -L_PWM);
 
             }

@@ -20,7 +20,7 @@ namespace PID {
         angle_pid.integral = 0;
         angle_pid.prev_error = 0;
         angle_pid.I_limit = 0;
-        angle_pid.out_limit = 4000;
+        angle_pid.out_limit = 6000;////原本是4000
 
         turn_pid.kp = 1.6;
         turn_pid.kp2 = 0.0;
@@ -30,14 +30,14 @@ namespace PID {
         turn_pid.integral = 0;
         turn_pid.prev_error = 0;
         turn_pid.I_limit = 0;
-        turn_pid.out_limit = 6000;
+        turn_pid.out_limit = 9000;////原本是6000
 
         speed_pid_L.kp = 0.0;
-        speed_pid_L.ki = 0.0;
+        speed_pid_L.ki = 0.0; //0.7/0.84/1.05
         speed_pid_L.kd = 0.0;
         speed_pid_L.integral = 0;
         speed_pid_L.prev_error = 0;
-        speed_pid_L.I_limit = 6000;
+        speed_pid_L.I_limit = 1800; //3000/2500/2000
         speed_pid_L.out_limit = 6000;
 
         speed_pid_R.kp = 0.0;
@@ -63,6 +63,16 @@ namespace PID {
         pid->p_term = pid->kp * error;
         pid->d_term = pid->kd * (error - pid->prev_error);
         int16_t output = pid->p_term + pid->d_term ;
+
+
+            // //分段输出限幅
+            // if(target>7900){
+            //     pid->out_limit = 3800;
+            // } else if(target<-7900) {
+            //         pid->out_limit = 4000;//这个会导致奇怪的现象出现，即左右占空比差值很大，但是小车会慢慢差速转弯（转弯半径大），并伴随不正常的嗡嗡声
+            // }//这时候合适的是4000限幅，4500会出现非正常转弯，5000会冲出赛道，怀疑是电机保护问题？
+
+
         // 总输出限幅
         if (pid->out_limit > 0) {
             if (output > pid->out_limit) {
@@ -93,6 +103,24 @@ namespace PID {
         pid->gd_term = pid->gkd * imu660ra_gyro_z;
         pid->d_term = pid->kd * (error - pid->prev_error);
         int16_t output = pid->p_term + pid->d_term + pid->p2_term + pid->gd_term;
+        
+        //分段输出限幅
+        // if (current > 0) {
+        //     if(current<2800){
+        //         pid->out_limit = 6000;
+        //     }else {
+        //         pid->out_limit = 9000;
+        //     }
+        // } else {
+        //     if(current < -3000){
+        //         pid->out_limit = 6000;
+        //     }else {
+        //         pid->out_limit = 9000;
+        //     }
+        // }
+        
+        
+        
         // 总输出限幅
         if (pid->out_limit > 0) {
             if (output > pid->out_limit) {
@@ -101,6 +129,9 @@ namespace PID {
                 output = -pid->out_limit;
             }
         }
+
+
+
         pid->prev_error = error;
 
         // TCP::test[0] = output;
@@ -129,6 +160,23 @@ namespace PID {
                 pid->integral = -pid->I_limit;
             }
         }
+        // //分段输出限幅
+        if(current<200){
+            pid->out_limit = 4500;
+        }else if(current<300){
+            pid->out_limit = 5000;
+        }else if(current<400){
+             pid->out_limit = 5500;
+        }else if(current<500){
+            pid->out_limit = 5600;
+        }
+
+        if(Control::RoadSegment_t == 1){
+            pid->out_limit = 1100;
+
+        }else if(Control::RoadSegment_t == 4){
+            pid->out_limit = 900;
+        }
         
         // 计算各分量
         pid->p_term = pid->kp * error;
@@ -139,20 +187,29 @@ namespace PID {
         output = (pid->p_term + pid->i_term + pid->d_term);
        // printf("error = %d, output = %d\n", error, output);
         // 输出限幅
-        if(pid->out_limit > 0) {
-            if(output > pid->out_limit) {
+        // if(pid->out_limit > 0) {
+        //     if(output > pid->out_limit) {
+        //         output = pid->out_limit;
+        //         // 抗饱和处理：回退多余积分
+        //         if(pid->ki != 0) {
+        //             pid->integral -= (output - pid->out_limit) / pid->ki;
+        //         }
+        //     } 
+        //     else if(output < -pid->out_limit) {
+        //         output = -pid->out_limit;
+        //         // 抗饱和处理：回退多余积分
+        //         if(pid->ki != 0) {
+        //             pid->integral -= (output + pid->out_limit) / pid->ki;
+        //         }
+        //     }
+        // }
+
+
+        if (pid->out_limit > 0) {
+            if (output > pid->out_limit) {
                 output = pid->out_limit;
-                // 抗饱和处理：回退多余积分
-                if(pid->ki != 0) {
-                    pid->integral -= (output - pid->out_limit) / pid->ki;
-                }
-            } 
-            else if(output < -pid->out_limit) {
+            } else if (output < -pid->out_limit) {
                 output = -pid->out_limit;
-                // 抗饱和处理：回退多余积分
-                if(pid->ki != 0) {
-                    pid->integral -= (output + pid->out_limit) / pid->ki;
-                }
             }
         }
         
