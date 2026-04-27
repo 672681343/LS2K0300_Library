@@ -30,7 +30,7 @@
 
 //模型处理相关的宏定义
 // 1. 模型相关配置
-#define MODEL_INPUT_WIDTH         40      // 模型输入图像宽度（根据实际模型调整）
+#define MODEL_INPUT_WIDTH         40      // 模型输入图像宽度（根据实际模型调整） --> 模型期待的标准尺寸
 #define MODEL_INPUT_HEIGHT        40      // 模型输入图像高度（根据实际模型调整）
 #define MODEL_INPUT_CHANNEL       3       // 模型输入图像通道数（RGB=3）
 #define MODEL_OUTPUT_CLASS_NUM    3       // 模型输出类别数（根据实际任务调整）

@@ -5,8 +5,10 @@
 #include <cstdio>
 #include <opencv2/opencv.hpp>
 
+//后续裁剪功能可以关掉，要看具体识别的速度和准确率
+
 // 图像尺寸（根据你的IPS200屏幕修改）
-#define IMG_WIDTH  160
+#define IMG_WIDTH  160  //是一个bug,按理来说应该要是186*70
 #define IMG_HEIGHT 120
 
 // RGB565 颜色定义
@@ -18,17 +20,30 @@
 #define RGB565_YELLOW  0xFFE0
 
 
-std::vector<RedBox> boxes;
+std::vector<RedBox> boxes; //  存储红色框对象的容器
 
+
+/*
+ *概述：该函数用于判断一个像素点是否为红色像素。通过比较像素的红色分量与给定的最小红色值，以及红色分量与绿色、蓝色分量的差值，来确定该像素是否满足红色的条件。
+ *
+ *参数：
+ *      pixel：一个16位无符号整数，表示一个像素点的RGB565格式颜色值。
+ *      min_red：一个8位无符号整数，表示红色分量的最小阈值。
+ *      min_diff：一个8位无符号整数，表示红色分量与绿色、蓝色分量的最小差值。
+ *返回值：
+ *
+ *返回一个布尔值，如果像素的红色分量大于等于min_red，并且大于绿色分量和蓝色分量至少min_diff，则返回true，表示该像素是红色像素；否则返回false。
+ */
 // 函数实现（不写默认参数，只写参数类型）
 bool is_red_pixel(uint16_t pixel, uint8_t min_red, uint8_t min_diff) {
-    uint8_t r = (pixel >> 11) & 0x1F;
+    uint8_t r = (pixel >> 11) & 0x1F; //  从16位像素值中提取RGB分量 这里的像素格式通常是RGB565，其中R占5位，G占6位，B占5位 提取红色分量(R)：将像素值右移11位，然后与0x1F(二进制00011111)进行与操作，获取低5位作为红色值
     uint8_t g = (pixel >> 5) & 0x3F;
     uint8_t b = pixel & 0x1F;
     
     return (r >= min_red) && (r > g + min_diff) && (r > b + min_diff);
 }
 
+//该函数用于检测图像中的红色区域，并根据面积和密度条件筛选出符合条件的红色矩形框。
 void detect_red_regions(uint16_t* image, int width, int height,
                        std::vector<RedBox>& boxes,
                        int min_area, int max_area) {
@@ -39,7 +54,7 @@ void detect_red_regions(uint16_t* image, int width, int height,
     
     // 生成二值掩码
     for (int i = 0; i < total_pixels; i++) {
-        mask[i] = is_red_pixel(image[i]) ? 255 : 0;
+        mask[i] = is_red_pixel(image[i]) ? 255 : 0; //  判断当前像素是否为红色像素，如果是则将mask中对应位置设为255，否则设为0
     }
     
     memset(visited, 0, total_pixels);
@@ -104,10 +119,11 @@ void detect_red_regions(uint16_t* image, int width, int height,
         }
     }
     
-    delete[] mask;
+    delete[] mask; //  释放动态分配的内存
     delete[] visited;
 }
 
+//在指定图像上绘制一个指定颜色和粗细的矩形
 void draw_rect_rgb565(uint16_t* image, int width, int height,
                      int x, int y, int w, int h, 
                      uint16_t color, int thickness) {
@@ -144,6 +160,9 @@ void draw_rect_rgb565(uint16_t* image, int width, int height,
     }
 }
 
+
+
+//在指定图像上绘制一个十字，十字的中心位置和颜色可自定义。
 void draw_cross_rgb565(uint16_t* image, int width, int height,
                       int cx, int cy, uint16_t color, int size) {
     for (int i = -size; i <= size; i++) {
@@ -155,6 +174,7 @@ void draw_cross_rgb565(uint16_t* image, int width, int height,
 }
 
 
+//该函数用于从源图像中裁剪出一个指定矩形区域的图像，并返回裁剪后的图像数据
 uint16_t* crop_image(uint16_t* src_image, int src_width, int src_height,
                     int x, int y, int w, int h) {
     // 边界检查
@@ -184,40 +204,39 @@ uint16_t* crop_image(uint16_t* src_image, int src_width, int src_height,
         memcpy(&dst_image[dst_offset], &src_image[src_offset], w * sizeof(uint16_t));
     }
     
-    return dst_image;
+    return dst_image; //  返回处理后的图像数据
 }
 
-
-
+//该函数将RGB565格式的图像数据转换为JPG格式并保存到指定文件。
 void save_rgb565_as_jpg(const char* filename, uint16_t* rgb565, int w, int h) {
     // RGB565 -> BGR (OpenCV 格式)
-    cv::Mat bgr(h, w, CV_8UC3);
+    cv::Mat bgr(h, w, CV_8UC3); //  将RGB565格式的图像转换为BGR格式的OpenCV Mat对象 参数说明： h: 图像的高度（行数） w: 图像的宽度（列数） CV_8UC3: 表示每个像素由3个8位无符号字符（即BGR三个通道）组成
     
     for (int y = 0; y < h; y++) {
         for (int x = 0; x < w; x++) {
-            uint16_t p = rgb565[y * w + x];
-            uint8_t r = ((p >> 11) & 0x1F) << 3;
-            uint8_t g = ((p >> 5) & 0x3F) << 2;
-            uint8_t b = (p & 0x1F) << 3;
+            uint16_t p = rgb565[y * w + x]; //  从RGB565格式图像中获取像素值
+            uint8_t r = ((p >> 11) & 0x1F) << 3; //  提取红色分量(R5)，并将其扩展到8位
+            uint8_t g = ((p >> 5) & 0x3F) << 2; //  提取绿色分量(G6)，并将其扩展到8位
+            uint8_t b = (p & 0x1F) << 3; //  提取蓝色分量(B5)，并将其扩展到8位
             
-            bgr.at<cv::Vec3b>(y, x) = cv::Vec3b(b, g, r);  // BGR 顺序
+            bgr.at<cv::Vec3b>(y, x) = cv::Vec3b(b, g, r);  // BGR 顺序 //  将RGB值存储为BGR格式的OpenCV Vec3b向量
         }
     }
     
     // 直接保存为 JPG
-    std::vector<int> params;
-    params.push_back(cv::IMWRITE_JPEG_QUALITY);
+    std::vector<int> params; //  定义一个整型向量，用于存储图像编码参数
+    params.push_back(cv::IMWRITE_JPEG_QUALITY); //  添加JPEG质量参数标志
     params.push_back(95);  // 质量 0-100
     
-    cv::imwrite(filename, bgr, params);
+    cv::imwrite(filename, bgr, params); //  将处理后的图像保存到文件 参数:   filename - 要保存的文件名   bgr - 要保存的BGR格式图像数据   params - 保存参数，如压缩质量等
 }
 
 
 
-
+//该函数处理RGB565格式的图像，检测其中的红色区域，并在检测到红色区域时，每隔一定帧数裁剪并保存该区域为JPEG图片。
 void process_image(uint16_t* rgb565_image) {
     
-    detect_red_regions(rgb565_image, IMG_WIDTH, IMG_HEIGHT, boxes, 40, 1100);
+    detect_red_regions(rgb565_image, IMG_WIDTH, HEIGHT, boxes, 40, 1100);
 
     // printf("Detected %zu boxes\n", boxes.size());
     
@@ -226,26 +245,26 @@ void process_image(uint16_t* rgb565_image) {
     
     // 每30帧自动保存一张（约0.5秒@60fps）
     if (!boxes.empty() ) {   // && (frame_count % 10 == 0)
-        const auto& box = boxes[0];
+        const auto& box = boxes[0]; //  获取检测到的第一个边界框
         // printf("Box: Area=%d at (%d,%d) size %dx%d\n",
         //        box.area, box.x, box.y, box.w, box.h);
         
         // 画框
-        draw_rect_rgb565(rgb565_image, IMG_WIDTH, IMG_HEIGHT,
+        draw_rect_rgb565(rgb565_image, IMG_WIDTH, IMG_HEIGHT, //  绘制矩形框，使用RGB565格式 参数：图像数据、图像宽度、图像高度、矩形坐标和尺寸、颜色、线宽
                         box.x - 2, box.y +2, box.w + 4, box.h+15, 
                         RGB565_WHITE, 2);
         
         // 裁剪并保存
-        uint16_t* cropped = crop_image(rgb565_image, IMG_WIDTH, IMG_HEIGHT,
+        uint16_t* cropped = crop_image(rgb565_image, IMG_WIDTH, IMG_HEIGHT, //  从原始图像中裁剪出指定区域         参数：原始图像、图像宽度、图像高度、裁剪起点x坐标、裁剪起点y坐标、裁剪宽度、裁剪高度
                                       box.x - 2, box.y+2, box.w + 4, box.h+15);
         if (cropped) {
             char path[128];
             // 保存到 /tmp（内存中），之后用scp拷出
-            snprintf(path, sizeof(path), "/tmp/redbox_%d_%d.jpg", 
+            snprintf(path, sizeof(path), "/tmp/redbox_%d_%d.jpg",  //  格式化生成文件名，包含帧数和区域面积信息
                     frame_count, box.area);
-            save_rgb565_as_jpg(path, cropped, box.w + 4, box.h + 15);
+            save_rgb565_as_jpg(path, cropped, box.w + 4, box.h + 15); //  将裁剪后的RGB565图像保存为JPG格式
             
-            free(cropped);
+            free(cropped); //  释放裁剪图像的内存
         }
     }
     

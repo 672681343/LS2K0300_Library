@@ -649,7 +649,7 @@ namespace MenuSystem {
         current_menu = &main_menu; // 硬编码主菜单
         cursor_pos = 0;
         if(current_menu) {
-            draw_menu();
+            draw_menu();//如果不想显示菜单，只想显示一个彩色图像，把这个关了就可以
         }
     }
     //需要保存的参数组
@@ -946,12 +946,13 @@ namespace MenuSystem {
         //显示lcd
 
         // ips200_show_gray_image(camera_x,camera_y,rgay_image,186,70);
+        // ips200_show_rgb565_image(camera_x,camera_y,rgb565_image,160,120,60,20,0);
         ips200_show_gray_image(camera_x,camera_y,Camera::lcd_pixels,186,70);
         ips200_draw_line(camera_x-1,camera_y,camera_x-1,camera_y+70,0xFFFF);
         ips200_draw_line(camera_x+186,camera_y,camera_x+186,camera_y+70,0xFFFF);
         ips200_draw_line(camera_x,camera_y+70,camera_x+186,camera_y+70,0xFFFF);
         // 显示电池电压
-        //ips200_show_gray_image(0, 0, rgay_image, UVC_WIDTH, UVC_HEIGHT);
+        // ips200_show_gray_image(0, 0, rgay_image, UVC_WIDTH, UVC_HEIGHT);
         // 清屏并绘制标题
         
         char title_buf[32];

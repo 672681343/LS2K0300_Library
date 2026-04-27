@@ -929,7 +929,7 @@ namespace Elem {
                 break;
             }
         }
-        printf("Zebra.y = %d , Elem::Zebra.count = %d, Elem::Zebra.State = %d\n", Zebra.y, Zebra.count, Zebra.State);
+        // printf("Zebra.y = %d , Elem::Zebra.count = %d, Elem::Zebra.State = %d\n", Zebra.y, Zebra.count, Zebra.State);
     }
 
 }
