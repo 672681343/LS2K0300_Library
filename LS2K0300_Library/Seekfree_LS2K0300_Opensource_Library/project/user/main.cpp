@@ -111,7 +111,7 @@ int main(int, char**)
     while(1)
     {
 
-        frame_count++;  // 帧计数+1
+        
         
         //摄像头采集数据
         if(wait_image_refresh() < 0)
@@ -127,18 +127,7 @@ int main(int, char**)
             continue;  // 跳过空帧，不退出程序
         }
 
-        // 将原来的预处理、推理、输出打印代码替换为：
-        InferenceResult inference_result = perform_inference(
-            frame_rgb, 
-            frame_count, 
-            (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged), 
-            interpreter
-        );
 
-        // 更新first_frame_logged标志（如果需要）
-        if (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged) {
-            first_frame_logged = true;
-        }
 
         // ======================== 图像和控制处理 ========================
 
@@ -167,18 +156,15 @@ int main(int, char**)
 
         // ips200_show_rgb565_image(0,0,rgb565_image,160,120,60,20,0);
 
+        // frame_count++;  // 帧计数+1
 
-        process_image(rgb565_image);
-        if(!boxes.empty()){
-            // const auto& box = boxes[0];
-            printf("Box: Area=%d at (%d,%d) size %dx%d\n",
-                   boxes[0].area, boxes[0].x, boxes[0].y, boxes[0].w, boxes[0].h);            
-        }
-        
-        
+        process_image(rgb565_image, &frame_count);
 
-        // ips200_show_rgb565_image(0, 0, rgb565_image, 160, 120, 160, 120, 0);
-        ips200_show_gray_image(0, 0, rgay_image, 160, 120);
+        
+        // show_rgb565_image(0, 0, scc8660_image[0], SCC8660_W, SCC8660_H, 100, 100, 1);  //
+        ips200_show_rgb565_image(0, 0, rgb565_image, 160, 120, 160, 70, 0);
+        // ips200_show_rgb565_image(0, 0, rgb565_image, 160, 120, 160, 70, 0);
+        // ips200_show_gray_image(0, 0, rgay_image, 160, 120);
         
     }
 }

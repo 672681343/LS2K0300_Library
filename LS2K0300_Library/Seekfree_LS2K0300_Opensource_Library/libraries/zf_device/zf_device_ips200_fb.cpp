@@ -275,22 +275,77 @@ uint16 width, uint16 height)
 //              如果要显示低位在前的其他 RGB565 图像 修改最后一个参数即可
 //              如果要显示低位在前的其他 RGB565 图像 修改最后一个参数即可
 //-------------------------------------------------------------------------------------------------------------------
-void ips200_show_rgb565_image (uint16 x, uint16 y, const uint16 *image, uint16 width, uint16 height, uint16 dis_width, uint16 dis_height, uint8 color_mode)
+// void ips200_show_rgb565_image (uint16 x, uint16 y, const uint16 *image, uint16 width, uint16 height, uint16 dis_width, uint16 dis_height, uint8 color_mode)
+// {
+//     uint32 x_start = 0, y_start = 0;
+//     for(y_start = y; y_start < (y + height); y_start++)
+//     {
+//         for(x_start = x; x_start < (x + width); x_start++)
+//         {
+//             uint16 color = image[(x_start - x) + (y_start- y) * width];
+//             if(1 == color_mode)
+//             {
+//                 color = ((color & 0x00FF) << 8) | ((color & 0xFF00) >> 8);
+//             }
+//             ips200_draw_point(x_start, y_start, color);
+//         }
+//     }
+// }
+
+
+//-------------------------------------------------------------------------------------------------------------------
+// 函数简介     IPS200 显示 RGB565 彩色图像（支持裁剪）
+// 参数说明     x               坐标x方向的起点 参数范围 [0, ips200_x_max-1]
+// 参数说明     y               坐标y方向的起点 参数范围 [0, ips200_y_max-1]
+// 参数说明     *image          图像数组指针
+// 参数说明     width           图像实际宽度
+// 参数说明     height          图像实际高度
+// 参数说明     dis_width       显示宽度（裁剪后宽度） 参数范围 [0, ips200_x_max]
+// 参数说明     dis_height      显示高度（裁剪后高度） 参数范围 [0, ips200_y_max]
+// 参数说明     color_mode      色彩模式 0-低位在前 1-高位在前
+// 返回参数     void
+// 使用示例     // 显示图像的左上角 100x100 区域
+//               show_rgb565_image(0, 0, scc8660_image[0], SCC8660_W, SCC8660_H, 100, 100, 1);
+// 备注信息     如果 dis_width/dis_height 小于原图尺寸，则显示裁剪后的图像
+//-------------------------------------------------------------------------------------------------------------------
+void ips200_show_rgb565_image(uint16 x, uint16 y, const uint16 *image, uint16 width, uint16 height, 
+                               uint16 dis_width, uint16 dis_height, uint8 color_mode)
 {
-    uint32 x_start = 0, y_start = 0;
-    for(y_start = y; y_start < (y + height); y_start++)
+    // 参数校验
+    if (dis_width == 0) dis_width = width;
+    if (dis_height == 0) dis_height = height;
+    if (dis_width > width) dis_width = width;
+    if (dis_height > height) dis_height = height;
+    
+    uint16 x_start = 0, y_start = 0;
+    
+    for (y_start = 0; y_start < dis_height; y_start++)
     {
-        for(x_start = x; x_start < (x + width); x_start++)
+        for (x_start = 0; x_start < dis_width; x_start++)
         {
-            uint16 color = image[(x_start - x) + (y_start- y) * width];
-            if(1 == color_mode)
+            // 计算图像中的位置
+            uint16 src_x = x_start;
+            uint16 src_y = y_start;
+            
+            uint16 color = image[src_x + src_y * width];
+            
+            if (1 == color_mode)
             {
+                // 高低位交换
                 color = ((color & 0x00FF) << 8) | ((color & 0xFF00) >> 8);
             }
-            ips200_draw_point(x_start, y_start, color);
+            
+            // 显示到屏幕
+            ips200_draw_point(x + x_start, y + y_start, color);
         }
     }
 }
+
+
+
+
+
+
 
 
 void ips200_init(const char *path)

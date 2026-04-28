@@ -21,7 +21,7 @@ void draw_rect_rgb565(uint16_t* image, int width, int height,
                      uint16_t color, int thickness = 1);
 void draw_cross_rgb565(uint16_t* image, int width, int height,
                       int cx, int cy, uint16_t color, int size = 5);
-void process_image(uint16_t* rgb565_image);
+void process_image(uint16_t* rgb565_image, int *frame_count);
 
 extern uint16_t* cropped;
 

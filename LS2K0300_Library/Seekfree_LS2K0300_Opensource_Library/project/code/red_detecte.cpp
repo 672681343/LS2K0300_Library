@@ -1,4 +1,5 @@
 #include "red_detecte.h"
+#include "many_define.h"
 #include <queue>
 #include <cstring>
 #include <algorithm>
@@ -10,6 +11,8 @@
 // 图像尺寸（根据你的IPS200屏幕修改）
 #define IMG_WIDTH  160  //是一个bug,按理来说应该要是186*70
 #define IMG_HEIGHT 120
+
+
 
 // RGB565 颜色定义
 #define RGB565_RED     0xF800
@@ -174,6 +177,18 @@ void draw_cross_rgb565(uint16_t* image, int width, int height,
 }
 
 
+
+
+
+/*
+src_image：指向源图像数据的指针，图像数据为uint16_t类型
+src_width：源图像的宽度（像素数）
+src_height：源图像的高度（像素数）
+x：裁剪区域左上角的x坐标
+y：裁剪区域右下角的y坐标
+w：裁剪区域的宽度
+h：裁剪区域的高度
+*/
 //该函数用于从源图像中裁剪出一个指定矩形区域的图像，并返回裁剪后的图像数据
 uint16_t* crop_image(uint16_t* src_image, int src_width, int src_height,
                     int x, int y, int w, int h) {
@@ -234,39 +249,59 @@ void save_rgb565_as_jpg(const char* filename, uint16_t* rgb565, int w, int h) {
 
 
 //该函数处理RGB565格式的图像，检测其中的红色区域，并在检测到红色区域时，每隔一定帧数裁剪并保存该区域为JPEG图片。
-void process_image(uint16_t* rgb565_image) {
+void process_image(uint16_t* rgb565_image, int *frame_count) {
     
-    detect_red_regions(rgb565_image, IMG_WIDTH, HEIGHT, boxes, 40, 1100);
+    detect_red_regions(rgb565_image, IMG_WIDTH, HEIGHT, boxes, 40, 1100); //只检测上70行
 
     // printf("Detected %zu boxes\n", boxes.size());
-    
-    static int frame_count = 0;
-    frame_count++;
+    (*frame_count)++;  // 帧计数+1
+        printf("第%d帧：处理完成\n", *frame_count);
     
     // 每30帧自动保存一张（约0.5秒@60fps）
-    if (!boxes.empty() ) {   // && (frame_count % 10 == 0)
+    if (!boxes.empty() && (*frame_count % 10 == 0)) {   // && (frame_count % 10 == 0)
         const auto& box = boxes[0]; //  获取检测到的第一个边界框
-        // printf("Box: Area=%d at (%d,%d) size %dx%d\n",
-        //        box.area, box.x, box.y, box.w, box.h);
+
         
         // 画框
-        draw_rect_rgb565(rgb565_image, IMG_WIDTH, IMG_HEIGHT, //  绘制矩形框，使用RGB565格式 参数：图像数据、图像宽度、图像高度、矩形坐标和尺寸、颜色、线宽
+        draw_rect_rgb565(rgb565_image, IMG_WIDTH, HEIGHT, //  绘制矩形框，使用RGB565格式 参数：图像数据、图像宽度、图像高度、矩形坐标和尺寸、颜色、线宽
                         box.x - 2, box.y +2, box.w + 4, box.h+15, 
-                        RGB565_WHITE, 2);
+                        RGB565_YELLOW, 4);
         
         // 裁剪并保存
-        uint16_t* cropped = crop_image(rgb565_image, IMG_WIDTH, IMG_HEIGHT, //  从原始图像中裁剪出指定区域         参数：原始图像、图像宽度、图像高度、裁剪起点x坐标、裁剪起点y坐标、裁剪宽度、裁剪高度
-                                      box.x - 2, box.y+2, box.w + 4, box.h+15);
+        uint16_t* cropped = crop_image(rgb565_image, IMG_WIDTH, HEIGHT, //  从原始图像中裁剪出指定区域         参数：原始图像、图像宽度、图像高度、裁剪起点x坐标、裁剪起点y坐标、裁剪宽度、裁剪高度
+                                      box.x - 2, box.y+2, box.w + 10, box.h+15);
         if (cropped) {
-            char path[128];
+                                                                                                                               char path[128];
             // 保存到 /tmp（内存中），之后用scp拷出
             snprintf(path, sizeof(path), "/tmp/redbox_%d_%d.jpg",  //  格式化生成文件名，包含帧数和区域面积信息
-                    frame_count, box.area);
-            save_rgb565_as_jpg(path, cropped, box.w + 4, box.h + 15); //  将裁剪后的RGB565图像保存为JPG格式
-            
+                    *frame_count, box.area);
+            // save_rgb565_as_jpg(path, cropped, box.w + 4, box.h + 15); //  将裁剪后的RGB565图像保存为JPG格式
+            save_rgb565_as_jpg(path, cropped, box.w + 10, box.h+ 15); //  将裁剪后的RGB565图像保存为JPG格式
+
+
+            printf("Box: Area=%d at (%d,%d) size %dx%d, 文件名: %s\n",
+               box.area, box.x, box.y, box.w, box.h, path);
             free(cropped); //  释放裁剪图像的内存
         }
+
+        // InferenceResult inference_result = perform_inference(
+        //         path, 
+        //         frame_count, 
+        //         (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged), 
+        //         interpreter
+        //     );
+
+        //     // 更新first_frame_logged标志（如果需要）
+        //     if (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged) {
+        //         first_frame_logged = true;
+        //     }
+
+
     }
+
+    // if (boxes.empty()) {
+    //     frame_count = 0; // 没有检测到红色区域，重置帧计数器
+    // }
     
 
 }
