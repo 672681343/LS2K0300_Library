@@ -3,9 +3,19 @@
 // #define RECOGNIZE_H
 
 #include "zf_common_headfile.h"
+// #include <opencv2/opencv.hpp>
+using namespace cv;
 
 
-// 现有的包含和定义...
+    //cv图像矩阵初始化
+extern Mat float_img,resized_img;
+
+// 日志控制变量
+extern int frame_count;          // 帧计数器
+extern bool first_frame_logged;  // 第一帧日志是否已打印
+
+
+
 
 // 添加推理结果结构体（如果还没有的话）
 typedef struct {

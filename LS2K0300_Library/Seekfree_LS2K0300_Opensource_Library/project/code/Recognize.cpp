@@ -3,6 +3,14 @@
 // 类别标签定义
 static const char* class_labels[] = {"materials", "traffic", "weapon",};
 
+//cv图像矩阵初始化
+Mat float_img,resized_img;
+
+// 日志控制变量
+int frame_count = 0;          // 帧计数器
+bool first_frame_logged = false;  // 第一帧日志是否已打印
+
+
 InferenceResult perform_inference(
     cv::Mat input_image,
     int frame_count,

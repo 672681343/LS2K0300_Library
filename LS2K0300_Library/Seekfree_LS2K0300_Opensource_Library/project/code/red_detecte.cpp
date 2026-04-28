@@ -1,5 +1,7 @@
 #include "red_detecte.h"
 #include "many_define.h"
+#include "Recognize.h"
+
 #include <queue>
 #include <cstring>
 #include <algorithm>
@@ -262,39 +264,43 @@ void process_image(uint16_t* rgb565_image, int *frame_count) {
         const auto& box = boxes[0]; //  获取检测到的第一个边界框
 
         
-        // 画框
-        draw_rect_rgb565(rgb565_image, IMG_WIDTH, HEIGHT, //  绘制矩形框，使用RGB565格式 参数：图像数据、图像宽度、图像高度、矩形坐标和尺寸、颜色、线宽
-                        box.x - 2, box.y +2, box.w + 4, box.h+15, 
-                        RGB565_YELLOW, 4);
+        // // 画框
+        // draw_rect_rgb565(rgb565_image, IMG_WIDTH, HEIGHT, //  绘制矩形框，使用RGB565格式 参数：图像数据、图像宽度、图像高度、矩形坐标和尺寸、颜色、线宽
+        //                 box.x - 2, box.y +2, box.w + 4, box.h+15, 
+        //                 RGB565_YELLOW, 4);
         
         // 裁剪并保存
         uint16_t* cropped = crop_image(rgb565_image, IMG_WIDTH, HEIGHT, //  从原始图像中裁剪出指定区域         参数：原始图像、图像宽度、图像高度、裁剪起点x坐标、裁剪起点y坐标、裁剪宽度、裁剪高度
-                                      box.x - 2, box.y+2, box.w + 10, box.h+15);
+                                      box.x - 2, box.y+2, box.w + 5, box.h+15);
         if (cropped) {
-                                                                                                                               char path[128];
+                                                                                                                               
+            char path[128];
             // 保存到 /tmp（内存中），之后用scp拷出
-            snprintf(path, sizeof(path), "/tmp/redbox_%d_%d.jpg",  //  格式化生成文件名，包含帧数和区域面积信息
+            snprintf(path, sizeof(path), "/tmp/car_%d_%d.jpg",  //  格式化生成文件名，包含帧数和区域面积信息
                     *frame_count, box.area);
             // save_rgb565_as_jpg(path, cropped, box.w + 4, box.h + 15); //  将裁剪后的RGB565图像保存为JPG格式
-            save_rgb565_as_jpg(path, cropped, box.w + 10, box.h+ 15); //  将裁剪后的RGB565图像保存为JPG格式
+            save_rgb565_as_jpg(path, cropped, box.w + 5, box.h+ 15); //  将裁剪后的RGB565图像保存为JPG格式
 
 
             printf("Box: Area=%d at (%d,%d) size %dx%d, 文件名: %s\n",
                box.area, box.x, box.y, box.w, box.h, path);
+
+            // InferenceResult inference_result = perform_inference(
+            //     cropped, 
+            //     frame_count, 
+            //     (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged), 
+            //     interpreter
+            // );
+
+            // // 更新first_frame_logged标志（如果需要）
+            // if (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged) {
+            //     first_frame_logged = true;
+            // }
+            
             free(cropped); //  释放裁剪图像的内存
         }
 
-        // InferenceResult inference_result = perform_inference(
-        //         path, 
-        //         frame_count, 
-        //         (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged), 
-        //         interpreter
-        //     );
 
-        //     // 更新first_frame_logged标志（如果需要）
-        //     if (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged) {
-        //         first_frame_logged = true;
-        //     }
 
 
     }

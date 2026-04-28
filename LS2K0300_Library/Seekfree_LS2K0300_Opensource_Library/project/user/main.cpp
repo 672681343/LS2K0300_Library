@@ -90,12 +90,7 @@ int main(int, char**)
     }
     printf("✅ 摄像头初始化成功\n");
 
-    //cv图像矩阵初始化
-    Mat float_img,resized_img;
 
-    // 日志控制变量
-    int frame_count = 0;          // 帧计数器
-    bool first_frame_logged = false;  // 第一帧日志是否已打印
 
     printf("===== 开始实时推理 =====\n");
   
@@ -159,6 +154,7 @@ int main(int, char**)
         // frame_count++;  // 帧计数+1
 
         process_image(rgb565_image, &frame_count);
+    
 
         
         // show_rgb565_image(0, 0, scc8660_image[0], SCC8660_W, SCC8660_H, 100, 100, 1);  //
