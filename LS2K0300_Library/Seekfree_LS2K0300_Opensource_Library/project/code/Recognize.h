@@ -14,8 +14,11 @@ extern Mat float_img,resized_img;
 extern int frame_count;          // 帧计数器
 extern bool first_frame_logged;  // 第一帧日志是否已打印
 
+extern tflite::MicroInterpreter* interpreter;
+// extern tflite::MicroInterpreter* init_tflite_simple(uint8_t* tensor_arena, size_t arena_size);
+bool init_tflite_simple(uint8_t* tensor_arena, size_t arena_size);
 
-
+void debug_log_printf_callback(const char* s); // 日志回调函数
 
 // 添加推理结果结构体（如果还没有的话）
 typedef struct {

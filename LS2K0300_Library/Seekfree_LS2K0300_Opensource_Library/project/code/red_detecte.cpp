@@ -285,17 +285,18 @@ void process_image(uint16_t* rgb565_image, int *frame_count) {
             printf("Box: Area=%d at (%d,%d) size %dx%d, 文件名: %s\n",
                box.area, box.x, box.y, box.w, box.h, path);
 
-            // InferenceResult inference_result = perform_inference(
-            //     cropped, 
-            //     frame_count, 
-            //     (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged), 
-            //     interpreter
-            // );
+            cv::Mat cropped_mat(box.h+15, box.w + 5, CV_16UC1, cropped);
+            InferenceResult inference_result = perform_inference(
+                cropped_mat, 
+                *frame_count, 
+                (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged), 
+                *interpreter
+            );
 
-            // // 更新first_frame_logged标志（如果需要）
-            // if (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged) {
-            //     first_frame_logged = true;
-            // }
+            // 更新first_frame_logged标志（如果需要）
+            if (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged) {
+                first_frame_logged = true;
+            }
             
             free(cropped); //  释放裁剪图像的内存
         }

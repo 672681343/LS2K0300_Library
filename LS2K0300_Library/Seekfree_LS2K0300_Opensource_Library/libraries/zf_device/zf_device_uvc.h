@@ -5,7 +5,7 @@
 #include "zf_common_typedef.h"
 #include <opencv2/opencv.hpp>
 
-
+//160 120 //320 240
 #define UVC_WIDTH   160
 #define UVC_HEIGHT  120
 #define UVC_FPS     60

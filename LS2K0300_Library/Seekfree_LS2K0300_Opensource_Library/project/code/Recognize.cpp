@@ -1,5 +1,8 @@
 #include "Recognize.h"
 
+// 全局指针定义
+tflite::MicroInterpreter* interpreter = nullptr; // 用来存储模型解释器的指针
+
 // 类别标签定义
 static const char* class_labels[] = {"materials", "traffic", "weapon",};
 
@@ -9,6 +12,94 @@ Mat float_img,resized_img;
 // 日志控制变量
 int frame_count = 0;          // 帧计数器
 bool first_frame_logged = false;  // 第一帧日志是否已打印
+
+// ======================== 日志回调函数 ========================
+void debug_log_printf_callback(const char* s) 
+{
+    if (s == NULL)  return;
+    printf("%s", s);
+}
+
+
+
+// 初始化函数 - 无返回值版本
+bool init_tflite_simple(uint8_t* tensor_arena, size_t arena_size) {
+    // 如果已经初始化，先清理
+    if (interpreter != nullptr) {
+        delete interpreter;
+        interpreter = nullptr;
+    }
+    
+    // 设置日志回调
+    RegisterDebugLogCallback(debug_log_printf_callback);
+    
+    // TFLite初始化
+    tflite::InitializeTarget();
+    
+    static tflite::MicroMutableOpResolver<TFLITE_OP_RESOLVER_MAX_NUM> resolver;
+    
+    // 添加所有算子
+    resolver.AddConv2D();
+    resolver.AddDepthwiseConv2D();
+    resolver.AddMaxPool2D();
+    resolver.AddFullyConnected();
+    resolver.AddRelu6();
+    resolver.AddSoftmax();
+    resolver.AddReshape();
+    resolver.AddShape();
+    resolver.AddSlice();
+    resolver.AddQuantize();
+    resolver.AddDequantize();
+    resolver.AddCast();
+    resolver.AddSqueeze();
+    resolver.AddExpandDims();
+    resolver.AddConcatenation();
+    resolver.AddTranspose();
+    resolver.AddStridedSlice();
+    resolver.AddPack();
+    
+    // 加载模型
+    const tflite::Model* model = ::tflite::GetModel(loong_cnn_model_simple_tflite);
+    
+    // 检查模型版本
+    if (model->version() != TFLITE_SCHEMA_VERSION) {
+        printf("Error: Model version mismatch!\n");
+        return false;
+    }
+    
+    // 创建解释器（直接赋值给全局变量）
+    interpreter = new tflite::MicroInterpreter(model, resolver, tensor_arena, arena_size);
+    
+    // 分配张量
+    if (interpreter->AllocateTensors() != kTfLiteOk) {
+        printf("Error: Failed to allocate tensors!\n");
+        delete interpreter;
+        interpreter = nullptr;
+        return false;
+    }
+    
+    printf("Model initialized successfully!\n");
+    printf("Input tensor shape: ");
+    TfLiteTensor* input = interpreter->input(0);
+    for (int i = 0; i < input->dims->size; i++) {
+        printf("%d ", input->dims->data[i]);
+    }
+    printf("\n");
+    
+    return true;
+}
+
+// 清理函数
+void cleanup_tflite() {
+    if (interpreter != nullptr) {
+        delete interpreter;
+        interpreter = nullptr;
+        printf("Model interpreter cleaned up.\n");
+    }
+}
+
+
+
 
 
 InferenceResult perform_inference(

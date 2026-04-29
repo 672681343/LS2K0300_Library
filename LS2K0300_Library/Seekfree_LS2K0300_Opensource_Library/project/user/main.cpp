@@ -17,12 +17,7 @@ void cleanup()
 
 
 
-// ======================== 日志回调函数 ========================
-void debug_log_printf_callback(const char* s) 
-{
-    if (s == NULL)  return;
-    printf("%s", s);
-}
+
 
 
 
@@ -31,46 +26,57 @@ void debug_log_printf_callback(const char* s)
 
 int main(int, char**) 
 {
-    // ======================== 识别初始化 ========================
 
-    // 重定向TFLM的MicroPrintf日志输出
-    RegisterDebugLogCallback(debug_log_printf_callback);
-
-    // tflite库初始化
-    tflite::InitializeTarget();
-
-    // 导入模型
-    // 传入模型文件生成的.h文件当中的数组名
-    const tflite::Model* model = ::tflite::GetModel(loong_cnn_model_simple_tflite);
-    TFLITE_CHECK_EQ(model->version(), TFLITE_SCHEMA_VERSION);
-
-    // 构建算子解析器（使用宏定义指定最大算子数）
-    tflite::MicroMutableOpResolver<TFLITE_OP_RESOLVER_MAX_NUM> resolver;
-
-    /* 添加所有可能会用到的算子 */
-	resolver.AddConv2D();
-	resolver.AddDepthwiseConv2D();
-	resolver.AddMaxPool2D();
-	resolver.AddFullyConnected();
-	resolver.AddRelu6();
-	resolver.AddSoftmax();
-	resolver.AddReshape();
-	resolver.AddShape();
-	resolver.AddSlice();
-	resolver.AddQuantize();
-	resolver.AddDequantize();
-	resolver.AddCast();
-	resolver.AddSqueeze();
-	resolver.AddExpandDims();
-	resolver.AddConcatenation();
-	resolver.AddTranspose();
-	resolver.AddStridedSlice();
-	resolver.AddPack();
-
-    // 创建模型解析器并分配张量空间（使用宏定义指定张量空间大小）
+    // 张量内存
     uint8_t tensor_arena[TENSOR_ARENA_SIZE];
-    tflite::MicroInterpreter interpreter(model, resolver, tensor_arena, TENSOR_ARENA_SIZE);
-    interpreter.AllocateTensors();
+    
+    // 初始化（无返回值，通过全局变量访问）
+    if (!init_tflite_simple(tensor_arena, TENSOR_ARENA_SIZE)) {
+        printf("Failed to initialize TFLite!\n");
+        return -1;
+    }
+
+
+    // // ======================== 识别初始化 ========================
+
+    // // 重定向TFLM的MicroPrintf日志输出
+    // RegisterDebugLogCallback(debug_log_printf_callback);
+
+    // // tflite库初始化
+    // tflite::InitializeTarget();
+
+    // // 导入模型
+    // // 传入模型文件生成的.h文件当中的数组名
+    // const tflite::Model* model = ::tflite::GetModel(loong_cnn_model_simple_tflite);
+    // TFLITE_CHECK_EQ(model->version(), TFLITE_SCHEMA_VERSION);
+
+    // // 构建算子解析器（使用宏定义指定最大算子数）
+    // tflite::MicroMutableOpResolver<TFLITE_OP_RESOLVER_MAX_NUM> resolver;
+
+    // /* 添加所有可能会用到的算子 */
+	// resolver.AddConv2D();
+	// resolver.AddDepthwiseConv2D();
+	// resolver.AddMaxPool2D();
+	// resolver.AddFullyConnected();
+	// resolver.AddRelu6();
+	// resolver.AddSoftmax();
+	// resolver.AddReshape();
+	// resolver.AddShape();
+	// resolver.AddSlice();
+	// resolver.AddQuantize();
+	// resolver.AddDequantize();
+	// resolver.AddCast();
+	// resolver.AddSqueeze();
+	// resolver.AddExpandDims();
+	// resolver.AddConcatenation();
+	// resolver.AddTranspose();
+	// resolver.AddStridedSlice();
+	// resolver.AddPack();
+
+    // // 创建模型解析器并分配张量空间（使用宏定义指定张量空间大小）
+    // uint8_t tensor_arena[TENSOR_ARENA_SIZE];
+    // tflite::MicroInterpreter interpreter(model, resolver, tensor_arena, TENSOR_ARENA_SIZE);
+    // interpreter.AllocateTensors();
 
     // 注册清理函数
     atexit(cleanup);
@@ -158,8 +164,9 @@ int main(int, char**)
 
         
         // show_rgb565_image(0, 0, scc8660_image[0], SCC8660_W, SCC8660_H, 100, 100, 1);  //
-        ips200_show_rgb565_image(0, 0, rgb565_image, 160, 120, 160, 70, 0);
-        // ips200_show_rgb565_image(0, 0, rgb565_image, 160, 120, 160, 70, 0);
+        // ips200_show_rgb565_image(0, 0, rgb565_image, 160, 120, 160, 70, 0);//用这个
+
+        ips200_show_rgb565_image(0, 0, rgb565_image, UVC_WIDTH, UVC_HEIGHT, UVC_WIDTH, UVC_HEIGHT, 0);
         // ips200_show_gray_image(0, 0, rgay_image, 160, 120);
         
     }
