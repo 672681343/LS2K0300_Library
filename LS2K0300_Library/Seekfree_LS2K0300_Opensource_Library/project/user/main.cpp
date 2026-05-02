@@ -94,6 +94,8 @@ int main(int, char**)
         MenuSystem::key_shutdown();
         MenuSystem::Menu_display();
 
+        // system_delay_ms(1);
+
         // ips200_show_rgb565_image(0,0,rgb565_image,160,120,60,20,0);
 
         // process_image(rgb565_image);

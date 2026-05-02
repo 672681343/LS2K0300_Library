@@ -373,8 +373,8 @@ namespace Elem {
                 Left_corner.U_y  = cross_Up(ImageProc::Left_BF.LostParam.mid,  ImageProc::Left_BF.LostParam.end - 15, 0, ImageProc::l_black);
                 Right_corner.U_y = cross_Up(ImageProc::Right_BF.LostParam.mid, ImageProc::Right_BF.LostParam.end - 15, 1, ImageProc::r_black);
 
-                if (Left_corner.U_y < 28 ) { Left_corner.U_y = 0;}
-                if (Right_corner.U_y > 28 ) { Right_corner.U_y = 0;}
+                if (Left_corner.U_y < ImageProc::Left_BF.LostParam.end - 20) { Left_corner.U_y = 0; }
+                if (Right_corner.U_y < ImageProc::Right_BF.LostParam.end - 20) { Right_corner.U_y = 0; }
 
 
                 if(!Left_corner.U_y){
@@ -544,7 +544,7 @@ namespace Elem {
                 if(Right_corner.U_y != 0){
                     my_draw_line(ImageProc::r_black[Right_corner.U_y-1],Right_corner.U_y-1,ImageProc::r_black[HEIGHT-5],HEIGHT-5,MODE_TWO_POINTS,DIRECTION_UP_RIGHT,0);
                 }
-                if (ImageProc::Right_BF.LostParam.sum < 10 ){
+                if (ImageProc::Right_BF.LostParam.sum < 1 ){
                     Left_Island.State = 5;
                     ImageProc::state.range_r = WIDTH - 10;
                     Error::Err.limit = HEIGHT - 1; 
@@ -555,7 +555,7 @@ namespace Elem {
             case 5:{
                 Right_corner.Curve_Row = Circular_Detection(1, 0, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::r_black);
                 if (Right_corner.Curve_Row != 0){
-                    my_draw_line(ImageProc::r_black[Right_corner.Curve_Row + 4], Right_corner.Curve_Row + 4, 20, 20, MODE_TWO_POINTS, DIRECTION_DOWN_RIGHT, 0);
+                    my_draw_line(ImageProc::r_black[Right_corner.Curve_Row + 4], Right_corner.Curve_Row + 4, 5, 20, MODE_TWO_POINTS, DIRECTION_DOWN_RIGHT, 0);
                 }
                 if (Right_corner.Curve_Row > 45 && ImageProc::Right_BF.LostParam.sum > 2 && ImageProc::Right_BF.LostParam.start < 50){
                     Left_Island.State = 6;
@@ -567,9 +567,9 @@ namespace Elem {
             //出环标志（无突变点）
             case 6:{
                 Left_corner.U_y = 0;
-                my_draw_line(ImageProc::r_black[HEIGHT-10],HEIGHT-10,20,20,MODE_TWO_POINTS,DIRECTION_DOWN_RIGHT,0);
+                my_draw_line(ImageProc::r_black[HEIGHT-10],HEIGHT-10,5,20,MODE_TWO_POINTS,DIRECTION_DOWN_RIGHT,0);
                 Left_corner.U_y = island_Up(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff + 2 , 0, ImageProc::l_black);
-                if((ImageProc::Right_BF.LostParam.sum < 15  && ImageProc::Right_BF.Var < 150) || Left_corner.U_y ){
+                if((ImageProc::Right_BF.LostParam.sum < 15  && ImageProc::Right_BF.Var < 150 && ImageProc::Right_BF.LostParam.end > 40) || Left_corner.U_y ){
                     Left_Island.State = 7;
                 }
                 break;           
@@ -723,7 +723,7 @@ namespace Elem {
                     my_draw_line(ImageProc::l_black[Left_corner.U_y-1],Left_corner.U_y-1,ImageProc::l_black[HEIGHT-5],HEIGHT-5,MODE_TWO_POINTS,DIRECTION_UP_LEFT,0);
                 }
 
-                if (ImageProc::Left_BF.LostParam.sum < 10 ){
+                if (ImageProc::Left_BF.LostParam.sum < 1 ){
                     Right_Island.State = 5;
                     ImageProc::state.range_l = 10;
                     Error::Err.limit = HEIGHT - 1; 
@@ -734,7 +734,7 @@ namespace Elem {
             case 5:{
                 Left_corner.Curve_Row = Circular_Detection(0, 1, HEIGHT - 1, HEIGHT - ImageProc::state.cutoff + 5, ImageProc::l_black);
                 if (Left_corner.Curve_Row != 0){
-                    my_draw_line(ImageProc::l_black[Left_corner.Curve_Row + 4], Left_corner.Curve_Row + 4, WIDTH-10, 20, MODE_TWO_POINTS, DIRECTION_DOWN_LEFT, 0);
+                    my_draw_line(ImageProc::l_black[Left_corner.Curve_Row + 4], Left_corner.Curve_Row + 4, WIDTH-5, 20, MODE_TWO_POINTS, DIRECTION_DOWN_LEFT, 0);
                 }
                 if (Left_corner.Curve_Row > 42 && ImageProc::Left_BF.LostParam.sum > 2 && ImageProc::Left_BF.LostParam.start < 50  ){
                     Right_Island.State = 6;
@@ -746,9 +746,9 @@ namespace Elem {
             //出环标志（无突变点）
             case 6:{
                 Right_corner.U_y = 0;
-                my_draw_line(ImageProc::l_black[HEIGHT-5],HEIGHT-5,WIDTH-10,20,MODE_TWO_POINTS,DIRECTION_DOWN_LEFT,0);
+                my_draw_line(ImageProc::l_black[HEIGHT-5],HEIGHT-5,WIDTH-5,20,MODE_TWO_POINTS,DIRECTION_DOWN_LEFT,0);
                 Right_corner.U_y = island_Up(HEIGHT - 3, HEIGHT - ImageProc::state.cutoff , 1, ImageProc::r_black);
-                if((ImageProc::Left_BF.LostParam.sum < 15  && ImageProc::Left_BF.Slope < -1 )|| Right_corner.U_y ){
+                if((ImageProc::Left_BF.LostParam.sum < 15  && ImageProc::Left_BF.Slope < -1 && ImageProc::Left_BF.LostParam.end > 40 )|| Right_corner.U_y ){
                     Right_Island.State = 7;
                 }
                 break;             

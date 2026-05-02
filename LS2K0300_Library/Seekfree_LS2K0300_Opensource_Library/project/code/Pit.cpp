@@ -38,13 +38,11 @@ namespace Pit{
         imu660ra_get_gyro();
 
 
-        Err_out = -PID::TurnPID(0, Error::Err.current, &PID::turn_pid);
-        Angle_out = -PID::AnglePID(Err_out,imu660ra_gyro_z, &PID::angle_pid);  //imu660ra_gyro_z
-        Control::pwm.L = PID::Speed_loc_PID((Control::aim_speed.cur_L+Control::aim_speed.cur_R)/2, (Encoder::count.L+Encoder::count.R)/2, &PID::speed_pid_L);
+        Err_out = PID::TurnPID(0, Error::Err.current, &PID::turn_pid);
+        Angle_out = PID::AnglePID(-Err_out,imu660ra_gyro_z, &PID::angle_pid);  //imu660ra_gyro_z
+        Control::pwm.L = PID::Speed_loc_PID((Control::aim_speed.cur_L+Control::aim_speed.cur_R)/2 , (Encoder::count.L+Encoder::count.R)/2, &PID::speed_pid_L);
+        // Control::pwm.R = PID::Speed_loc_PID((Control::aim_speed.cur_L+Control::aim_speed.cur_R)/2 + Err_out , (Encoder::count.L+Encoder::count.R)/2, &PID::speed_pid_L);
                 
-
-
-
 
         // // 公共停机逻辑
         if(ImageProc::state.cutoff < 3){
@@ -72,7 +70,7 @@ namespace Pit{
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.L ); 
                 }else{
-                    Motor::goMotor((Control::pwm.L - Angle_out)*(1 + Control::CurveSpeed.dif) , (Control::pwm.L + Angle_out)*(1 - Control::CurveSpeed.dif) );
+                    Motor::goMotor((Control::pwm.L + Angle_out)*(1 + Control::CurveSpeed.dif) , (Control::pwm.L - Angle_out)*(1 - Control::CurveSpeed.dif) );
                 }
 
 
@@ -80,9 +78,9 @@ namespace Pit{
                 // 开环测试（允许左右轮独立 PWM）
 
                 if(MenuSystem::Car_flag.turn == 0){
-                    Motor::goMotor(1100, 1100); //Control::pwm.L
+                    Motor::goMotor(  Angle_out, -Angle_out); //Control::pwm.L
                 }else{
-                    Motor::goMotor(1600 - Angle_out , 1600 + Angle_out );
+                    Motor::goMotor(1300 - Err_out , 1300 + Err_out );
                 }
 
             } else {
@@ -103,7 +101,7 @@ namespace Pit{
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.L ); 
                 }else{
-                    Motor::goMotor(Control::pwm.L - Angle_out , Control::pwm.L + Angle_out );
+                    Motor::goMotor(Control::pwm.L - Angle_out , Control::pwm.L + Angle_out );//左减右加
                 }
 
             } else if(MenuSystem::Car_flag.stop == 0){

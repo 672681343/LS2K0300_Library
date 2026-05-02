@@ -98,28 +98,28 @@ namespace Control{
 
     //长直道PID参数
     Set_Pid LongStrPid = {
-        .kp = 380.0,
+        .kp = 0.0,
         .kp2 = 0.0,
         .gkd = 0.00,
-        .kd = 160.0
+        .kd = 0.0
     };
     //短直道PID参数
     Set_Pid ShortStrPid = {
-        .kp = 320.0,
+        .kp = 0.0,
         .kp2 = 0.0,
         .gkd = 0.00,
-        .kd = 180.0
+        .kd = 0.0
     };
     //弯道PID参数
     Set_Pid CurvePid = {
-        .kp = 230.0,
+        .kp = 0.0,
         .kp2 = 0.0,
         .gkd = 0.0,
-        .kd = 160.0
+        .kd = 0.0
     };
     //环岛PID参数
     Set_Pid IslandPid = {
-        .kp = 215.0,
+        .kp = 0.0,
         .kp2 = 0.0,
         .gkd = 0.0,
         .kd = 0.0
@@ -240,11 +240,11 @@ namespace Control{
                     if (Error::Err.current > 0){
                         aim_speed.cur_L = CurveSpeed.set_speed;
                         aim_speed.cur_R = CurveSpeed.set_speed;
-                        CurveSpeed.dif = -0;
+                        CurveSpeed.dif = -0.5;
                     }else{
                         aim_speed.cur_L = CurveSpeed.set_speed;
                         aim_speed.cur_R = CurveSpeed.set_speed;
-                        CurveSpeed.dif = 0;
+                        CurveSpeed.dif = 0.5;
                     }
 
 
@@ -282,11 +282,11 @@ namespace Control{
                     if (Error::Err.current > 0){
                         aim_speed.cur_L = IslandSpeed.set_speed;
                         aim_speed.cur_R = IslandSpeed.set_speed;
-                        CurveSpeed.dif = -0;
+                        CurveSpeed.dif = -0.5;
                     }else{
                         aim_speed.cur_L = IslandSpeed.set_speed;
                         aim_speed.cur_R = IslandSpeed.set_speed;
-                        CurveSpeed.dif = 0;
+                        CurveSpeed.dif = 0.5;
                     }
 
 

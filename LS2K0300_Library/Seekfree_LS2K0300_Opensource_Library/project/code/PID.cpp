@@ -14,7 +14,7 @@ namespace PID {
     //-------------------------------------------------------------------------------------------------------------------
     void PID_init() {
 
-        angle_pid.kp = 0.40;
+        angle_pid.kp = 0.0;
         angle_pid.ki = 0.0;
         angle_pid.kd = 0.0;
         angle_pid.integral = 0;
@@ -22,31 +22,31 @@ namespace PID {
         angle_pid.I_limit = 0;
         angle_pid.out_limit = 6000;////原本是4000
 
-        turn_pid.kp = 1.6;
+        turn_pid.kp = 0;
         turn_pid.kp2 = 0.0;
         turn_pid.ki = 0.0;
         turn_pid.gkd = 0.0;
-        turn_pid.kd = 2.0;
+        turn_pid.kd = 0;
         turn_pid.integral = 0;
         turn_pid.prev_error = 0;
         turn_pid.I_limit = 0;
-        turn_pid.out_limit = 9000;////原本是6000
+        turn_pid.out_limit = 8000;////原本是6000
 
         speed_pid_L.kp = 0.0;
         speed_pid_L.ki = 0.0; //0.7/0.84/1.05
         speed_pid_L.kd = 0.0;
         speed_pid_L.integral = 0;
         speed_pid_L.prev_error = 0;
-        speed_pid_L.I_limit = 1800; //3000/2500/2000
-        speed_pid_L.out_limit = 6000;
+        speed_pid_L.I_limit = 6000; //3000/2500/2000
+        speed_pid_L.out_limit = 9000;
 
-        speed_pid_R.kp = 0.0;
-        speed_pid_R.ki = 0.0;
-        speed_pid_R.kd = 0.0;
-        speed_pid_R.integral = 0;
-        speed_pid_R.prev_error = 0;
-        speed_pid_R.I_limit = 6000;
-        speed_pid_R.out_limit = 6000;
+        // speed_pid_R.kp = 0.0;
+        // speed_pid_R.ki = 0.0;
+        // speed_pid_R.kd = 0.0;
+        // speed_pid_R.integral = 0;
+        // speed_pid_R.prev_error = 0;
+        // speed_pid_R.I_limit = 6000;
+        // speed_pid_R.out_limit = 6000;
     }
 
 
@@ -60,20 +60,46 @@ namespace PID {
     int16_t AnglePID(int16_t target, int16_t current, PIDParams *pid)
     {
         int16_t error = target - current;
+        int32_t output = 0;
+        // 积分累积（先累积后限幅）
+        pid->integral += error;
+        
+        // 积分限幅
+        if(pid->I_limit > 0) {
+            if(pid->integral > pid->I_limit) {
+                pid->integral = pid->I_limit;
+            } else if(pid->integral < -pid->I_limit) {
+                pid->integral = -pid->I_limit;
+            }
+        }
+        
+        // 计算各分量
         pid->p_term = pid->kp * error;
+        pid->i_term = pid->ki * pid->integral;
         pid->d_term = pid->kd * (error - pid->prev_error);
-        int16_t output = pid->p_term + pid->d_term ;
+ 
+        // 总输出
+        output = (pid->p_term + pid->i_term + pid->d_term);
+       // printf("error = %d, output = %d\n", error, output);
+        // 输出限幅
+        if(pid->out_limit > 0) {
+            if(output > pid->out_limit) {
+                output = pid->out_limit;
+                // 抗饱和处理：回退多余积分
+                if(pid->ki != 0) {
+                    pid->integral -= (output - pid->out_limit) / pid->ki;
+                }
+            } 
+            else if(output < -pid->out_limit) {
+                output = -pid->out_limit;
+                // 抗饱和处理：回退多余积分
+                if(pid->ki != 0) {
+                    pid->integral -= (output + pid->out_limit) / pid->ki;
+                }
+            }
+        }
 
 
-            // //分段输出限幅
-            // if(target>7900){
-            //     pid->out_limit = 3800;
-            // } else if(target<-7900) {
-            //         pid->out_limit = 4000;//这个会导致奇怪的现象出现，即左右占空比差值很大，但是小车会慢慢差速转弯（转弯半径大），并伴随不正常的嗡嗡声
-            // }//这时候合适的是4000限幅，4500会出现非正常转弯，5000会冲出赛道，怀疑是电机保护问题？
-
-
-        // 总输出限幅
         if (pid->out_limit > 0) {
             if (output > pid->out_limit) {
                 output = pid->out_limit;
@@ -81,11 +107,11 @@ namespace PID {
                 output = -pid->out_limit;
             }
         }
-        pid->prev_error = error;
-
-        // TCP::test[0] = output;
         
-        return output ;
+        // 保存误差记录
+        pid->prev_error = error;
+        
+        return output;
     }
 
     //-------------------------------------------------------------------------------------------------------------------
@@ -149,8 +175,10 @@ namespace PID {
     int16_t Speed_loc_PID(int16_t target, int16_t current, PIDParams* pid) {
         int16_t error = target - current;
         int32_t output = 0;
+
+        if( error >30 || error < -30 ) pid->integral += 8 * error;
         // 积分累积（先累积后限幅）
-        pid->integral += error;
+        else pid->integral += error;
         
         // 积分限幅
         if(pid->I_limit > 0) {
@@ -160,23 +188,28 @@ namespace PID {
                 pid->integral = -pid->I_limit;
             }
         }
-        // //分段输出限幅
-        if(current<200){
-            pid->out_limit = 4500;
+        // // //分段输出限幅
+        if(current<50){
+            pid->out_limit = 3500;
+        }else if(current<100){
+            pid->out_limit = 3800;
+        }else if(current<150){
+            pid->out_limit = 4300;
+        }else if(current<200){
+             pid->out_limit = 4800;
+        }else if(current<250){
+            pid->out_limit = 5400;
         }else if(current<300){
-            pid->out_limit = 5000;
-        }else if(current<400){
-             pid->out_limit = 5500;
-        }else if(current<500){
-            pid->out_limit = 5600;
+            pid->out_limit = 6000;
+        }else if(current<350){
+            pid->out_limit = 7500;
         }
 
-        if(Control::RoadSegment_t == 1){
-            pid->out_limit = 1100;
-
-        }else if(Control::RoadSegment_t == 4){
-            pid->out_limit = 900;
+        if(Control::RoadSegment_t == 1 || Control::RoadSegment_t == 4 ){
+            pid->out_limit = 3800;
         }
+
+
         
         // 计算各分量
         pid->p_term = pid->kp * error;
@@ -187,22 +220,22 @@ namespace PID {
         output = (pid->p_term + pid->i_term + pid->d_term);
        // printf("error = %d, output = %d\n", error, output);
         // 输出限幅
-        // if(pid->out_limit > 0) {
-        //     if(output > pid->out_limit) {
-        //         output = pid->out_limit;
-        //         // 抗饱和处理：回退多余积分
-        //         if(pid->ki != 0) {
-        //             pid->integral -= (output - pid->out_limit) / pid->ki;
-        //         }
-        //     } 
-        //     else if(output < -pid->out_limit) {
-        //         output = -pid->out_limit;
-        //         // 抗饱和处理：回退多余积分
-        //         if(pid->ki != 0) {
-        //             pid->integral -= (output + pid->out_limit) / pid->ki;
-        //         }
-        //     }
-        // }
+        if(pid->out_limit > 0) {
+            if(output > pid->out_limit) {
+                output = pid->out_limit;
+                // 抗饱和处理：回退多余积分
+                if(pid->ki != 0) {
+                    pid->integral -= (output - pid->out_limit) / pid->ki;
+                }
+            } 
+            else if(output < -pid->out_limit) {
+                output = -pid->out_limit;
+                // 抗饱和处理：回退多余积分
+                if(pid->ki != 0) {
+                    pid->integral -= (output + pid->out_limit) / pid->ki;
+                }
+            }
+        }
 
 
         if (pid->out_limit > 0) {
