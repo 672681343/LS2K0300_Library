@@ -12,6 +12,12 @@ uint8_t M_x;
 // 使用示例: fitting_line(start,end,l_black,fit_l_black);
 // 备注信息: 
 //-------------------------------------------------------------------------------------------------------------------
+
+void test_tool () {
+
+    
+}
+
 void fitting_line(uint8_t start,uint8_t end,
     const std::array<uint16_t, HEIGHT>& raw_line,
     std::array<uint16_t, HEIGHT>& fit_line

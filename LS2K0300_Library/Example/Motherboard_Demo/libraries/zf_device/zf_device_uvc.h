@@ -5,9 +5,9 @@
 #include "zf_common_typedef.h"
 #include <opencv2/opencv.hpp>
 
-
-#define UVC_WIDTH   160
-#define UVC_HEIGHT  120
+//这是例程宏定义参数，非实际使用
+#define UVC_WIDTH   320
+#define UVC_HEIGHT  240
 #define UVC_FPS     60
 
 int8 uvc_camera_init(const char *path);

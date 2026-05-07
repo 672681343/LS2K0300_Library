@@ -6,9 +6,9 @@
 #include <opencv2/opencv.hpp>
 
 //160 120 //320 240
-#define UVC_WIDTH   160
-#define UVC_HEIGHT  120
-#define UVC_FPS     60
+#define UVC_WIDTH   320
+#define UVC_HEIGHT  240
+#define UVC_FPS     120
 
 int8 uvc_camera_init(const char *path);
 int8 wait_image_refresh();

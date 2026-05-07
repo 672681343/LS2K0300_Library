@@ -2,6 +2,7 @@
 #include "zf_common_font.h"
 #include "zf_common_function.h"
 
+
 static uint16 ips200_pencolor = IPS200_DEFAULT_PENCOLOR;
 static uint16 ips200_bgcolor = IPS200_DEFAULT_BGCOLOR;
 
@@ -340,6 +341,74 @@ void ips200_show_rgb565_image(uint16 x, uint16 y, const uint16 *image, uint16 wi
         }
     }
 }
+
+
+
+
+
+
+// 将 OpenCV Mat 转换为 RGB565 格式并显示
+void show_cv_mat_on_ips200(uint16 x, uint16 y, cv::Mat& image, uint8 color_mode)
+{
+    // 参数检查
+    if (image.empty()) {
+        printf("Error: Input image is empty!\n");
+        return;
+    }
+    
+    // 获取图像尺寸
+    uint16 width = image.cols;
+    uint16 height = image.rows;
+    uint16 channels = image.channels();
+    printf("Image size: %dx%d, channels: %d\n", width, height, channels);
+    
+    // 检查颜色通道
+    if (channels != 3 && channels != 1) {
+        printf("Error: Only 1 or 3 channel images are supported!\n");
+        return;
+    }
+    
+    // 为 RGB565 数据分配内存
+    uint16* rgb565_data = new uint16[width * height];
+    
+    // 转换为 RGB565
+    for (uint16 row = 0; row < height; row++) {
+        for (uint16 col = 0; col < width; col++) {
+            if (channels == 3) {
+                // BGR 格式（OpenCV 默认）
+                cv::Vec3b pixel = image.at<cv::Vec3b>(row, col);
+                uint8_t b = pixel[0];
+                uint8_t g = pixel[1];
+                uint8_t r = pixel[2];
+                
+                // 转换为 RGB565
+                rgb565_data[col + row * width] = 
+                    ((r >> 3) << 11) |  // 5位红色
+                    ((g >> 2) << 5)  |  // 6位绿色
+                    ((b >> 3));         // 5位蓝色
+            } else if (channels == 1) {
+                // 灰度图转伪彩色
+                uint8_t gray = image.at<uint8_t>(row, col);
+                // 灰度值作为 RGB565（简单映射，可根据需求修改）
+                uint8_t r = gray;
+                uint8_t g = gray;
+                uint8_t b = gray;
+                
+                rgb565_data[col + row * width] = 
+                    ((r >> 3) << 11) |
+                    ((g >> 2) << 5)  |
+                    ((b >> 3));
+            }
+        }
+    }
+    
+    // 调用现有函数显示
+    ips200_show_rgb565_image(x, y, rgb565_data, width, height, width, height, color_mode);
+    
+    // 释放内存
+    delete[] rgb565_data;
+}
+
 
 
 

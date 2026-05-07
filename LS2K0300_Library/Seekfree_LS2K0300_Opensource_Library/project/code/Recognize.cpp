@@ -78,7 +78,7 @@ bool init_tflite_simple(uint8_t* tensor_arena, size_t arena_size) {
         return false;
     }
     
-    printf("Model initialized successfully!\n");
+    printf("✅ Model初始化成功!\n");
     printf("Input tensor shape: ");
     TfLiteTensor* input = interpreter->input(0);
     for (int i = 0; i < input->dims->size; i++) {
@@ -113,6 +113,15 @@ InferenceResult perform_inference(
     
     // 图像预处理
     cv::resize(input_image, resized_img, cv::Size(MODEL_INPUT_WIDTH, MODEL_INPUT_HEIGHT), cv::INTER_LINEAR); //  1. 调整输入图像大小以匹配模型输入尺寸
+    // ips200_show_rgb565_image(0, 0, resized_img, UVC_WIDTH, UVC_HEIGHT, UVC_WIDTH, UVC_HEIGHT, 0);//调试用
+
+
+    
+
+    // show_rgb565_image(0, 0, resized_img, 40, 40, 0, 0, 1);
+
+        show_cv_mat_on_ips200(0, 0, resized_img, 0);
+
     //cv::resize：这是OpenCV库中用于调整图像大小的函数，它可以将源图像缩放到指定尺寸。
     //input_image：这是函数的第一个参数，表示需要进行尺寸调整的输入图像，它是一个OpenCV的Mat对象。
     //resized_img：这是函数的第二个参数，表示调整大小后的输出图像，也是一个Mat对象。

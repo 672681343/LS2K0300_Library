@@ -132,6 +132,7 @@
 
 //===================================================外部组件库===================================================
 // #include "ncnn/net.h" // for ncnn
+// #include "net.h" // for ncnn
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>  // for cv::cvtColor
 #include <opencv2/highgui/highgui.hpp> // for cv::VideoCapture
@@ -159,6 +160,15 @@
 
 //===================================================用户自定义文件===================================================
 #include "../model/loong_cnn_model_simple.h"
+// #include "lq_ntp.hpp"
+// #include "lq_ncnn.hpp"
+// #include <opencv2/opencv.hpp>
+// // #include <ncnn.h>
+// #include "/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/ncnn/lq_ntp.hpp"
+// #include "/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/ncnn/lq_timer.hpp"     // 包含 g_ntp 变量的定义
+// #include "/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/ncnn/lq_ncnn.hpp"     // 包含 LQ_NCNN 类的定义
+// #include "libraries/zf_components/ncnn/lq_timer.hpp"
+
 #include "many_define.h"
 #include "Camera.h"
 #include "ImageProc.h"

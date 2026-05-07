@@ -25,6 +25,9 @@ extern std::array<uint16_t, HEIGHT> tem_fit;
 extern uint8_t M_x;
 
 /* Exported functions ------------------------------------------------------- */
+void test_tool ();
+
+
 void fitting_line(uint8_t start,uint8_t end,
     const std::array<uint16_t, HEIGHT>& raw_line,
     std::array<uint16_t, HEIGHT>& fit_line

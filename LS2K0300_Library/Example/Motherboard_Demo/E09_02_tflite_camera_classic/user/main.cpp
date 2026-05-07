@@ -55,8 +55,8 @@ using namespace cv;
 //
 // ======================== 可配置参数宏定义 ========================
 // 1. 模型相关配置
-#define MODEL_INPUT_WIDTH         40      // 模型输入图像宽度（根据实际模型调整）
-#define MODEL_INPUT_HEIGHT        40      // 模型输入图像高度（根据实际模型调整）
+#define MODEL_INPUT_WIDTH         68      // 模型输入图像宽度（根据实际模型调整）
+#define MODEL_INPUT_HEIGHT        68      // 模型输入图像高度（根据实际模型调整）
 #define MODEL_INPUT_CHANNEL       3       // 模型输入图像通道数（RGB=3）
 #define MODEL_OUTPUT_CLASS_NUM    3       // 模型输出类别数（根据实际任务调整）
 #define MODEL_INPUT_SIZE          (MODEL_INPUT_WIDTH * MODEL_INPUT_HEIGHT * MODEL_INPUT_CHANNEL)  // 输入总元素数

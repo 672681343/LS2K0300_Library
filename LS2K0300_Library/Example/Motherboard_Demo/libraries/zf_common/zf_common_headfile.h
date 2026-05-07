@@ -131,7 +131,9 @@
 
 
 //===================================================外部组件库===================================================
-#include "ncnn/net.h" // for ncnn
+// #include "ncnn/net.h" // for ncnn
+// #include "net.h" // for ncnn
+#include "/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Example/Motherboard_Demo/libraries/zf_components/ncnn/include/ncnn/net.h" // for ncnn
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>  // for cv::cvtColor
 #include <opencv2/highgui/highgui.hpp> // for cv::VideoCapture
@@ -159,6 +161,8 @@
 
 //===================================================用户自定义文件===================================================
 #include "../model/loong_cnn_model_simple.h"
+
+
 //===================================================用户自定义文件===================================================
 
 

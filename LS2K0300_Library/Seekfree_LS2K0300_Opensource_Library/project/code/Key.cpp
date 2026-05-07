@@ -62,14 +62,14 @@ namespace Key {
     //-------------------------------------------------------------------------------------------------------------------
 
     void test(){
-        while(1){
-            if(gpio_get_level(KEY_0) == 0)printf("key_0 = %d\r\n", gpio_get_level(KEY_0));
-            if(gpio_get_level(KEY_1) == 0)printf("key_1 = %d\r\n", gpio_get_level(KEY_1));
-            if(gpio_get_level(KEY_2) == 0)printf("key_2 = %d\r\n", gpio_get_level(KEY_2));
-            if(gpio_get_level(KEY_3) == 0)printf("key_3 = %d\r\n", gpio_get_level(KEY_3));
 
-            if(gpio_get_level(SWITCH_0) == 0)printf("switch_0 = %d\r\n", gpio_get_level(SWITCH_0));
-            if(gpio_get_level(SWITCH_1) == 0)printf("switch_1 = %d\r\n", gpio_get_level(SWITCH_1));
-        }
+            if(gpio_get_level(KEY_0))printf("key_0 = %d\r\n", gpio_get_level(KEY_0));
+            if(gpio_get_level(KEY_1))printf("key_1 = %d\r\n", gpio_get_level(KEY_1));
+            if(gpio_get_level(KEY_2))printf("key_2 = %d\r\n", gpio_get_level(KEY_2));
+            if(gpio_get_level(KEY_3))printf("key_3 = %d\r\n", gpio_get_level(KEY_3));
+
+            if(gpio_get_level(SWITCH_0))printf("switch_0 = %d\r\n", gpio_get_level(SWITCH_0));
+            if(gpio_get_level(SWITCH_1))printf("switch_1 = %d\r\n", gpio_get_level(SWITCH_1));
+        
     }
 }
