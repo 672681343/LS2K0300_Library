@@ -287,8 +287,8 @@ void process_image(uint16_t* rgb565_image, int *frame_count) {
         //                               box.x - 2, box.y+2, box.w + 5, box.h+15);
 
                                               // 裁剪并保存
-        if(box.w <= 40){
-            box.w = 40 ; 
+        if(box.w <= MODEL_INPUT_WIDTH-5){
+            box.w = MODEL_INPUT_WIDTH-5; // 保持宽度不变，增加一些边距
         }
 
         uint16_t* cropped = crop_image(rgb565_image, UVC_WIDTH, UVC_HEIGHT, //  从原始图像中裁剪出指定区域         参数：原始图像、图像宽度、图像高度、裁剪起点x坐标、裁剪起点y坐标、裁剪宽度、裁剪高度
@@ -296,17 +296,15 @@ void process_image(uint16_t* rgb565_image, int *frame_count) {
         if (cropped) {
                                                                                                                                
             char path[128];
-            // 保存到 /tmp（内存中），之后用scp拷出
-            snprintf(path, sizeof(path), "/tmp/car_%d_%d.jpg",  //  格式化生成文件名，包含帧数和区域面积信息
-                    *frame_count, box.area);
-            // save_rgb565_as_jpg(path, cropped, box.w + 4, box.h + 15); //  将裁剪后的RGB565图像保存为JPG格式
-            save_rgb565_as_jpg(path, cropped, box.w + 5, 45); //  将裁剪后的RGB565图像保存为JPG格式
+            // // 保存到 /tmp（内存中），之后用scp拷出
+            // snprintf(path, sizeof(path), "/tmp/car_%d_%d.jpg",  //  格式化生成文件名，包含帧数和区域面积信息
+            //         *frame_count, box.area);
+            // // save_rgb565_as_jpg(path, cropped, box.w + 4, box.h + 15); //  将裁剪后的RGB565图像保存为JPG格式
+            // save_rgb565_as_jpg(path, cropped, box.w + 5, 45); //  将裁剪后的RGB565图像保存为JPG格式
 
 
-            printf("Box: Area=%d at (%d,%d) size %dx%d, 文件名: %s\n",
-               box.area, box.x, box.y, box.w, box.h, path);
-
-            // cv::Mat cropped_mat(80, box.w + 5, CV_16UC1, cropped);
+            // printf("Box: Area=%d at (%d,%d) size %dx%d, 文件名: %s\n",
+            //    box.area, box.x, box.y, box.w, box.h, path);
 
             // 创建彩色Mat (BGR格式)
             cv::Mat cropped_mat(45, box.w + 5, CV_8UC3);
@@ -351,6 +349,18 @@ void process_image(uint16_t* rgb565_image, int *frame_count) {
                 first_frame_logged = true;
             }
             
+
+            // 保存到 /tmp（内存中），之后用scp拷出
+            snprintf(path, sizeof(path), "/tmp/%s_%d_%d.jpg",  //  格式化生成文件名，包含帧数和区域面积信息
+                    class_labels[inference_result.class_index], *frame_count, box.area);
+            // save_rgb565_as_jpg(path, cropped, box.w + 4, box.h + 15); //  将裁剪后的RGB565图像保存为JPG格式
+            save_rgb565_as_jpg(path, cropped, box.w + 5, 45); //  将裁剪后的RGB565图像保存为JPG格式
+
+
+            printf("Box: Area=%d at (%d,%d) size %dx%d, 文件名: %s\n",
+               box.area, box.x, box.y, box.w, box.h, path);
+             
+
             free(cropped); //  释放裁剪图像的内存
         }
 

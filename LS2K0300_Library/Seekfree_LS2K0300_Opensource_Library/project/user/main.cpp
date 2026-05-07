@@ -18,17 +18,6 @@ void cleanup()
 
 int main(int, char**) 
 {
-
-    // 张量内存
-    uint8_t tensor_arena[TENSOR_ARENA_SIZE];
-    
-    // 初始化（无返回值，通过全局变量访问）
-    if (!init_tflite_simple(tensor_arena, TENSOR_ARENA_SIZE)) {
-        printf("Failed to initialize TFLite!\n");
-        return -1;
-    }
-
-
     // 注册清理函数
     atexit(cleanup);
 
@@ -47,7 +36,14 @@ int main(int, char**)
     }
     printf("✅ 摄像头初始化成功\n");
 
-
+    // 张量内存
+    uint8_t tensor_arena[TENSOR_ARENA_SIZE];
+    
+    // 识别初始化（无返回值，通过全局变量访问）
+    if (!init_tflite_simple(tensor_arena, TENSOR_ARENA_SIZE)) {
+        printf("Failed to initialize TFLite!\n");
+        return -1;
+    }
   
     // ======================== 基础初始化 ========================
     TCP::init();
@@ -102,8 +98,6 @@ int main(int, char**)
 
 
         // ips200_show_rgb565_image(0,0,rgb565_image,160,120,60,20,0);
-
-        // frame_count++;  // 帧计数+1
 
         process_image(rgb565_image, &frame_count);
     

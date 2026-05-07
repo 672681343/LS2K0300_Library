@@ -4,7 +4,7 @@
 tflite::MicroInterpreter* interpreter = nullptr; // 用来存储模型解释器的指针
 
 // 类别标签定义
-static const char* class_labels[] = {"materials", "traffic", "weapon",};
+const char* class_labels[] = {"materials", "traffic", "weapon",};
 
 //cv图像矩阵初始化
 Mat float_img,resized_img;

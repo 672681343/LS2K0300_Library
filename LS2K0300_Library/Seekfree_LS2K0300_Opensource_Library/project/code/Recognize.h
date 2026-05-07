@@ -23,6 +23,8 @@ using namespace cv;
     //cv图像矩阵初始化
     extern Mat float_img,resized_img;
 
+    extern const char* class_labels[];
+
     // 日志控制变量
     extern int frame_count;          // 帧计数器
     extern bool first_frame_logged;  // 第一帧日志是否已打印
