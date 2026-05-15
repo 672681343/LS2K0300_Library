@@ -58,6 +58,12 @@ bool init_tflite_simple(uint8_t* tensor_arena, size_t arena_size) {
     resolver.AddStridedSlice();
     resolver.AddPack();
     
+    //后来添加的算子
+    resolver.AddAdd();     // 缺少的ADD算子
+    resolver.AddMul();     // 之前缺少的MUL算子
+
+
+
     // 加载模型
     const tflite::Model* model = ::tflite::GetModel(loong_cnn_model_simple_tflite);
     
@@ -116,11 +122,8 @@ InferenceResult perform_inference(
     // ips200_show_rgb565_image(0, 0, resized_img, UVC_WIDTH, UVC_HEIGHT, UVC_WIDTH, UVC_HEIGHT, 0);//调试用
 
 
-    
 
-    // show_rgb565_image(0, 0, resized_img, 40, 40, 0, 0, 1);
-
-        show_cv_mat_on_ips200(0, 0, resized_img, 0);
+        // show_cv_mat_on_ips200(0, 0, resized_img, 0);//显示预处理后的图像，调试用
 
     //cv::resize：这是OpenCV库中用于调整图像大小的函数，它可以将源图像缩放到指定尺寸。
     //input_image：这是函数的第一个参数，表示需要进行尺寸调整的输入图像，它是一个OpenCV的Mat对象。
@@ -173,7 +176,7 @@ InferenceResult perform_inference(
     
     result.class_index = max_i;
     result.confidence = max_v;
-
+  
     // 打印结果
     if(frame_count % LOG_PRINT_FREQUENCY == 0) { //  每隔LOG_PRINT_FREQUENCY帧打印一次
         printf("[第%d帧] 预测类别：%s | 置信度：%.4f | 推理耗时：%ld us\n", //  打印帧数、预测类别、置信度和推理耗时

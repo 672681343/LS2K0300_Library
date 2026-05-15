@@ -26,9 +26,9 @@ namespace Pit{
     void callback_5ms()
     {
         Encoder::update();
-        imu660ra_get_gyro();
+        // imu660ra_get_gyro(); // 获取IMU数据
 
-        Angle_out = PID::AnglePID(Err_out, imu660ra_gyro_z, &PID::angle_pid);
+        Angle_out = PID::AnglePID(Err_out, 0, &PID::angle_pid);
 
 
         // // 公共停机逻辑

@@ -254,7 +254,7 @@
         rgb;
         rotate = <0>;           // 旋转方向 0 90 180 270
         buswidth = <8>;
-        fps = <30>;             // 帧率
+        fps = <30>;             // 帧率  30
         
         dc-gpios = <&gpa1 10 GPIO_ACTIVE_HIGH>;     // GPIO26
         reset-gpios = <&gpa4 10 GPIO_ACTIVE_HIGH>;  // GPIO74

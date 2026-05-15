@@ -1,2 +1,6 @@
 用于存放模型文件，其中的模型需要自行训练以及到处。
 loong_cnn_model_simple.h仅供学习使用，无法直接用于比赛。
+
+
+打开model终端，生成头文件
+xxd -i loong_cnn_model_simple.tflite "loong_cnn_model_simple.h"

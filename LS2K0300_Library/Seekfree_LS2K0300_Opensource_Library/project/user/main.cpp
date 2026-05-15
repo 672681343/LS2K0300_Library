@@ -96,21 +96,22 @@ int main(int, char**)
         // MenuSystem::key_shutdown();
         // MenuSystem::Menu_display();
 
+        process_image(rgb565_image, &frame_count);
 
         // ips200_show_rgb565_image(0,0,rgb565_image,160,120,60,20,0);
 
-        process_image(rgb565_image, &frame_count);
+
     
 
         
         // show_rgb565_image(0, 0, scc8660_image[0], SCC8660_W, SCC8660_H, 100, 100, 1);  //
-        // ips200_show_rgb565_image(0, 0, rgb565_image, 160, 120, 160, 70, 0);//用这个
+        // ips200_show_rgb565_image(0, 0, rgb565_image, 160, 120, 160, 120, 0);//用这个
 
-        // ips200_show_rgb565_image(0, 0, rgb565_image, UVC_WIDTH, UVC_HEIGHT, UVC_WIDTH, UVC_HEIGHT, 0);///显示彩色图像
+        ips200_show_rgb565_image(0, 0, rgb565_image, UVC_WIDTH, UVC_HEIGHT, 240, 240, 0);///显示彩色图像
 
 
 
-        // ips200_show_gray_image(0, 0, rgay_image, 160, 120);
+        // ips200_show_gray_image(0, 0, rgay_image, 186, 70);
         
     }
 }

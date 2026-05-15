@@ -11,8 +11,8 @@
 //后续裁剪功能可以关掉，要看具体识别的速度和准确率
 
 // 图像尺寸（根据你的IPS200屏幕修改）
-#define IMG_WIDTH  160  
-#define IMG_HEIGHT 120
+#define IMG_WIDTH  320  
+#define IMG_HEIGHT 240
 
 
 
@@ -26,6 +26,7 @@
 
 
 std::vector<RedBox> boxes; //  存储红色框对象的容器
+
 
 
 /*
@@ -57,11 +58,18 @@ void detect_red_regions(uint16_t* image, int width, int height,
     uint8_t* mask = new uint8_t[total_pixels];
     uint8_t* visited = new uint8_t[total_pixels];
 
-        // 边界过滤阈值（新增参数，方便外部配置）
-    int min_y_threshold = 85;          // min_y 必须大于此值（上侧边界裁剪值）
+    //     // 边界过滤阈值（新增参数，方便外部配置）(适配160*120， 40*40的红色区域)
+    // int min_y_threshold = 85;          // min_y 必须大于此值（上侧边界裁剪值）
+    // int max_y_threshold = 5;           // min_y 必须小于 height - 此值（下侧边界裁剪值）
+    // int min_x_threshold = 5;            // min_x 必须大于此值  （左侧边界裁剪值）
+    // int max_x_threshold = 10;           // max_x 必须小于 width - 此值（右侧边界裁剪值）
+    // float min_density = 0.2f;
+
+            // 边界过滤阈值（新增参数，方便外部配置） 适配68*68的
+    int min_y_threshold = 45;          // min_y 必须大于此值（上侧边界裁剪值）
     int max_y_threshold = 5;           // min_y 必须小于 height - 此值（下侧边界裁剪值）
     int min_x_threshold = 5;            // min_x 必须大于此值  （左侧边界裁剪值）
-    int max_x_threshold = 85;           // max_x 必须小于 width - 此值（右侧边界裁剪值）
+    int max_x_threshold = 65;           // max_x 必须小于 width - 此值（右侧边界裁剪值）
     float min_density = 0.2f;
     
     // 生成二值掩码
@@ -137,6 +145,29 @@ void detect_red_regions(uint16_t* image, int width, int height,
         }
     }
     
+    // ========== 新增：筛选从下往上数第一个红框 ==========
+    if (!boxes.empty()) {
+        // 按框的底部Y坐标从大到小排序（从下到上）
+        // 图像坐标：左上角(0,0)，Y向下递增，所以底部Y越大越靠下
+        std::sort(boxes.begin(), boxes.end(),
+            [](const RedBox& a, const RedBox& b) {
+                int bottom_a = a.y + a.h;  // 框a的底部Y坐标
+                int bottom_b = b.y + b.h;  // 框b的底部Y坐标
+                // 底部Y大的排在前面（从下到上）
+                if (bottom_a != bottom_b) {
+                    return bottom_a > bottom_b;
+                }
+                // 如果底部Y相同，按X从小到大排序（从左到右）
+                return a.x < b.x;
+            });
+        
+        // 只保留最底部的第一个红框
+        RedBox first_from_bottom = boxes[0];
+        boxes.clear();
+        boxes.push_back(first_from_bottom);
+    }
+    // ================================================
+
     delete[] mask;
     delete[] visited;
 }
@@ -256,7 +287,7 @@ void save_rgb565_as_jpg(const char* filename, uint16_t* rgb565, int w, int h) {
     // 直接保存为 JPG
     std::vector<int> params; //  定义一个整型向量，用于存储图像编码参数
     params.push_back(cv::IMWRITE_JPEG_QUALITY); //  添加JPEG质量参数标志
-    params.push_back(95);  // 质量 0-100
+    params.push_back(100);  // 质量 0-100
     
     cv::imwrite(filename, bgr, params); //  将处理后的图像保存到文件 参数:   filename - 要保存的文件名   bgr - 要保存的BGR格式图像数据   params - 保存参数，如压缩质量等
 }
@@ -265,34 +296,35 @@ void save_rgb565_as_jpg(const char* filename, uint16_t* rgb565, int w, int h) {
 
 //该函数处理RGB565格式的图像，检测其中的红色区域，并在检测到红色区域时，每隔一定帧数裁剪并保存该区域为JPEG图片。
 void process_image(uint16_t* rgb565_image, int *frame_count) {
-    
-    detect_red_regions(rgb565_image, UVC_WIDTH, UVC_HEIGHT, boxes, 40, 1600); 
+    detect_red_regions(rgb565_image, UVC_WIDTH, UVC_HEIGHT, boxes, 40, 2600); 
 
     // printf("Detected %zu boxes\n", boxes.size());
     (*frame_count)++;  // 帧计数+1
-        printf("第%d帧：处理完成\n", *frame_count);
+        // printf("第%d帧：处理完成\n", *frame_count);
     
     // 每20帧自动保存一张, 并且只保存第一个检测到的红色区域（如果有的话）
-    if (!boxes.empty() && (*frame_count % 20 == 0)) {   // && (frame_count % 10 == 0)
+    if (!boxes.empty() && (*frame_count % 50 == 0)) {   // && (frame_count % 10 == 0)
         auto& box = boxes[0]; //  获取检测到的第一个边界框
+            uint8 process_height = 45; // 裁剪高度固定为45像素，宽度根据检测到的红色区域和模型输入大小调整（适配68*68的）
+            uint8 process_width = box.w + 15;   // 裁剪宽度box.w + 8（适配40*40）
 
-        
+            
         // // 画框
         // draw_rect_rgb565(rgb565_image, UVC_WIDTH, UVC_HEIGHT, //  绘制矩形框，使用RGB565格式 参数：图像数据、图像宽度、图像高度、矩形坐标和尺寸、颜色、线宽
-        //                 box.x - 2, box.y +2, box.w + 4, box.h+15, 
+        //                 box.x - 2, box.y +2, process_width, process_height, 
         //                 RGB565_YELLOW, 4);
-        
+            
         // // 裁剪并保存
         // uint16_t* cropped = crop_image(rgb565_image, UVC_WIDTH, UVC_HEIGHT, //  从原始图像中裁剪出指定区域         参数：原始图像、图像宽度、图像高度、裁剪起点x坐标、裁剪起点y坐标、裁剪宽度、裁剪高度
         //                               box.x - 2, box.y+2, box.w + 5, box.h+15);
 
                                               // 裁剪并保存
-        if(box.w <= MODEL_INPUT_WIDTH-5){
-            box.w = MODEL_INPUT_WIDTH-5; // 保持宽度不变，增加一些边距
+        if(box.w <= MODEL_INPUT_WIDTH){
+            box.w = MODEL_INPUT_WIDTH; // 保持宽度不变，增加一些边距
         }
 
         uint16_t* cropped = crop_image(rgb565_image, UVC_WIDTH, UVC_HEIGHT, //  从原始图像中裁剪出指定区域         参数：原始图像、图像宽度、图像高度、裁剪起点x坐标、裁剪起点y坐标、裁剪宽度、裁剪高度
-                                      box.x - 5, box.y+5, box.w + 5, 45);
+                                      box.x - 5, box.y+5, process_width, process_height);
         if (cropped) {
                                                                                                                                
             char path[128];
@@ -300,19 +332,19 @@ void process_image(uint16_t* rgb565_image, int *frame_count) {
             // snprintf(path, sizeof(path), "/tmp/car_%d_%d.jpg",  //  格式化生成文件名，包含帧数和区域面积信息
             //         *frame_count, box.area);
             // // save_rgb565_as_jpg(path, cropped, box.w + 4, box.h + 15); //  将裁剪后的RGB565图像保存为JPG格式
-            // save_rgb565_as_jpg(path, cropped, box.w + 5, 45); //  将裁剪后的RGB565图像保存为JPG格式
+            // save_rgb565_as_jpg(path, cropped, box.w + 5, process_height); //  将裁剪后的RGB565图像保存为JPG格式
 
 
             // printf("Box: Area=%d at (%d,%d) size %dx%d, 文件名: %s\n",
             //    box.area, box.x, box.y, box.w, box.h, path);
 
             // 创建彩色Mat (BGR格式)
-            cv::Mat cropped_mat(45, box.w + 5, CV_8UC3);
+            cv::Mat cropped_mat(process_height, process_width, CV_8UC3);
 
             // 将RGB565转换为BGR
-            for (int y = 0; y < 45; y++) {
-                for (int x = 0; x < box.w + 5; x++) {
-                    uint16_t pixel = cropped[y * (box.w + 5) + x];
+            for (int y = 0; y < process_height; y++) {
+                for (int x = 0; x < process_width; x++) {
+                    uint16_t pixel = cropped[y * (process_width) + x];
                     
                     // 提取RGB565分量
                     uint8_t r5 = (pixel >> 11) & 0x1F;  // 红色5位
@@ -350,11 +382,25 @@ void process_image(uint16_t* rgb565_image, int *frame_count) {
             }
             
 
-            // 保存到 /tmp（内存中），之后用scp拷出
-            snprintf(path, sizeof(path), "/tmp/%s_%d_%d.jpg",  //  格式化生成文件名，包含帧数和区域面积信息
+            // // 保存到 /tmp（内存中），之后用scp拷出
+            // snprintf(path, sizeof(path), "/tmp/%s_%d_%d.jpg",  //  格式化生成文件名，包含帧数和区域面积信息
+            //         class_labels[inference_result.class_index], *frame_count, box.area);
+                  
+            snprintf(path, sizeof(path), "/tmp/%s_%d_%d_2.jpg",  //  格式化生成文件名，包含帧数和区域面积信息
                     class_labels[inference_result.class_index], *frame_count, box.area);
+            
+            //traffic_*_*_1.jpg --> 是装甲车
+            //traffic_*_*_2.jpg --> 是救护车
+
+            //weapon_*_*_1.jpg --> 是枪
+            //weapon_*_*_2.jpg --> 是爆炸物
+
+            //materials_*_*_1.jpg --> 是望远镜
+            //materials_*_*_2.jpg --> 是急救包
+
+
             // save_rgb565_as_jpg(path, cropped, box.w + 4, box.h + 15); //  将裁剪后的RGB565图像保存为JPG格式
-            save_rgb565_as_jpg(path, cropped, box.w + 5, 45); //  将裁剪后的RGB565图像保存为JPG格式
+            save_rgb565_as_jpg(path, cropped, process_width, process_height); //  将裁剪后的RGB565图像保存为JPG格式
 
 
             printf("Box: Area=%d at (%d,%d) size %dx%d, 文件名: %s\n",
