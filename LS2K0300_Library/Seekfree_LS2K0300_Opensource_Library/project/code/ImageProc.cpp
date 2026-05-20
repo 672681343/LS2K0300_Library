@@ -46,10 +46,11 @@ namespace ImageProc {
         }
 
         
+        //二次丢线统计
+        sec_lost_line_statistics(bin, 10, WIDTH-10, state.cutoff);
         //丢线统计
         lost_line_statistics(state.cutoff);
-        //二次丢线统计
-        sec_lost_line_statistics(bin, 30, WIDTH-30, state.cutoff);
+
         //计算边界特征
         uint8_t start = HEIGHT - 10;
         uint8_t end = HEIGHT - state.cutoff + 5;
@@ -539,19 +540,48 @@ namespace ImageProc {
         {
             const auto& L = Left_BF.LostParam;
             const auto& R = Right_BF.LostParam;
+
+            if(L.start == HEIGHT-1 && R.start != HEIGHT-1 && R.start < L.end ) {
+
+                // 取上下边界交集
+                const uint8_t lose_both_U = std::min(sec_loss_left.LostParam.start, R.start);
+                const uint8_t lose_both_D = std::max(sec_loss_left.LostParam.end, R.end);
+                const uint8_t sum_both = (lose_both_U > lose_both_D) ? 
+                                        (lose_both_U - lose_both_D) : 0;
             
-            // 取上下边界交集
-            const uint8_t lose_both_U = std::min(L.start, R.start);
-            const uint8_t lose_both_D = std::max(L.end, R.end);
-            const uint8_t sum_both = (lose_both_U > lose_both_D) ? 
-                                    (lose_both_U - lose_both_D) : 0;
+                Mid_BF.LostParam.start = lose_both_U;
+                Mid_BF.LostParam.end = lose_both_D;
+                Mid_BF.LostParam.count = sum_both;
+                Mid_BF.LostParam.mid = static_cast<uint8_t>((lose_both_U + lose_both_D) >> 1);
+                Mid_BF.LostParam.sum = sum_both;
+
+            }else if(R.start == HEIGHT-1 && L.start != HEIGHT-1 && L.start < R.end) {
+                // 取上下边界交集
+                const uint8_t lose_both_U = std::min(L.start, sec_loss_right.LostParam.start);
+                const uint8_t lose_both_D = std::max(L.end, sec_loss_right.LostParam.end);
+                const uint8_t sum_both = (lose_both_U > lose_both_D) ? 
+                                        (lose_both_U - lose_both_D) : 0;
             
-            Mid_BF.LostParam.start = lose_both_U;
-            Mid_BF.LostParam.end = lose_both_D;
-            Mid_BF.LostParam.count = sum_both;
-            Mid_BF.LostParam.mid = static_cast<uint8_t>((lose_both_U + lose_both_D) >> 1);
-            Mid_BF.LostParam.reparation = static_cast<int8_t>(L.reparation + R.reparation);
-            Mid_BF.LostParam.sum = sum_both;
+                Mid_BF.LostParam.start = lose_both_U;
+                Mid_BF.LostParam.end = lose_both_D;
+                Mid_BF.LostParam.count = sum_both;
+                Mid_BF.LostParam.mid = static_cast<uint8_t>((lose_both_U + lose_both_D) >> 1);
+                Mid_BF.LostParam.sum = sum_both;
+            }else {
+            
+                // 取上下边界交集
+                const uint8_t lose_both_U = std::min(L.start, R.start);
+                const uint8_t lose_both_D = std::max(L.end, R.end);
+                const uint8_t sum_both = (lose_both_U > lose_both_D) ? 
+                                        (lose_both_U - lose_both_D) : 0;
+            
+                Mid_BF.LostParam.start = lose_both_U;
+                Mid_BF.LostParam.end = lose_both_D;
+                Mid_BF.LostParam.count = sum_both;
+                Mid_BF.LostParam.mid = static_cast<uint8_t>((lose_both_U + lose_both_D) >> 1);
+                Mid_BF.LostParam.reparation = static_cast<int8_t>(L.reparation + R.reparation);
+                Mid_BF.LostParam.sum = sum_both;
+            }
         }        
     }
 
@@ -576,7 +606,7 @@ namespace ImageProc {
         // 左侧检测
         bool l_found_white = false;
         
-        for (uint8_t idx = 5; idx < cut_off - 2; ++idx) {
+        for (uint8_t idx = 0; idx < cut_off - 2; ++idx) {
             uint8_t row = HEIGHT - 1 - idx;  // 从底部开始计算当前行
             uint16_t pixel_offset = row * WIDTH + x_left;
             

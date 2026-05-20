@@ -61,6 +61,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.cpp.o.d"
   "CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Pit.cpp.o"
   "CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Pit.cpp.o.d"
+  "CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.cpp.o"
+  "CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.cpp.o.d"
   "CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Saving.cpp.o"
   "CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Saving.cpp.o.d"
   "CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/TCP.cpp.o"

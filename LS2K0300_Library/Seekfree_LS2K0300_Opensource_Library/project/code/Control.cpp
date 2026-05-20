@@ -147,7 +147,7 @@ namespace Control{
             case LOOG: 
                 CurveSpeed.dif = 0;
                 if(MenuSystem::Car_flag.speed_loop){
-                    if (Error::Err.current > 0){
+                    if (Err::Err.current > 0){
                         aim_speed.cur_L = LongStrSpeed.set_speed;
                         aim_speed.cur_R = LongStrSpeed.set_speed;
                     }else{
@@ -186,13 +186,13 @@ namespace Control{
 
                 }
 
-                Error::Err.row = LongStrSpeed.err_row;
+                Err::Err.row = LongStrSpeed.err_row;
  
                 break;
             case SHORT:
                 CurveSpeed.dif = 0;
                 if(MenuSystem::Car_flag.speed_loop){
-                    if (Error::Err.current > 0){
+                    if (Err::Err.current > 0){
                         aim_speed.cur_L = ShortStrSpeed.set_speed;
                         aim_speed.cur_R = ShortStrSpeed.set_speed;
                     }else{
@@ -230,21 +230,21 @@ namespace Control{
 
                 }
                 
-                Error::Err.row = ShortStrSpeed.err_row;
+                Err::Err.row = ShortStrSpeed.err_row;
                 
                 break;
             case CURVE:
                 //分段PD控制器
                 //SmartPD::SegmentPDController(Error::Err.current, CurvePid.kp, CurvePid.kd);
                 if(MenuSystem::Car_flag.speed_loop){
-                    if (Error::Err.current > 0){
+                    if (Err::Err.current > 0){
                         aim_speed.cur_L = CurveSpeed.set_speed;
                         aim_speed.cur_R = CurveSpeed.set_speed;
-                        CurveSpeed.dif = -0.5;
+                        CurveSpeed.dif = -0;
                     }else{
                         aim_speed.cur_L = CurveSpeed.set_speed;
                         aim_speed.cur_R = CurveSpeed.set_speed;
-                        CurveSpeed.dif = 0.5;
+                        CurveSpeed.dif = 0;
                     }
 
 
@@ -279,14 +279,14 @@ namespace Control{
             case ISLAND:
                 CurveSpeed.dif = 0;
                 if(MenuSystem::Car_flag.speed_loop){
-                    if (Error::Err.current > 0){
+                    if (Err::Err.current > 0){
                         aim_speed.cur_L = IslandSpeed.set_speed;
                         aim_speed.cur_R = IslandSpeed.set_speed;
-                        CurveSpeed.dif = -0.5;
+                        CurveSpeed.dif = -0;
                     }else{
                         aim_speed.cur_L = IslandSpeed.set_speed;
                         aim_speed.cur_R = IslandSpeed.set_speed;
-                        CurveSpeed.dif = 0.5;
+                        CurveSpeed.dif = 0;
                     }
 
 
@@ -321,7 +321,7 @@ namespace Control{
 
                 }
 
-                Error::Err.row = IslandSpeed.err_row;
+                Err::Err.row = IslandSpeed.err_row;
 
                 break;
 
@@ -330,8 +330,13 @@ namespace Control{
             }
         }else{
 
-                    pwm.L = 0;
-                    pwm.R = 0;
+            PID::turn_pid.kp = ShortStrPid.kp;
+            PID::turn_pid.kd = ShortStrPid.kd;
+            PID::speed_pid_L.kp = ShortStrSpeed.l_kp;
+            PID::speed_pid_L.ki = ShortStrSpeed.l_ki;
+
+            aim_speed.cur_L = 0; // 停车速度
+            aim_speed.cur_R = 0; // 停车速度
         }
 
 
@@ -356,6 +361,15 @@ namespace Control{
 
                 }
 
+            }
+
+            if(Elem::Zebra.count >= 2 && MenuSystem::Car_flag.init == 1 && MenuSystem::Car_flag.stop ==0){
+                stop_count ++;
+                if (stop_count > 2){ // 停止计数
+                    MenuSystem::Car_flag.stop = 1;
+                    stop_count = 0; // 重置停止计数
+                }
+                //MenuSystem::sh_down()
             }
 
         }
@@ -483,7 +497,7 @@ namespace Control{
 
         return 
             (ImageProc::state.cutoff < 64) && 
-            ((left_condition && Error::Err.current > 25)|| (right_condition && Error::Err.current < -25)) &&
+            ((left_condition && Err::Err.current > 25)|| (right_condition && Err::Err.current < -25)) &&
             (ImageProc::Mid_BF.Var < 70);
     }
     
@@ -506,9 +520,9 @@ namespace Control{
 
         // 计算中线特征参数
         ImageProc::Mid_BF.Slope = two_segment_fitting_int(start, end, 0, 0, 
-                                Error::center_line, Error::fit_center_line);
+                                Err::center_line, Err::fit_center_line);
         ImageProc::Mid_BF.Var = fangcha(start, end, 
-                                Error::center_line, Error::fit_center_line);
+                                Err::center_line, Err::fit_center_line);
         
         //return SHORT;
         //return CURVE;

@@ -181,16 +181,16 @@ uint8_t island_Up(uint8_t start, uint8_t end, uint8_t mode,
     uint8_t U_point = 0;
     if (end < 3) { end = 3; }
     if (start > HEIGHT - 5) { start = HEIGHT - 5; }
-    uint8_t maxDelta = 5;
-    int jumpThreshold = 15;
+    int8_t maxDelta = 4;
+    int8_t jumpThreshold = 15;
     if (mode == 0)
     {
         for (i = start; i > end; i--)
         {
-            if (abs(Search_line[i - 2] - Search_line[i - 1]) < maxDelta &&
-                abs(Search_line[i - 1] - Search_line[i]) < maxDelta &&
-                Search_line[i] - Search_line[i + 2] > jumpThreshold &&
-                Search_line[i] - Search_line[i + 3] > jumpThreshold && i < 50
+            if (abs((int)Search_line[i - 2] - (int)Search_line[i - 1]) < maxDelta &&
+                abs((int)Search_line[i - 1] - (int)Search_line[i]) < maxDelta &&
+                (int)Search_line[i] - (int)Search_line[i + 2] > jumpThreshold &&
+                (int)Search_line[i] - (int)Search_line[i + 3] > jumpThreshold && i < 50
                 )
             {
                 U_point = i;
@@ -203,10 +203,10 @@ uint8_t island_Up(uint8_t start, uint8_t end, uint8_t mode,
         for (i = start; i > end; i--)
         {
 
-            if (abs(Search_line[i - 2] - Search_line[i - 1]) < maxDelta &&
-                abs(Search_line[i - 1] - Search_line[i]) < maxDelta &&
-                Search_line[i] - Search_line[i + 2] < -jumpThreshold &&
-                Search_line[i] - Search_line[i + 3] < -jumpThreshold && i < 50
+            if (abs((int)Search_line[i - 2] - (int)Search_line[i - 1]) < maxDelta &&
+                abs((int)Search_line[i - 1] - (int)Search_line[i]) < maxDelta &&
+                (int)Search_line[i] - (int)Search_line[i + 2] < -jumpThreshold &&
+                (int)Search_line[i] - (int)Search_line[i + 3] < -jumpThreshold && i < 50
                 )
             {
                 U_point = i;
@@ -231,16 +231,16 @@ uint8_t island_Down(uint8_t start, uint8_t end, uint8_t mode,
     uint8_t D_point = 0;
     if (end < 3) { end = 3; }
     if (start > HEIGHT - 3) { start = HEIGHT - 3; }
-    uint8_t maxDelta = 3;
-    uint8_t jumpThreshold = 10;
+    int8_t maxDelta = 3;
+    int8_t jumpThreshold = 10;
     if (mode == 0)
     {
         for (i = start; i > end; i--)
         {
-            if ((Search_line[i] - Search_line[i-2]) >= jumpThreshold &&
-                (Search_line[i] - Search_line[i-3]) >= jumpThreshold &&
-                abs(Search_line[i] - Search_line[i + 1]) < maxDelta &&
-                abs(Search_line[i + 1] - Search_line[i + 2]) < maxDelta 
+            if (((int)Search_line[i] - (int)Search_line[i-2]) > jumpThreshold &&
+                ((int)Search_line[i] - (int)Search_line[i-3]) > jumpThreshold &&
+                abs((int)Search_line[i] - (int)Search_line[i + 1]) < maxDelta &&
+                abs((int)Search_line[i + 1] - (int)Search_line[i + 2]) < maxDelta 
                 )
             {
                 D_point = i;
@@ -252,10 +252,10 @@ uint8_t island_Down(uint8_t start, uint8_t end, uint8_t mode,
     {
         for (i = start; i > end; i--)
         {
-            if ((Search_line[i] - Search_line[i-3]) <= -jumpThreshold &&
-                (Search_line[i] - Search_line[i-2]) <= -jumpThreshold &&
-                abs(Search_line[i] - Search_line[i + 1]) < maxDelta &&
-                abs(Search_line[i + 1] - Search_line[i + 2]) < maxDelta
+            if (((int)Search_line[i] - (int)Search_line[i-3]) < -jumpThreshold &&
+                ((int)Search_line[i] - (int)Search_line[i-2]) < -jumpThreshold &&
+                abs((int)Search_line[i] - (int)Search_line[i + 1]) < maxDelta &&
+                abs((int)Search_line[i + 1] - (int)Search_line[i + 2]) < maxDelta
                 )
             {
                 D_point = i;
@@ -281,15 +281,15 @@ uint8_t island_sideUp(uint8_t start, uint8_t end, uint8_t mode,
     uint8_t U_point = 0;
     if (end < 3) { end = 3; }
     if (start > HEIGHT - 5) { start = HEIGHT - 5; }
-    uint8_t maxDelta = 15;
-    uint8_t jumpThreshold = 10;
+    int8_t maxDelta = 15;
+    int8_t jumpThreshold = 10;
     if (mode == 0)
     {
         for (i = start; i > end; i--)
         {
-            if (abs(Search_line[i - 2] - Search_line[i - 1]) < maxDelta &&
-                abs(Search_line[i - 1] - Search_line[i]) < maxDelta &&
-                Search_line[i] - Search_line[i + 2] > jumpThreshold
+            if (abs((int)Search_line[i - 2] - (int)Search_line[i - 1]) < maxDelta &&
+                abs((int)Search_line[i - 1] - (int)Search_line[i]) < maxDelta &&
+                (int)Search_line[i] - (int)Search_line[i + 2] > jumpThreshold
                 )
             {
                 U_point = i;
@@ -302,9 +302,9 @@ uint8_t island_sideUp(uint8_t start, uint8_t end, uint8_t mode,
         for (i = start; i > end; i--)
         {
 
-            if (abs(Search_line[i - 2] - Search_line[i - 1]) < maxDelta &&
-                abs(Search_line[i - 1] - Search_line[i]) < maxDelta &&
-                Search_line[i] - Search_line[i + 2] < -jumpThreshold
+            if (abs((int)Search_line[i - 2] - (int)Search_line[i - 1]) < maxDelta &&
+                abs((int)Search_line[i - 1] - (int)Search_line[i]) < maxDelta &&
+                (int)Search_line[i] - (int)Search_line[i + 2] < -jumpThreshold
                 )
             {
                 U_point = i;
@@ -343,17 +343,17 @@ uint8_t Circular_Detection(uint8_t type, uint8_t limit, uint8_t start, uint8_t e
             
             if (Search_line[i] > 10 && Search_line[i - 1] > 10 && Search_line[i + 1] > 10)
             {
-                if (Search_line[i] - Search_line[i - 1] == 0)
+                if ((int)Search_line[i] - (int)Search_line[i - 1] == 0)
                 {
                     n++;
                 }
-                else if (Search_line[i] - Search_line[i - 1] > 0)
+                else if ((int)Search_line[i] - (int)Search_line[i - 1] > 0)
                 {
                     inc++;
                     inc += n;
                     n = 0;
                 }
-                else if (Search_line[i] - Search_line[i + 1] > 0)
+                else if ((int)Search_line[i] - (int)Search_line[i + 1] > 0)
                 {
                     dec++;
                     dec += n;
@@ -395,17 +395,17 @@ uint8_t Circular_Detection(uint8_t type, uint8_t limit, uint8_t start, uint8_t e
             
             if (Search_line[i] < 170 && Search_line[i - 1] < 170 && Search_line[i + 1] < 170)
             {
-                if (Search_line[i] - Search_line[i - 1] == 0)
+                if ((int)Search_line[i] - (int)Search_line[i - 1] == 0)
                 {
                     n++;
                 }
-                else if (Search_line[i - 1] - Search_line[i] > 0)
+                else if ((int)Search_line[i - 1] - (int)Search_line[i] > 0)
                 {
                     dec++;
                     dec += n;
                     n = 0;
                 }
-                else if (Search_line[i + 1] - Search_line[i] > 0)
+                else if ((int)Search_line[i + 1] - (int)Search_line[i] > 0)
                 {
                     inc++;
                     inc += n;
@@ -488,16 +488,16 @@ uint8_t cross_Up(uint8_t start, uint8_t end, uint8_t mode,
     uint8_t U_point = 0;
     if (end < 3) { end = 3; }
     if (start > HEIGHT - 6) { start = HEIGHT - 6; }
-    int8_t maxDelta = 7;
-    int8_t jumpThreshold = 15;
+    int8_t maxDelta = 9;
+    int8_t jumpThreshold = 11;
     if(mode == 0)
     {
         for (i = start; i > end; i--)
         {
-            if (abs(Search_line[i - 2] - Search_line[i - 1]) < maxDelta &&
-                abs(Search_line[i - 1] - Search_line[i]) < maxDelta &&
-                Search_line[i] - Search_line[i + 2] > jumpThreshold &&
-                Search_line[i] - Search_line[i + 3] > jumpThreshold && i < 50
+            if (abs((int)Search_line[i - 2] - (int)Search_line[i - 1]) < maxDelta &&
+                abs((int)Search_line[i - 1] - (int)Search_line[i]) < maxDelta &&
+                (int)Search_line[i] - (int)Search_line[i + 2] > jumpThreshold &&
+                (int)Search_line[i] - (int)Search_line[i + 3] > jumpThreshold && i < 50
                 )
             {
                 U_point = i-1;
@@ -510,10 +510,10 @@ uint8_t cross_Up(uint8_t start, uint8_t end, uint8_t mode,
     {
         for (i = start; i > end; i--)
         {
-            if (abs(Search_line[i - 2] - Search_line[i - 1]) < maxDelta &&
-                abs(Search_line[i - 1] - Search_line[i]) < maxDelta &&
-                Search_line[i] - Search_line[i + 2] < -jumpThreshold &&
-                Search_line[i] - Search_line[i + 3] < -jumpThreshold && i < 50
+            if (abs((int)Search_line[i - 2] - (int)Search_line[i - 1]) < maxDelta &&
+                abs((int)Search_line[i - 1] - (int)Search_line[i]) < maxDelta &&
+                (int)Search_line[i] - (int)Search_line[i + 2] < -jumpThreshold &&
+                (int)Search_line[i] - (int)Search_line[i + 3] < -jumpThreshold && i < 50
                 )
             {
                 U_point = i-1;
@@ -536,7 +536,7 @@ uint8 cross_Down(uint8 start, uint8 end, uint8 mode,
 {
     uint8_t i = 0;
     uint8_t D_point = 0;
-    if (end < 3) { end = 3; }
+    if (end < 4) { end = 4; }
     if (start > HEIGHT - 8) { start = HEIGHT - 8; }
     int8_t maxDelta = 5;
     int8_t jumpThreshold = 9;
@@ -544,10 +544,10 @@ uint8 cross_Down(uint8 start, uint8 end, uint8 mode,
     {
         for (i = start; i > end; i--)
         {
-            if ((Search_line[i] - Search_line[i-2]) >= jumpThreshold &&
-                (Search_line[i] - Search_line[i-3]) >= jumpThreshold &&
-                abs(Search_line[i] - Search_line[i + 1]) < maxDelta &&
-                abs(Search_line[i + 1] - Search_line[i + 2]) < maxDelta 
+            if (((int)Search_line[i] - (int)Search_line[i-3]) >= jumpThreshold &&
+                ((int)Search_line[i] - (int)Search_line[i-4]) >= jumpThreshold &&
+                abs((int)Search_line[i] - (int)Search_line[i + 1]) < maxDelta &&
+                abs((int)Search_line[i + 1] - (int)Search_line[i + 2]) < maxDelta 
                 )
             {
                 D_point = i + 1;
@@ -559,10 +559,10 @@ uint8 cross_Down(uint8 start, uint8 end, uint8 mode,
     {
         for (i = start; i > end; i--)
         {
-            if ((Search_line[i] - Search_line[i-3]) <= -jumpThreshold &&
-                (Search_line[i] - Search_line[i-2]) <= -jumpThreshold &&
-                abs(Search_line[i] - Search_line[i + 1]) < maxDelta &&
-                abs(Search_line[i + 1] - Search_line[i + 2]) < maxDelta
+            if (((int)Search_line[i] - (int)Search_line[i-3]) <= -jumpThreshold &&
+                ((int)Search_line[i] - (int)Search_line[i-2]) <= -jumpThreshold &&
+                abs((int)Search_line[i] - (int)Search_line[i + 1]) < maxDelta &&
+                abs((int)Search_line[i + 1] - (int)Search_line[i + 2]) < maxDelta
                 )
             {
                 D_point = i + 1;
@@ -594,9 +594,9 @@ uint8_t zebra_Up(uint8_t start, uint8_t end, uint8_t mode,
     {
         for (i = start; i > end; i--)
         {
-            if (abs(Search_line[i - 2] - Search_line[i - 1]) < maxDelta &&
-                abs(Search_line[i - 1] - Search_line[i]) < maxDelta &&
-                Search_line[i] - Search_line[i + 2] < -jumpThreshold
+            if (abs((int)Search_line[i - 2] - (int)Search_line[i - 1]) < maxDelta &&
+                abs((int)Search_line[i - 1] - (int)Search_line[i]) < maxDelta &&
+                (int)Search_line[i] - (int)Search_line[i + 2] < -jumpThreshold
                 )
             {
                 U_point = i;
@@ -608,9 +608,9 @@ uint8_t zebra_Up(uint8_t start, uint8_t end, uint8_t mode,
     {
         for (i = start; i > end; i--)
         {
-            if (abs(Search_line[i - 2] - Search_line[i - 1]) < maxDelta &&
-                abs(Search_line[i - 1] - Search_line[i]) < maxDelta &&
-                Search_line[i] - Search_line[i + 2] > jumpThreshold
+            if (abs((int)Search_line[i - 2] - (int)Search_line[i - 1]) < maxDelta &&
+                abs((int)Search_line[i - 1] - (int)Search_line[i]) < maxDelta &&
+                (int)Search_line[i] - (int)Search_line[i + 2] > jumpThreshold
                 )
             {
                 U_point = i;
@@ -639,9 +639,9 @@ uint8_t zebra_Down(uint8_t start, uint8_t end, uint8_t mode,
     {
         for (i = start; i > end; i--)
         {
-            if ((Search_line[i + 2] - Search_line[i]) < -jumpThreshold &&
-                abs(Search_line[i] - Search_line[i - 1]) < maxDelta &&
-                abs(Search_line[i - 1] - Search_line[i - 2]) < maxDelta
+            if (((int)Search_line[i + 2] - (int)Search_line[i]) < -jumpThreshold &&
+                abs((int)Search_line[i] - (int)Search_line[i - 1]) < maxDelta &&
+                abs((int)Search_line[i - 1] - (int)Search_line[i - 2]) < maxDelta
                 )
             {
                 D_point = i;
@@ -653,9 +653,9 @@ uint8_t zebra_Down(uint8_t start, uint8_t end, uint8_t mode,
     {
         for (i = start; i > end; i--)
         {
-            if ((Search_line[i + 2] - Search_line[i]) > jumpThreshold &&
-                abs(Search_line[i] - Search_line[i - 1]) < maxDelta &&
-                abs(Search_line[i - 1] - Search_line[i - 2]) < maxDelta
+            if (((int)Search_line[i + 2] - (int)Search_line[i]) > jumpThreshold &&
+                abs((int)Search_line[i] - (int)Search_line[i - 1]) < maxDelta &&
+                abs((int)Search_line[i - 1] - (int)Search_line[i - 2]) < maxDelta
                 )
             {
                 D_point = i;
@@ -984,8 +984,8 @@ uint8_t M_point(uint8_t start, uint8_t end,
 
         uint8_t j = 0;
         for(j = start + 5  ; j < end - 5 ; j++){
-            int8_t left_diff = Search_line[j-5] - Search_line[j];
-            int8_t right_diff = Search_line[j+5] - Search_line[j];
+            int8_t left_diff = (int)Search_line[j-5] - (int)Search_line[j];
+            int8_t right_diff = (int)Search_line[j+5] - (int)Search_line[j];
             if (left_diff >= 1 && right_diff >= 1 && Search_line[j] != 0 && Search_line[j] <= 68) {
                 M_x = j;
                 return HEIGHT-Search_line[j]-2;

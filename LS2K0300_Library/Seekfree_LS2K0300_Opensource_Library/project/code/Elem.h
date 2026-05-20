@@ -29,6 +29,14 @@ namespace Elem {
         uint8_t x2;
     }_Island;
 
+    typedef struct{
+        uint8_t enable;
+        uint8_t State;
+        uint8_t y;
+        uint8_t count;
+        uint8_t count_threshold;
+    }_Zebra;
+
 
 
     typedef struct{
@@ -46,10 +54,14 @@ namespace Elem {
     extern _Island Left_Island;
     extern _Cross Cross;
 
+    extern _Zebra Zebra;
+
     extern _Tilt Right_Tilt_Cross;
     extern _Tilt Left_Tilt_Cross;
 
     extern uint8_t isHandling;
+
+    extern uint8_t black_count;
 
     extern uint8_t M_y;
     
@@ -58,5 +70,9 @@ namespace Elem {
     void tilt_cross_detection(void);
     void cross_detection(void);
     void island_detection(void);
+    void zebra_detection(void);
+
+    uint8_t find_zebra(uint8_t start_row, uint8_t end_row);
+
 
 }

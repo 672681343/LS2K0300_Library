@@ -107,6 +107,10 @@ int main(int, char**)
         }
 
         // 显示图像到屏幕上
-        ips200_show_gray_image(0, 0, rgay_image, UVC_WIDTH, UVC_HEIGHT);
+        //ips200_show_gray_image(0, 0, rgay_image, UVC_WIDTH, UVC_HEIGHT);
+
+
+
+
     }
 }

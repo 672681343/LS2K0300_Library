@@ -44,7 +44,7 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/tensorflow/lite/micro/memory_pl
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/tensorflow/lite/micro/tflite_bridge DIR_TFLM_SRCS)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/tensorflow/lite/micro/kernels DIR_TFLM_SRCS)
 
-# ===================== 编译静态库 =====================
+# ===================== 编译静态库 =====================z
 add_library(tflm STATIC ${DIR_TFLM_SRCS})
 
 # 设置静态库输出路径（tflm目录下的lib文件夹）

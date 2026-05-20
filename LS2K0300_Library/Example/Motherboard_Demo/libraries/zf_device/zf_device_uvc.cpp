@@ -16,8 +16,11 @@ using namespace cv;
 
 cv::Mat frame_rgb;      // 构建opencv对象 彩色
 cv::Mat frame_rgay;     // 构建opencv对象 灰度
+cv::Mat frame_rgb565;     // 构建opencv对象 彩色565
 
 uint8_t *rgay_image;    // 灰度图像数组指针
+
+uint16_t *rgb565_image;
 
 VideoCapture cap;
 
@@ -35,7 +38,9 @@ int8 uvc_camera_init(const char *path)
         printf("find uvc camera Successfully.\r\n");
     }
 
-    cap.set(CAP_PROP_FOURCC, VideoWriter::fourcc('M', 'J', 'P', 'G'));  // 设置格式
+    
+    cap.set(CAP_PROP_FOURCC, VideoWriter::fourcc('Y', 'V', 'Y', '2'));  // 设置格式
+    // cap.set(CAP_PROP_FOURCC, VideoWriter::fourcc('M', 'J', 'P', 'G'));  // 设置格式
     cap.set(CAP_PROP_FRAME_WIDTH, UVC_WIDTH);                           // 设置摄像头宽度
     cap.set(CAP_PROP_FRAME_HEIGHT, UVC_HEIGHT);                         // 设置摄像头高度
     cap.set(CAP_PROP_FPS, UVC_FPS);                                     // 显示屏幕帧率
@@ -43,6 +48,11 @@ int8 uvc_camera_init(const char *path)
     printf("get uvc width = %f.\r\n",  cap.get(CAP_PROP_FRAME_WIDTH));
     printf("get uvc height = %f.\r\n", cap.get(CAP_PROP_FRAME_HEIGHT));
     printf("get uvc fps = %f.\r\n",    cap.get(CAP_PROP_FPS));
+
+    printf("Actual: %.0fx%.0f @ %.0f FPS\n", 
+            cap.get(CAP_PROP_FRAME_WIDTH),
+            cap.get(CAP_PROP_FRAME_HEIGHT),
+            cap.get(CAP_PROP_FPS));
 
     return 0;
 }
@@ -70,8 +80,13 @@ int8 wait_image_refresh()
     // rgb转灰度
     cv::cvtColor(frame_rgb, frame_rgay, cv::COLOR_BGR2GRAY);
 
+    cv::cvtColor(frame_rgb, frame_rgb565, cv::COLOR_BGR2BGR565);
+
     // cv对象转指针
     rgay_image = reinterpret_cast<uint8_t *>(frame_rgay.ptr(0));
+
+    rgb565_image = reinterpret_cast<uint16_t *>(frame_rgb565.ptr(0));
+
 
     return 0;
 }

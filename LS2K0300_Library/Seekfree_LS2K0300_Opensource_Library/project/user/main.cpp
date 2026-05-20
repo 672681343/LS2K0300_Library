@@ -44,6 +44,15 @@ int main(int, char**)
         return -1;
     }
 
+    // // 张量内存
+    // uint8_t tensor_arena[TENSOR_ARENA_SIZE];
+    
+    // // 初始化（无返回值，通过全局变量访问）
+    // if (!init_tflite_simple(tensor_arena, TENSOR_ARENA_SIZE)) {
+    //     printf("Failed to initialize TFLite!\n");
+    //     return -1;
+    // }
+
 
     TCP::init();
     Motor::Init();                              // 初始化电机
@@ -53,10 +62,6 @@ int main(int, char**)
     MenuSystem::init();                         // 菜单初始化
     Pit::Init();                                // 中断初始化
 
-    // uint32_t sum;
-    // for(uint8_t i =0;i<200;i++){
-    //     sum+=imu660ra_gyro_z;
-    // }
 
 
     while(1)
@@ -72,10 +77,11 @@ int main(int, char**)
             exit(0);
         }
 
+
         Camera::basic_image_processing(rgay_image);
         ImageProc::image_measurement(Camera::bin_pixels,Camera::lcd_pixels);
         Elem::elem_judge();
-        Error::error_get(ImageProc::state, ImageProc::l_black, ImageProc::r_black, ImageProc::left_flags, ImageProc::right_flags);
+        Err::error_get(ImageProc::state, ImageProc::l_black, ImageProc::r_black, ImageProc::left_flags, ImageProc::right_flags);
         
         // ips200_show_gray_image(0, 0, rgay_image, UVC_WIDTH, UVC_HEIGHT);
 
@@ -89,7 +95,7 @@ int main(int, char**)
             }
             Control::stop(0);
         }
-        Error::last_error_update();
+        Err::last_error_update();
 
         MenuSystem::key_shutdown();
         MenuSystem::Menu_display();
@@ -98,7 +104,7 @@ int main(int, char**)
 
         // ips200_show_rgb565_image(0,0,rgb565_image,160,120,60,20,0);
 
-        // process_image(rgb565_image);
+        process_image(rgb565_image);
         // if(!boxes.empty()){
         //     // const auto& box = boxes[0];
         //     printf("Box: Area=%d at (%d,%d) size %dx%d\n",
@@ -123,6 +129,8 @@ int main(int, char**)
         // std::cout << "主循环运行时间: " << loop_time_elapsed.count() << " 毫秒" << std::endl;
         
 // ---------------------------------时间统计--------------------------------
+
+        system_delay_ms(10);
         
     }
 }

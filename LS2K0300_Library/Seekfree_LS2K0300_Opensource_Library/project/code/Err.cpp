@@ -1,6 +1,6 @@
 #include "Err.h"
 
-namespace Error {
+namespace Err {
     // 变量定义
 
     Error_parm Err = {
@@ -12,18 +12,22 @@ namespace Error {
         .tem_row = 40,
         .rep = 1.00
     };
+
+    uint8_t turn_time = 0;
+    uint8_t turn_flag = 0;
+
     alignas(8) std::array<uint16_t, HEIGHT> center_line;    //中线数组
     alignas(8) std::array<uint16_t, HEIGHT> fit_center_line;//拟合中线数组
     //alignas(8) std::array<uint16_t, HEIGHT> fit_Bessel_line;//拟合中线数组
 
     const std::array<uint8_t, HEIGHT> ROAD_WIDTH = {
-              9,  11,  15,  20,  23,  26,  29,  32,  34,  36,  // 0-9
-             39,  41,  43,  45,  46,  47,  49,  51,  54,  56,  // 10-19
-             58,  61,  63,  65,  68,  70,  73,  75,  77,  79,  // 20-29
-             82,  84,  86,  89,  91,  93,  96,  98,  100,  102, // 30-39
-            105, 108, 110, 113, 115, 118, 120, 122, 124, 127, // 40-49
-            129, 132, 134, 136, 138, 141, 143, 146, 148, 150, // 50-59
-            152, 155, 157, 159, 161, 163, 165, 167, 169, 171  // 60-69
+              27,  30,  30,  33,  35,  37,  39,  41,  44,  46,  // 0-9
+             47,  49,  51,  53,  55,  57,  60,  61,  63,  65,  // 10-19
+             67,  69,  72,  73,  76,  78,  80,  81,  82,  85,  // 20-29
+             87,  90,  92,  94,  96,  98,  98,  101,  103,  106, // 30-39
+            108, 110, 111, 112, 115, 117, 120, 121, 123, 125, // 40-49
+            127, 129, 130, 133, 135, 137, 139, 140, 141, 144, // 50-59
+            147, 149, 150, 152, 154, 155, 156, 160, 162, 164  // 60-69
     };
     //-------------------------------------------------------------------------------------------------------------------
     // 函数简介: 误差获取
@@ -42,6 +46,35 @@ namespace Error {
         midline_calculate(state, l_black, r_black, left_flags, right_flags);
 
         Err.current=error_calculate(Err.row, state, Err.limit, center_line);
+
+        if((!boxes.empty() || (turn_time<20 && turn_time!=0)) && turn_flag==0 ){
+            Err.current=error_calculate(Err.row, state, Err.limit, ImageProc::l_black);
+            turn_time++;
+            if(turn_time>=20){
+                turn_flag=1;
+            }
+        }
+        else if((!boxes.empty() || (turn_time<20 && turn_time!=0)) && turn_flag==1 ){
+            Err.current=error_calculate(Err.row, state, Err.limit, ImageProc::r_black);
+            turn_time++;
+            if(turn_time>=20){
+                turn_flag=2;
+            }
+        }
+        else if((!boxes.empty() || (turn_time<20 && turn_time!=0)) && turn_flag==2 ){
+            Err.current=error_calculate(Err.row, state, Err.limit, center_line);
+            turn_time++;
+            if(turn_time>=20){
+                turn_flag=0;
+            }
+        }
+        else{
+            Err.current=error_calculate(Err.row, state, Err.limit, center_line);
+            if(turn_time>=20){
+                turn_time=0;
+            }
+        }
+
         //printf("row=%d\ntem_row=%d\n",Err.row, Err.tem_row);
         //printf("Err=%d\n",Err.current);
 
@@ -87,42 +120,42 @@ namespace Error {
 
         switch (Err.mode) {
             case 0: {
-                // constexpr float lose_weight = 0.0f;
+                constexpr float lose_weight = 0.0f;
                 for (int16_t i = bottom_row; i >= top_limit; --i, lcd_row_ptr += row_step) {
                     process_row(i, [&](bool lf, bool rf, uint16_t lv, uint16_t rv) -> uint16_t { // 显式指定返回类型
                         const int sum = lv + rv; // 使用int中间值防止溢出
-                        // if (lf && rf) {
-                            // return static_cast<uint16_t>(sum / 2);
-                        // } else if (!rf) {
-                        //     return static_cast<uint16_t>(sum / 2 * (1 - lose_weight));
-                        //     //return static_cast<uint16_t>(lv + ROAD_WIDTH[i]/2);
-                        // } else if (!lf) {
-                        //     return static_cast<uint16_t>(sum / 2 * (1 + lose_weight));
-                        //     //return static_cast<uint16_t>(rv - ROAD_WIDTH[i]/2);
-                        // }
+                        if (lf && rf) {
+                            return static_cast<uint16_t>(sum / 2);
+                        } else if (!rf) {
+                            return static_cast<uint16_t>(sum / 2 * (1 - lose_weight));
+                            //return static_cast<uint16_t>(lv + ROAD_WIDTH[i]/2);
+                        } else if (!lf) {
+                            return static_cast<uint16_t>(sum / 2 * (1 + lose_weight));
+                            //return static_cast<uint16_t>(rv - ROAD_WIDTH[i]/2);
+                        }
                         return static_cast<uint16_t>(sum / 2);
                     });
                 }
                 break;
             }
 
-            // case -1: {
-            //     for (int16_t i = bottom_row; i >= top_limit; --i, lcd_row_ptr += row_step) {
-            //     process_row(i, [&](bool, bool, uint16_t lv, uint16_t) {
-            //         return lv + ROAD_WIDTH[i]/2;
-            //         });
-            //     }
-            //     break;
-            // }
+            case -1: {
+                for (int16_t i = bottom_row; i >= top_limit; --i, lcd_row_ptr += row_step) {
+                process_row(i, [&](bool, bool, uint16_t lv, uint16_t) {
+                    return lv + ROAD_WIDTH[i]/2;
+                    });
+                }
+                break;
+            }
 
-            // case 1: {
-            //     for (int16_t i = bottom_row; i >= top_limit; --i, lcd_row_ptr += row_step) {
-            //         process_row(i, [&](bool, bool, uint16_t, uint16_t rv) {
-            //             return rv - ROAD_WIDTH[i]/2;
-            //         });
-            //     }
-            //     break;
-            // }
+            case 1: {
+                for (int16_t i = bottom_row; i >= top_limit; --i, lcd_row_ptr += row_step) {
+                    process_row(i, [&](bool, bool, uint16_t, uint16_t rv) {
+                        return rv - ROAD_WIDTH[i]/2;
+                    });
+                }
+                break;
+            }
         }
     }
     //-------------------------------------------------------------------------------------------------------------------
@@ -168,16 +201,7 @@ namespace Error {
         if (use_override){ temp = Err.rep;}
         else {temp = 1.0f;}
             
-        if(!boxes.empty()){
-
-            error_value = static_cast<int16_t>(temp * (WIDTH / 2 - ImageProc::l_black[HEIGHT - Err.tem_row - 1]));
-        
-        }else{
-
-            error_value = static_cast<int16_t>(temp * (WIDTH / 2 - center_line[HEIGHT - Err.tem_row - 1]));
-
-        }
-
+        error_value = static_cast<int16_t>(temp * (WIDTH / 2 - center_line[HEIGHT - Err.tem_row - 1]));
         error_value = std::clamp(error_value, static_cast<int16_t>(-MAX_ERROR), MAX_ERROR);
         Err.previous = error_value;
         //std::clamp(error_value, static_cast<int16_t>(-MAX_ERROR), MAX_ERROR);

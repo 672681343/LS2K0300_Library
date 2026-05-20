@@ -1,13 +1,20 @@
 #include "red_detecte.h"
+#include "many_define.h"
+#include "Recognize.h"
+
 #include <queue>
 #include <cstring>
 #include <algorithm>
 #include <cstdio>
 #include <opencv2/opencv.hpp>
 
+//后续裁剪功能可以关掉，要看具体识别的速度和准确率
+
 // 图像尺寸（根据你的IPS200屏幕修改）
-#define IMG_WIDTH  160
+#define IMG_WIDTH  160  
 #define IMG_HEIGHT 120
+
+
 
 // RGB565 颜色定义
 #define RGB565_RED     0xF800
@@ -18,24 +25,44 @@
 #define RGB565_YELLOW  0xFFE0
 
 
-std::vector<RedBox> boxes;
+std::vector<RedBox> boxes; //  存储红色框对象的容器
 
+
+/*
+ *概述：该函数用于判断一个像素点是否为红色像素。通过比较像素的红色分量与给定的最小红色值，以及红色分量与绿色、蓝色分量的差值，来确定该像素是否满足红色的条件。
+ *
+ *参数：
+ *      pixel：一个16位无符号整数，表示一个像素点的RGB565格式颜色值。
+ *      min_red：一个8位无符号整数，表示红色分量的最小阈值。
+ *      min_diff：一个8位无符号整数，表示红色分量与绿色、蓝色分量的最小差值。
+ *返回值：
+ *
+ *返回一个布尔值，如果像素的红色分量大于等于min_red，并且大于绿色分量和蓝色分量至少min_diff，则返回true，表示该像素是红色像素；否则返回false。
+ */
 // 函数实现（不写默认参数，只写参数类型）
 bool is_red_pixel(uint16_t pixel, uint8_t min_red, uint8_t min_diff) {
-    uint8_t r = (pixel >> 11) & 0x1F;
+    uint8_t r = (pixel >> 11) & 0x1F; //  从16位像素值中提取RGB分量 这里的像素格式通常是RGB565，其中R占5位，G占6位，B占5位 提取红色分量(R)：将像素值右移11位，然后与0x1F(二进制00011111)进行与操作，获取低5位作为红色值
     uint8_t g = (pixel >> 5) & 0x3F;
     uint8_t b = pixel & 0x1F;
     
     return (r >= min_red) && (r > g + min_diff) && (r > b + min_diff);
 }
 
+//该函数用于检测图像中的红色区域，并根据面积和密度条件筛选出符合条件的红色矩形框。
 void detect_red_regions(uint16_t* image, int width, int height,
                        std::vector<RedBox>& boxes,
-                       int min_area, int max_area) {
+                       int min_area, int max_area) {         // 最小填充密度
     
     const int total_pixels = width * height;
     uint8_t* mask = new uint8_t[total_pixels];
     uint8_t* visited = new uint8_t[total_pixels];
+
+        // 边界过滤阈值（新增参数，方便外部配置）
+    int min_y_threshold = 5;          // min_y 必须大于此值（上侧边界裁剪值）
+    int max_y_threshold = 5;           // min_y 必须小于 height - 此值（下侧边界裁剪值）
+    int min_x_threshold = 5;            // min_x 必须大于此值  （左侧边界裁剪值）
+    int max_x_threshold = 5;           // max_x 必须小于 width - 此值（右侧边界裁剪值）
+    float min_density = 0.2f;
     
     // 生成二值掩码
     for (int i = 0; i < total_pixels; i++) {
@@ -49,8 +76,8 @@ void detect_red_regions(uint16_t* image, int width, int height,
     const int dy[4] = {-1, 1, 0, 0};
     
     // BFS 查找连通域
-    for (int y = 0; y < height; y=y+4) {
-        for (int x = 0; x < width; x=x+4) {
+    for (int y = 0; y < height; y = y + 4) {
+        for (int x = 0; x < width; x = x + 4) {
             int idx = y * width + x;
             if (mask[idx] == 0 || visited[idx]) continue;
             
@@ -85,8 +112,14 @@ void detect_red_regions(uint16_t* image, int width, int height,
                 }
             }
             
-            // 过滤并记录
-            if (pixel_count >= min_area && pixel_count <= max_area && min_y < 115  && min_x > 5 && max_x <155) {
+            // 过滤并记录（使用参数化的阈值）
+            if (pixel_count >= min_area && 
+                pixel_count <= max_area && 
+                min_y < height - max_y_threshold &&   // 原：UVC_HEIGHT - 5，改为通用 height
+                min_y > min_y_threshold &&
+                min_x > min_x_threshold && 
+                max_x < width - max_x_threshold) {    // 原：UVC_WIDTH - 85，改为通用 width
+                
                 RedBox box;
                 box.x = min_x;
                 box.y = min_y;
@@ -97,7 +130,7 @@ void detect_red_regions(uint16_t* image, int width, int height,
                 int bbox_area = box.w * box.h;
                 box.density = bbox_area > 0 ? (float)pixel_count / bbox_area : 0;
                 
-                if (box.density > 0.2f) {
+                if (box.density > min_density) {
                     boxes.push_back(box);
                 }
             }
@@ -108,6 +141,7 @@ void detect_red_regions(uint16_t* image, int width, int height,
     delete[] visited;
 }
 
+//在指定图像上绘制一个指定颜色和粗细的矩形
 void draw_rect_rgb565(uint16_t* image, int width, int height,
                      int x, int y, int w, int h, 
                      uint16_t color, int thickness) {
@@ -144,6 +178,9 @@ void draw_rect_rgb565(uint16_t* image, int width, int height,
     }
 }
 
+
+
+//在指定图像上绘制一个十字，十字的中心位置和颜色可自定义。
 void draw_cross_rgb565(uint16_t* image, int width, int height,
                       int cx, int cy, uint16_t color, int size) {
     for (int i = -size; i <= size; i++) {
@@ -155,6 +192,19 @@ void draw_cross_rgb565(uint16_t* image, int width, int height,
 }
 
 
+
+
+
+/*
+src_image：指向源图像数据的指针，图像数据为uint16_t类型
+src_width：源图像的宽度（像素数）
+src_height：源图像的高度（像素数）
+x：裁剪区域左上角的x坐标
+y：裁剪区域右下角的y坐标
+w：裁剪区域的宽度
+h：裁剪区域的高度
+*/
+//该函数用于从源图像中裁剪出一个指定矩形区域的图像，并返回裁剪后的图像数据
 uint16_t* crop_image(uint16_t* src_image, int src_width, int src_height,
                     int x, int y, int w, int h) {
     // 边界检查
@@ -184,253 +234,144 @@ uint16_t* crop_image(uint16_t* src_image, int src_width, int src_height,
         memcpy(&dst_image[dst_offset], &src_image[src_offset], w * sizeof(uint16_t));
     }
     
-    return dst_image;
+    return dst_image; //  返回处理后的图像数据
 }
 
-
-
+//该函数将RGB565格式的图像数据转换为JPG格式并保存到指定文件。
 void save_rgb565_as_jpg(const char* filename, uint16_t* rgb565, int w, int h) {
     // RGB565 -> BGR (OpenCV 格式)
-    cv::Mat bgr(h, w, CV_8UC3);
+    cv::Mat bgr(h, w, CV_8UC3); //  将RGB565格式的图像转换为BGR格式的OpenCV Mat对象 参数说明： h: 图像的高度（行数） w: 图像的宽度（列数） CV_8UC3: 表示每个像素由3个8位无符号字符（即BGR三个通道）组成
     
     for (int y = 0; y < h; y++) {
         for (int x = 0; x < w; x++) {
-            uint16_t p = rgb565[y * w + x];
-            uint8_t r = ((p >> 11) & 0x1F) << 3;
-            uint8_t g = ((p >> 5) & 0x3F) << 2;
-            uint8_t b = (p & 0x1F) << 3;
+            uint16_t p = rgb565[y * w + x]; //  从RGB565格式图像中获取像素值
+            uint8_t r = ((p >> 11) & 0x1F) << 3; //  提取红色分量(R5)，并将其扩展到8位
+            uint8_t g = ((p >> 5) & 0x3F) << 2; //  提取绿色分量(G6)，并将其扩展到8位
+            uint8_t b = (p & 0x1F) << 3; //  提取蓝色分量(B5)，并将其扩展到8位
             
-            bgr.at<cv::Vec3b>(y, x) = cv::Vec3b(b, g, r);  // BGR 顺序
+            bgr.at<cv::Vec3b>(y, x) = cv::Vec3b(b, g, r);  // BGR 顺序 //  将RGB值存储为BGR格式的OpenCV Vec3b向量
         }
     }
     
     // 直接保存为 JPG
-    std::vector<int> params;
-    params.push_back(cv::IMWRITE_JPEG_QUALITY);
+    std::vector<int> params; //  定义一个整型向量，用于存储图像编码参数
+    params.push_back(cv::IMWRITE_JPEG_QUALITY); //  添加JPEG质量参数标志
     params.push_back(95);  // 质量 0-100
     
-    cv::imwrite(filename, bgr, params);
+    cv::imwrite(filename, bgr, params); //  将处理后的图像保存到文件 参数:   filename - 要保存的文件名   bgr - 要保存的BGR格式图像数据   params - 保存参数，如压缩质量等
 }
 
 
 
-
+//该函数处理RGB565格式的图像，检测其中的红色区域，并在检测到红色区域时，每隔一定帧数裁剪并保存该区域为JPEG图片。
 void process_image(uint16_t* rgb565_image) {
     
-    detect_red_regions(rgb565_image, IMG_WIDTH, IMG_HEIGHT, boxes, 20, 1100);
+    detect_red_regions(rgb565_image, IMG_WIDTH, IMG_HEIGHT, boxes, 25, 1600); 
 
     // printf("Detected %zu boxes\n", boxes.size());
+    // (*frame_count)++;  // 帧计数+1
+    //     printf("第%d帧：处理完成\n", *frame_count);
     
-    static int frame_count = 0;
-    frame_count++;
-    
-    // 每30帧自动保存一张（约0.5秒@60fps）
-    if (!boxes.empty() ) {   // && (frame_count % 10 == 0)
-        const auto& box = boxes[0];
-        // printf("Box: Area=%d at (%d,%d) size %dx%d\n",
-        //        box.area, box.x, box.y, box.w, box.h);
+    // // 每20帧自动保存一张, 并且只保存第一个检测到的红色区域（如果有的话）
+    // if (!boxes.empty() && (*frame_count % 20 == 0)) {   // && (frame_count % 10 == 0)
+    //     auto& box = boxes[0]; //  获取检测到的第一个边界框
+// 
         
-        // 画框
-        draw_rect_rgb565(rgb565_image, IMG_WIDTH, IMG_HEIGHT,
-                        box.x - 2, box.y +2, box.w + 4, box.h+15, 
-                        RGB565_WHITE, 2);
+    //     // // 画框
+    //     // draw_rect_rgb565(rgb565_image, UVC_WIDTH, UVC_HEIGHT, //  绘制矩形框，使用RGB565格式 参数：图像数据、图像宽度、图像高度、矩形坐标和尺寸、颜色、线宽
+    //     //                 box.x - 2, box.y +2, box.w + 4, box.h+15, 
+    //     //                 RGB565_YELLOW, 4);
         
-        // 裁剪并保存
-        uint16_t* cropped = crop_image(rgb565_image, IMG_WIDTH, IMG_HEIGHT,
-                                      box.x - 2, box.y+2, box.w + 4, box.h+15);
-        if (cropped) {
-            char path[128];
-            // 保存到 /tmp（内存中），之后用scp拷出
-            snprintf(path, sizeof(path), "/tmp/redbox_%d_%d.jpg", 
-                    frame_count, box.area);
-            save_rgb565_as_jpg(path, cropped, box.w + 4, box.h + 15);
+    //     // // 裁剪并保存
+    //     // uint16_t* cropped = crop_image(rgb565_image, UVC_WIDTH, UVC_HEIGHT, //  从原始图像中裁剪出指定区域         参数：原始图像、图像宽度、图像高度、裁剪起点x坐标、裁剪起点y坐标、裁剪宽度、裁剪高度
+    //     //                               box.x - 2, box.y+2, box.w + 5, box.h+15);
+
+    //                                           // 裁剪并保存
+    //     if(box.w <= MODEL_INPUT_WIDTH-5){
+    //         box.w = MODEL_INPUT_WIDTH-5; // 保持宽度不变，增加一些边距
+    //     }
+
+    //     uint16_t* cropped = crop_image(rgb565_image, UVC_WIDTH, UVC_HEIGHT, //  从原始图像中裁剪出指定区域         参数：原始图像、图像宽度、图像高度、裁剪起点x坐标、裁剪起点y坐标、裁剪宽度、裁剪高度
+    //                                   box.x - 5, box.y+5, box.w + 5, 45);
+    //     if (cropped) {
+                                                                                                                               
+    //         char path[128];
+    //         // // 保存到 /tmp（内存中），之后用scp拷出
+    //         // snprintf(path, sizeof(path), "/tmp/car_%d_%d.jpg",  //  格式化生成文件名，包含帧数和区域面积信息
+    //         //         *frame_count, box.area);
+    //         // // save_rgb565_as_jpg(path, cropped, box.w + 4, box.h + 15); //  将裁剪后的RGB565图像保存为JPG格式
+    //         // save_rgb565_as_jpg(path, cropped, box.w + 5, 45); //  将裁剪后的RGB565图像保存为JPG格式
+
+
+    //         // printf("Box: Area=%d at (%d,%d) size %dx%d, 文件名: %s\n",
+    //         //    box.area, box.x, box.y, box.w, box.h, path);
+
+    //         // 创建彩色Mat (BGR格式)
+    //         cv::Mat cropped_mat(45, box.w + 5, CV_8UC3);
+
+    //         // 将RGB565转换为BGR
+    //         for (int y = 0; y < 45; y++) {
+    //             for (int x = 0; x < box.w + 5; x++) {
+    //                 uint16_t pixel = cropped[y * (box.w + 5) + x];
+                    
+    //                 // 提取RGB565分量
+    //                 uint8_t r5 = (pixel >> 11) & 0x1F;  // 红色5位
+    //                 uint8_t g6 = (pixel >> 5) & 0x3F;   // 绿色6位
+    //                 uint8_t b5 = pixel & 0x1F;          // 蓝色5位
+                    
+    //                 // 扩展到8位
+    //                 uint8_t r = (r5 << 3) | (r5 >> 2);
+    //                 uint8_t g = (g6 << 2) | (g6 >> 4);
+    //                 uint8_t b = (b5 << 3) | (b5 >> 2);
+                    
+    //                 // OpenCV使用BGR顺序
+    //                 cv::Vec3b& dst = cropped_mat.at<cv::Vec3b>(y, x);
+    //                 dst[0] = b;  // Blue
+    //                 dst[1] = g;  // Green
+    //                 dst[2] = r;  // Red
+    //             }
+    //         }
+
+    //         // printf("转换后: %dx%d, 通道=%d, 类型=%d (CV_8UC3)\n", 
+    //         //     cropped_mat.cols, cropped_mat.rows, 
+    //         //     cropped_mat.channels(), cropped_mat.type());
+
+
+    //         InferenceResult inference_result = perform_inference(
+    //             cropped_mat, 
+    //             *frame_count, 
+    //             (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged), 
+    //             *interpreter
+    //         );
+
+    //         // 更新first_frame_logged标志（如果需要）
+    //         if (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged) {
+    //             first_frame_logged = true;
+    //         }
             
-            free(cropped);
-        }
-    }
+
+    //         // 保存到 /tmp（内存中），之后用scp拷出
+    //         snprintf(path, sizeof(path), "/tmp/%s_%d_%d.jpg",  //  格式化生成文件名，包含帧数和区域面积信息
+    //                 class_labels[inference_result.class_index], *frame_count, box.area);
+    //         // save_rgb565_as_jpg(path, cropped, box.w + 4, box.h + 15); //  将裁剪后的RGB565图像保存为JPG格式
+    //         save_rgb565_as_jpg(path, cropped, box.w + 5, 45); //  将裁剪后的RGB565图像保存为JPG格式
+
+
+    //         printf("Box: Area=%d at (%d,%d) size %dx%d, 文件名: %s\n",
+    //            box.area, box.x, box.y, box.w, box.h, path);
+             
+
+    //         free(cropped); //  释放裁剪图像的内存
+    //     }
+
+
+
+
+    // }
+
+    // if (boxes.empty()) {
+    //     frame_count = 0; // 没有检测到红色区域，重置帧计数器
+    // }
     
 
 }
-
-// #include "red_detecte.h"
-// #include <queue>
-// #include <cstring>
-// #include <algorithm>
-// #include <cmath>
-// #include <opencv2/opencv.hpp>
-
-// #define IMG_WIDTH  160
-// #define IMG_HEIGHT 120
-// #define RGB565_YELLOW  0xFFE0
-// #define RGB565_WHITE   0xFFFF
-
-// // 红色像素判断
-// static bool is_red(uint16_t p) {
-//     uint8_t r = (p >> 11) & 0x1F;
-//     uint8_t g = (p >> 5) & 0x3F;
-//     uint8_t b = p & 0x1F;
-//     return (r >= 20) && (r > g + 8) && (r > b + 8);
-// }
-
-// // 计算OBB
-// static RotatedRedBox compute_obb(const std::vector<std::pair<int,int>>& pts) {
-//     int n = pts.size();
-//     float cx = 0, cy = 0;
-//     for (auto& p : pts) { cx += p.first; cy += p.second; }
-//     cx /= n; cy /= n;
-    
-//     float xx = 0, xy = 0, yy = 0;
-//     for (auto& p : pts) {
-//         float dx = p.first - cx, dy = p.second - cy;
-//         xx += dx*dx; xy += dx*dy; yy += dy*dy;
-//     }
-//     xx/=n; xy/=n; yy/=n;
-    
-//     float tr = xx + yy, dt = xx*yy - xy*xy;
-//     float la = (tr + sqrtf(tr*tr - 4*dt)) * 0.5f;
-//     float ang = atan2f(la - xx, xy);
-    
-//     float c = cosf(ang), s = sinf(ang), min_u=1e9, max_u=-1e9, min_v=1e9, max_v=-1e9;
-//     for (auto& p : pts) {
-//         float dx = p.first - cx, dy = p.second - cy;
-//         float u = dx*c + dy*s, v = -dx*s + dy*c;
-//         min_u = std::min(min_u, u); max_u = std::max(max_u, u);
-//         min_v = std::min(min_v, v); max_v = std::max(max_v, v);
-//     }
-    
-//     RotatedRedBox b;
-//     b.cx = cx; b.cy = cy;
-//     b.w = (max_u - min_u) * 0.5f;
-//     b.h = (max_v - min_v) * 0.5f;
-//     b.angle = ang;
-//     if (b.w < b.h) { std::swap(b.w, b.h); b.angle += 3.14159f/2; }
-//     while (b.angle > 3.14159f/2) b.angle -= 3.14159f;
-//     return b;
-// }
-
-// void detect_red_regions_rotated(uint16_t* img, int w, int h,
-//                                std::vector<RotatedRedBox>& boxes,
-//                                int min_a, int max_a) {
-//     int n = w*h;
-//     uint8_t *mask = new uint8_t[n], *vis = new uint8_t[n]();
-//     for (int i=0;i<n;i++) mask[i] = is_red(img[i]) ? 255 : 0;
-    
-//     boxes.clear();
-//     const int dx[4]={0,0,-1,1}, dy[4]={-1,1,0,0};
-    
-//     for (int y=0;y<h;y+=2) {
-//         for (int x=0;x<w;x+=2) {
-//             int id = y*w+x;
-//             if (!mask[id] || vis[id]) continue;
-            
-//             std::vector<std::pair<int,int>> pts;
-//             std::queue<std::pair<int,int>> q;
-//             q.push({x,y}); vis[id]=1;
-            
-//             while (!q.empty()) {
-//                 auto [cx,cy] = q.front(); q.pop();
-//                 pts.push_back({cx,cy});
-//                 for (int i=0;i<4;i++) {
-//                     int nx=cx+dx[i], ny=cy+dy[i];
-//                     if (nx<0||nx>=w||ny<0||ny>=h) continue;
-//                     int nid=ny*w+nx;
-//                     if (mask[nid] && !vis[nid]) { vis[nid]=1; q.push({nx,ny}); }
-//                 }
-//             }
-            
-//             if ((int)pts.size()<min_a || (int)pts.size()>max_a) continue;
-//             auto b = compute_obb(pts);
-//             b.area = pts.size();
-//             float dens = (4*b.w*b.h)>0 ? pts.size()/(4*b.w*b.h) : 0;
-//             if (dens > 0.3f) boxes.push_back(b);
-//         }
-//     }
-//     delete[] mask; delete[] vis;
-// }
-
-// void draw_rotated_rect_rgb565(uint16_t* img, int w, int h,
-//                              const RotatedRedBox& b, uint16_t col, int thick) {
-//     float c=cosf(b.angle), s=sinf(b.angle);
-//     float dx1=b.w*c, dy1=b.w*s, dx2=-b.h*s, dy2=b.h*c;
-//     int p[4][2] = {
-//         {(int)(b.cx+dx1+dx2), (int)(b.cy+dy1+dy2)},
-//         {(int)(b.cx+dx1-dx2), (int)(b.cy+dy1-dy2)},
-//         {(int)(b.cx-dx1-dx2), (int)(b.cy-dy1-dy2)},
-//         {(int)(b.cx-dx1+dx2), (int)(b.cy-dy1+dy2)}
-//     };
-    
-//     auto line = [&](int x0,int y0,int x1,int y1) {
-//         int dx=abs(x1-x0), sx=x0<x1?1:-1;
-//         int dy=-abs(y1-y0), sy=y0<y1?1:-1;
-//         int err=dx+dy;
-//         while (1) {
-//             if (x0>=0&&x0<w&&y0>=0&&y0<h) img[y0*w+x0]=col;
-//             if (x0==x1&&y0==y1) break;
-//             int e2=2*err;
-//             if (e2>=dy) { err+=dy; x0+=sx; }
-//             if (e2<=dx) { err+=dx; y0+=sy; }
-//         }
-//     };
-    
-//     for (int t=0;t<thick;t++)
-//         for (int i=0;i<4;i++)
-//             line(p[i][0]+(i<2?t:-t), p[i][1]+(i==0||i==3?t:-t),
-//                  p[(i+1)%4][0]+((i+1)%4<2?t:-t), p[(i+1)%4][1]+((i+1)%4==0||(i+1)%4==3?t:-t));
-// }
-
-// uint16_t* crop_rotated_image(uint16_t* src, int sw, int sh, const RotatedRedBox& b, int margin) {
-//     int dw = (int)(b.w*2+0.5f)+ 2*margin, dh = (int)(b.h*2+0.5f)+ 2*margin;
-//     if (dw<=0||dh<=0) return nullptr;
-//     uint16_t* dst = (uint16_t*)malloc(dw*dh*sizeof(uint16_t));
-//     if (!dst) return nullptr;
-    
-//     float c=cosf(b.angle), s=sinf(b.angle);
-//     for (int y=0;y<dh;y++) {
-//         for (int x=0;x<dw;x++) {
-//             float dx=x-dw*0.5f, dy=y-dh*0.5f;
-//             int sx=(int)(b.cx+(dx*c-dy*s)+0.5f);
-//             int sy=(int)(b.cy+(dx*s+dy*c)+0.5f);
-//             dst[y*dw+x] = (sx>=0&&sx<sw&&sy>=0&&sy<sh) ? src[sy*sw+sx] : 0;
-//         }
-//     }
-//     return dst;
-// }
-
-// // 你的原有保存函数
-// void save_rgb565_as_jpg(const char* fn, uint16_t* rgb565, int w, int h) {
-//     cv::Mat bgr(h, w, CV_8UC3);
-//     for (int y=0;y<h;y++) {
-//         for (int x=0;x<w;x++) {
-//             uint16_t p = rgb565[y*w+x];
-//             uint8_t r = ((p>>11)&0x1F)<<3, g = ((p>>5)&0x3F)<<2, b = (p&0x1F)<<3;
-//             bgr.at<cv::Vec3b>(y,x) = cv::Vec3b(b,g,r);
-//         }
-//     }
-//     std::vector<int> params = {cv::IMWRITE_JPEG_QUALITY, 95};
-//     cv::imwrite(fn, bgr, params);
-// }
-
-// void process_image(uint16_t* rgb565_image) {
-//     static std::vector<RotatedRedBox> boxes;
-//     static int frame_count = 0;
-    
-//     detect_red_regions_rotated(rgb565_image, IMG_WIDTH, IMG_HEIGHT, boxes, 40, 1100);
-    
-//     if (!boxes.empty()) {
-//         const auto& b = boxes[0];
-//         frame_count++;
-        
-//         // 画旋转框
-//         draw_rotated_rect_rgb565(rgb565_image, IMG_WIDTH, IMG_HEIGHT, b, RGB565_WHITE, 2);
-        
-//         // 裁剪并保存
-//         uint16_t* cropped = crop_rotated_image(rgb565_image, IMG_WIDTH, IMG_HEIGHT, b,20);
-//         if (cropped) {
-//             char path[128];
-//             int dw=(int)(b.w*2+0.5f) + 40, dh=(int)(b.h*2+0.5f) + 40;
-//             snprintf(path, sizeof(path), "/tmp/redbox_%d_%d.jpg", frame_count, b.area);
-//             save_rgb565_as_jpg(path, cropped, dw, dh);
-//             free(cropped);
-//         }
-//     }
-// }

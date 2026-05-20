@@ -171,6 +171,7 @@ namespace MenuSystem {
         {"Cross",           ACTION_SUBMENU, "elem_cross",           {0,0}, MenuID::ELEM_CROSS},
         {"Left Island",     ACTION_SUBMENU, "elem_left_island",     {0,0}, MenuID::ELEM_LEFT_ISLAND},
         {"Right Island",    ACTION_SUBMENU, "elem_right_island",    {0,0}, MenuID::ELEM_RIGHT_ISLAND},
+        {"Zebra",           ACTION_SUBMENU, "elem_zebra",           {0,0}, MenuID::ELEM_ZEBRA},
  
  
     };
@@ -201,6 +202,12 @@ namespace MenuSystem {
         {"State:",  ACTION_VIEW,     "elem_right_island.state",  {0.0f, 0.0f}, MenuID::NONE}
     };
 
+    static const MenuItem elem_zebra_items[] = {
+        {"Enable:",  ACTION_SWITCH,   "elem_zebra.enable", {0,1}, MenuID::NONE},
+        {"count:",   ACTION_ADJUST,   "elem_zebra.count", {0, 10}, MenuID::NONE},
+        {"State:",   ACTION_VIEW,     "elem_zebra.state",  {0.0f, 0.0f}, MenuID::NONE},
+    };
+
 
 
     static const MenuItem err_items[] = {
@@ -218,8 +225,8 @@ namespace MenuSystem {
         {"Shutdown", ACTION_CALLBACK, "shutdown", {0.0f, 0.0f}, MenuID::NONE},
     };
     static const MenuItem version_items[] = {
-        {"1", ACTION_CALLBACK, "sys.version1", {0,0}, MenuID::V_ACTION},
-        {"2", ACTION_CALLBACK, "sys.version2", {0,0}, MenuID::V_ACTION},
+        {"2.7m/s", ACTION_CALLBACK, "sys.version1", {0,0}, MenuID::V_ACTION},
+        {"2.8m/s", ACTION_CALLBACK, "sys.version2", {0,0}, MenuID::V_ACTION},
         {"3", ACTION_CALLBACK, "sys.version3", {0,0}, MenuID::V_ACTION},
         {"4", ACTION_CALLBACK, "sys.version4", {0,0}, MenuID::V_ACTION},
         {"5", ACTION_CALLBACK, "sys.version5", {0,0}, MenuID::V_ACTION},
@@ -253,6 +260,8 @@ namespace MenuSystem {
     const Menu elem_left_island_menu = {"Left Island", elem_left_island_items, sizeof(elem_left_island_items)/sizeof(MenuItem)};
     const Menu elem_right_island_menu = {"Right Island", elem_right_island_items, sizeof(elem_right_island_items)/sizeof(MenuItem)};
 
+    const Menu elem_zebra_menu = {"Zebra", elem_zebra_items, sizeof(elem_zebra_items)/sizeof(MenuItem)};
+
     const Menu pwm_menu   = {"PWM Settings",pwm_items,sizeof(pwm_items)/sizeof(MenuItem)};
 
     const Menu confirm_menu = {"Confirm",       confirm_items,sizeof(confirm_items)/sizeof(MenuItem)};
@@ -281,7 +290,7 @@ namespace MenuSystem {
         &elem_cross_menu,       // [14] MenuID::ELEM_CROSS
         &elem_left_island_menu, // [15] MenuID::ELEM_LEFT_ISLAND
         &elem_right_island_menu,// [16] MenuID::ELEM_RIGHT_ISLAND
-
+        &elem_zebra_menu,       // [17] MenuID::ELEM_ZEBRA
 
         &err_menu,              // [22] MenuID::ERR
         &sys_menu,              // [23] MenuID::SYSTEM
@@ -367,6 +376,12 @@ namespace MenuSystem {
         {"x1",     TYPE_UINT8, .as_uint8 = &Elem::Right_Island.x1, .persist = true},
         {"x2",     TYPE_UINT8, .as_uint8 = &Elem::Right_Island.x2, .persist = true},
         {"state",  TYPE_UINT8, .as_uint8 = &Elem::Right_Island.State, .persist = false}
+    };
+   
+    static const ParamMapping elem_zebra_params[] = {
+        {"enable", TYPE_UINT8, .as_uint8 = &Elem::Zebra.enable, .persist = true},
+        {"count",  TYPE_UINT8, .as_uint8 = &Elem::Zebra.count_threshold, .persist = true},
+        {"state",  TYPE_UINT8, .as_uint8 = &Elem::Zebra.State, .persist = false}
     };
 
     static const ParamMapping BF_params[] = {
@@ -462,10 +477,10 @@ namespace MenuSystem {
     };
 
     static const ParamMapping err_params[] = {
-        {"cur",     TYPE_INT16, .as_int16 = &Error::Err.current, .persist = false},
-        {"pre",     TYPE_INT16, .as_int16 = &Error::Err.previous, .persist = false},
-        {"row",     TYPE_UINT8, .as_uint8 = &Error::Err.row, .persist = true},
-        {"rep",     TYPE_FLOAT, .as_float = &Error::Err.rep, .persist = true},
+        {"cur",     TYPE_INT16, .as_int16 = &Err::Err.current, .persist = false},
+        {"pre",     TYPE_INT16, .as_int16 = &Err::Err.previous, .persist = false},
+        {"row",     TYPE_UINT8, .as_uint8 = &Err::Err.row, .persist = true},
+        {"rep",     TYPE_FLOAT, .as_float = &Err::Err.rep, .persist = true},
     };
 
 
@@ -637,6 +652,14 @@ namespace MenuSystem {
             sizeof(elem_right_island_params)/sizeof(ParamMapping)
         });
 
+        //注册斑马线参数组
+        register_param_group({
+            "elem_zebra",
+            '.',
+            elem_zebra_params,  // 使用统一命名的全局定义
+            sizeof(elem_zebra_params)/sizeof(ParamMapping)
+        });
+
         //注册组参数组
         register_param_group({
             "Group",
@@ -671,6 +694,7 @@ namespace MenuSystem {
     "elem_cross",
     "elem_left_island",
     "elem_right_island",
+    "elem_zebra",
 
     };
     void register_param_group(const ParamGroup& group) {

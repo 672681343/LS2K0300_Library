@@ -27,28 +27,3 @@ extern uint16_t* cropped;
 
 extern std::vector<RedBox> boxes;
 
-
-// #ifndef RED_DETECTE_H
-// #define RED_DETECTE_H
-
-// #include <vector>
-// #include <cstdint>
-
-// struct RotatedRedBox {
-//     float cx, cy;
-//     float w, h;      // 半轴长度
-//     float angle;     // 弧度
-//     int area;
-// };
-
-// void detect_red_regions_rotated(uint16_t* image, int width, int height,
-//                                std::vector<RotatedRedBox>& boxes,
-//                                int min_area = 40, int max_area = 1100);
-// void draw_rotated_rect_rgb565(uint16_t* image, int width, int height,
-//                              const RotatedRedBox& box, uint16_t color, int thickness = 2);
-// uint16_t* crop_rotated_image(uint16_t* src, int src_w, int src_h,
-//                             const RotatedRedBox& box);
-// void process_image(uint16_t* rgb565_image);
-
-// #endif
-

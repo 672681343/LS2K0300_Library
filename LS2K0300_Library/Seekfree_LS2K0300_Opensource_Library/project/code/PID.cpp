@@ -20,7 +20,7 @@ namespace PID {
         angle_pid.integral = 0;
         angle_pid.prev_error = 0;
         angle_pid.I_limit = 0;
-        angle_pid.out_limit = 6000;////原本是4000
+        angle_pid.out_limit = 5000;////原本是4000
 
         turn_pid.kp = 0;
         turn_pid.kp2 = 0.0;
@@ -30,15 +30,15 @@ namespace PID {
         turn_pid.integral = 0;
         turn_pid.prev_error = 0;
         turn_pid.I_limit = 0;
-        turn_pid.out_limit = 8000;////原本是6000
+        turn_pid.out_limit = 7000;////原本是6000
 
         speed_pid_L.kp = 0.0;
         speed_pid_L.ki = 0.0; //0.7/0.84/1.05
         speed_pid_L.kd = 0.0;
         speed_pid_L.integral = 0;
         speed_pid_L.prev_error = 0;
-        speed_pid_L.I_limit = 6000; //3000/2500/2000
-        speed_pid_L.out_limit = 9000;
+        speed_pid_L.I_limit = 3000; //6000 ; 0.5 //3000/2500/2000
+        speed_pid_L.out_limit = 8000;
 
         // speed_pid_R.kp = 0.0;
         // speed_pid_R.ki = 0.0;
@@ -176,7 +176,7 @@ namespace PID {
         int16_t error = target - current;
         int32_t output = 0;
 
-        if( error >30 || error < -30 ) pid->integral += 8 * error;
+        if( error >30 || error < -30 ) pid->integral +=  error;
         // 积分累积（先累积后限幅）
         else pid->integral += error;
         
@@ -190,23 +190,59 @@ namespace PID {
         }
         // // //分段输出限幅
         if(current<50){
-            pid->out_limit = 3500;
-        }else if(current<100){
             pid->out_limit = 3800;
+        }else if(current<100){
+            pid->out_limit = 3900;
         }else if(current<150){
-            pid->out_limit = 4300;
+            pid->out_limit = 4100;
         }else if(current<200){
-             pid->out_limit = 4800;
+             pid->out_limit = 4500;
         }else if(current<250){
-            pid->out_limit = 5400;
+            pid->out_limit = 4900;
         }else if(current<300){
-            pid->out_limit = 6000;
+            pid->out_limit = 5300;
         }else if(current<350){
-            pid->out_limit = 7500;
+            pid->out_limit = 5700;
+        }else if(current<400){
+            pid->out_limit = 6100;
+        }else if(current<450){
+            pid->out_limit = 6500;
+        }else if(current<500){
+            pid->out_limit = 6900;
+        }else if(current<550){
+            pid->out_limit = 7300;
+        }else if(current<600){
+            pid->out_limit = 7700;
+        }else{
+            pid->out_limit = 8000;
         }
 
         if(Control::RoadSegment_t == 1 || Control::RoadSegment_t == 4 ){
-            pid->out_limit = 3800;
+
+            // if(current<50){
+            //     pid->out_limit = 2500;
+            // }else if(current<100){
+            //     pid->out_limit = 2800;
+            // }else if(current<150){
+            //     pid->out_limit = 3300;
+            // }else if(current<200){
+            //     pid->out_limit = 3800;
+            // }else if(current<250){
+            //     pid->out_limit = 4300;
+            // }else if(current<300){
+            //     pid->out_limit = 4500;
+            // }else if(current<350){
+            //     pid->out_limit = 4700;
+            // }else if(current<400){
+            //     pid->out_limit = 4900;
+            // }else if(current<450){
+            //     pid->out_limit = 5200;
+            // }
+
+            pid->out_limit = 3500;
+        }
+        if(Elem::Cross.State==2){
+            pid->out_limit = 5500;
         }
 
 

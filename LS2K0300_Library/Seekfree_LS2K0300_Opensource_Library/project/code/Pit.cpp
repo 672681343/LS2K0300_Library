@@ -38,7 +38,7 @@ namespace Pit{
         imu660ra_get_gyro();
 
 
-        Err_out = PID::TurnPID(0, Error::Err.current, &PID::turn_pid);
+        Err_out = PID::TurnPID(0, Err::Err.current, &PID::turn_pid);
         Angle_out = PID::AnglePID(-Err_out,imu660ra_gyro_z, &PID::angle_pid);  //imu660ra_gyro_z
         Control::pwm.L = PID::Speed_loc_PID((Control::aim_speed.cur_L+Control::aim_speed.cur_R)/2 , (Encoder::count.L+Encoder::count.R)/2, &PID::speed_pid_L);
         // Control::pwm.R = PID::Speed_loc_PID((Control::aim_speed.cur_L+Control::aim_speed.cur_R)/2 + Err_out , (Encoder::count.L+Encoder::count.R)/2, &PID::speed_pid_L);
@@ -48,10 +48,10 @@ namespace Pit{
         if(ImageProc::state.cutoff < 3){
             MenuSystem::Car_flag.stop = 1;
         }
-        if (MenuSystem::Car_flag.stop == 1) {
-            Motor::deinit();
-            return; // 直接退出，避免后续逻辑
-        }
+        // if (MenuSystem::Car_flag.stop == 1) {
+        //     Motor::deinit();
+        //     return; // 直接退出，避免后续逻辑
+        // }
         if (Elem::isHandling){
             count_5ms++;
             if (count_5ms >= 20) { // 每50ms处理一次
@@ -70,18 +70,18 @@ namespace Pit{
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.L ); 
                 }else{
-                    Motor::goMotor((Control::pwm.L + Angle_out)*(1 + Control::CurveSpeed.dif) , (Control::pwm.L - Angle_out)*(1 - Control::CurveSpeed.dif) );
+                    Motor::goMotor(Control::pwm.L + Angle_out*(1 + Control::CurveSpeed.dif) , Control::pwm.L - Angle_out*(1 - Control::CurveSpeed.dif) );
                 }
 
 
             } else if(MenuSystem::Car_flag.stop == 0){
                 // 开环测试（允许左右轮独立 PWM）
 
-                if(MenuSystem::Car_flag.turn == 0){
-                    Motor::goMotor(  Angle_out, -Angle_out); //Control::pwm.L
-                }else{
-                    Motor::goMotor(1300 - Err_out , 1300 + Err_out );
-                }
+                // if(MenuSystem::Car_flag.turn == 0){
+                //     Motor::goMotor(  Angle_out, -Angle_out); //Control::pwm.L
+                // }else{
+                //     Motor::goMotor(1300 - Err_out , 1300 + Err_out );
+                // }
 
             } else {
                 // 停止测试模式s
@@ -101,7 +101,7 @@ namespace Pit{
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.L ); 
                 }else{
-                    Motor::goMotor(Control::pwm.L - Angle_out , Control::pwm.L + Angle_out );//左减右加
+                    Motor::goMotor(Control::pwm.L + Angle_out , Control::pwm.L - Angle_out );//左减右加
                 }
 
             } else if(MenuSystem::Car_flag.stop == 0){
@@ -110,7 +110,7 @@ namespace Pit{
                 if(MenuSystem::Car_flag.turn == 0){
                     Motor::goMotor(Control::pwm.L, Control::pwm.L ); 
                 }else{
-                    Motor::goMotor(Control::pwm.L - Angle_out , Control::pwm.L + Angle_out );
+                    Motor::goMotor(Control::pwm.L + Angle_out , Control::pwm.L - Angle_out );
                 }
             }
 

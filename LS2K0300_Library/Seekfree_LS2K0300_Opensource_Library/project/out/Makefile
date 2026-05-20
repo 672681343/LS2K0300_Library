@@ -873,6 +873,30 @@ home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/pro
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Pit.cpp.s
 .PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Pit.cpp.s
 
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.o: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.cpp.o
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.o
+
+# target to build an object file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.cpp.o
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.cpp.o
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.i: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.cpp.i
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.i
+
+# target to preprocess a source file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.cpp.i
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.cpp.i
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.s: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.cpp.s
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.s
+
+# target to generate assembly for a file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.cpp.s
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.cpp.s
+
 home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Saving.o: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Saving.cpp.o
 .PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Saving.o
 
@@ -1095,6 +1119,9 @@ help:
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Pit.o"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Pit.i"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Pit.s"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.o"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.i"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Recognize.s"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Saving.o"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Saving.i"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Saving.s"

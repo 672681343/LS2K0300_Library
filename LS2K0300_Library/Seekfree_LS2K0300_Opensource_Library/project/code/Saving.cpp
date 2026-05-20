@@ -122,7 +122,7 @@ namespace {
         file << "[反馈数据]\n";
         int file_index = 0; // 初始化序号计数器
         #if Saving_param
-            file << file_index++ << "=" << static_cast<int>(Error::Err.current) << "\n";
+            file << file_index++ << "=" << static_cast<int>(Err::Err.current) << "\n";
             // file << file_index++ << "=" << static_cast<int>(Error::Err.tem_row) << "\n";
 
             // file << file_index++ << "=" << static_cast<int>(Encoder::count.L) << "\n";    
@@ -201,6 +201,11 @@ namespace {
             file << file_index++ << "=" << static_cast<int>(Control::pwm.L) << "\n";
             file << file_index++ << "=" << static_cast<int>(Pit::Angle_out) << "\n";
             file << file_index++ << "=" << static_cast<int>(Pit::Err_out) << "\n";
+
+            file << file_index++ << "=" << static_cast<int>(Elem::Zebra.y) << "\n";//Elem::Zebra.count
+            file << file_index++ << "=" << static_cast<int>(Elem::Zebra.State) << "\n";
+            file << file_index++ << "=" << static_cast<int>(Elem::black_count) << "\n";
+
 
             // file << file_index++ << "=" << static_cast<int>(Elem::Ramp.State) << "\n";
         #else 
@@ -299,7 +304,7 @@ namespace {
                 // 提取左、右、中线坐标
                 const int left_col = ImageProc::l_black[i];
                 const int right_col = ImageProc::r_black[i];
-                const int mid_col = Error::center_line[i];
+                const int mid_col = Err::center_line[i];
                 // const int fit_left_col = ImageProc::fit_l_black[i];
                 // const int fit_right_col = ImageProc::fit_r_black[i];
                 // 绘制左边界（黑）
@@ -363,7 +368,7 @@ namespace DataSaving {
         if(mode){
             binary_image_save(img_index,Camera::lcd_pixels);//Camera::huidu
             fitting_image_save(img_index);
-            data_save(img_index,ImageProc::l_black,Error::center_line,ImageProc::r_black,
+            data_save(img_index,ImageProc::l_black,Err::center_line,ImageProc::r_black,
                 ImageProc::fit_l_black,ImageProc::fit_r_black);
     
             ++img_index;    
