@@ -97,4 +97,6 @@ target_link_libraries(${PROJECT_NAME}
     tflm          # TFLM静态库
     pthread       # 线程库
     m             # 数学库
+
+    ${CMAKE_SOURCE_DIR}/../../libraries/zf_device/liblq_camera_ex.a
 )

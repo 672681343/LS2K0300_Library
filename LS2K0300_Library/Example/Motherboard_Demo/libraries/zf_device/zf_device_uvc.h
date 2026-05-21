@@ -8,17 +8,17 @@
 
 #define UVC_WIDTH   320
 #define UVC_HEIGHT  240
-#define UVC_FPS     90
+#define UVC_FPS     60
 
 int8 uvc_camera_init(const char *path);
 int8 wait_image_refresh();
 
 
-extern uint8_t *rgay_image;
+extern uint8_t *gray_image;
 extern uint16_t *rgb565_image;
 
 extern cv::Mat frame_rgb;      
-extern cv::Mat frame_rgay;    
+extern cv::Mat frame_gray;    
 extern cv::Mat frame_rgb565;  
 
 #endif

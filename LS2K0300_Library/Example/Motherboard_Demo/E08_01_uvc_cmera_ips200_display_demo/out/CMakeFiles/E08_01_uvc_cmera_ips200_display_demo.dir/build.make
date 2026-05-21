@@ -420,6 +420,7 @@ E08_01_uvc_cmera_ips200_display_demo: /opt/ls_2k0300_env/opencv_4_10_build/lib/l
 E08_01_uvc_cmera_ips200_display_demo: /opt/ls_2k0300_env/opencv_4_10_build/lib/libopencv_stitching.so.4.10.0
 E08_01_uvc_cmera_ips200_display_demo: /opt/ls_2k0300_env/opencv_4_10_build/lib/libopencv_video.so.4.10.0
 E08_01_uvc_cmera_ips200_display_demo: /opt/ls_2k0300_env/opencv_4_10_build/lib/libopencv_videoio.so.4.10.0
+E08_01_uvc_cmera_ips200_display_demo: /home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/user/../../libraries/zf_device/liblq_camera_ex.a
 E08_01_uvc_cmera_ips200_display_demo: /opt/ls_2k0300_env/opencv_4_10_build/lib/libopencv_imgcodecs.so.4.10.0
 E08_01_uvc_cmera_ips200_display_demo: /opt/ls_2k0300_env/opencv_4_10_build/lib/libopencv_dnn.so.4.10.0
 E08_01_uvc_cmera_ips200_display_demo: /opt/ls_2k0300_env/opencv_4_10_build/lib/libopencv_calib3d.so.4.10.0

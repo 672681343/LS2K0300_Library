@@ -258,6 +258,24 @@ uint16 width, uint16 height)
 }
 
 
+void ips200_show_rgb565_image (uint16 x, uint16 y, const uint16 *image, uint16 width, uint16 height, uint16 dis_width, uint16 dis_height, uint8 color_mode)
+{
+    uint32 x_start = 0, y_start = 0;
+    for(y_start = y; y_start < (y + height); y_start++)
+    {
+        for(x_start = x; x_start < (x + width); x_start++)
+        {
+            uint16 color = image[(x_start - x) + (y_start- y) * width];
+            if(1 == color_mode)
+            {
+                color = ((color & 0x00FF) << 8) | ((color & 0xFF00) >> 8);
+            }
+            ips200_draw_point(x_start, y_start, color);
+        }
+    }
+}
+
+
 void ips200_init(const char *path)
 {
     struct fb_fix_screeninfo fb_fix;

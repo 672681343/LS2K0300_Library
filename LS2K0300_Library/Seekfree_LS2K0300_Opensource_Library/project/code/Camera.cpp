@@ -76,11 +76,14 @@ namespace Camera {
 
     void binarize_image(uint8_t* image, uint8_t threshold) {
         const uint32_t sx = (UVC_WIDTH  << 16) / WIDTH;   // 列方向
+        const uint32_t sy = ((UVC_HEIGHT*7/12) << 16) / HEIGHT;  // 行方向
         for (int i = 0; i < HEIGHT; ++i) {
             for (int j = 0; j < WIDTH; ++j) {
                 uint32_t xs = (j * sx) >> 16;            // 源列坐标
+                uint32_t ys = (i * sy) >> 16;            // 源行坐标
                 if (xs >= UVC_WIDTH)  xs = UVC_WIDTH - 1;
-                uint8_t pv = image[i * UVC_WIDTH + xs];
+                if (ys >= UVC_HEIGHT) ys = UVC_HEIGHT - 1;
+                uint8_t pv = image[ys * UVC_WIDTH + xs];
                 bin_pixels[i * WIDTH + j] = (pv > threshold) ? 255 : 0;
                 lcd_pixels[i * WIDTH + j] = (pv > threshold) ? 255 : 0;
                 huidu[i * WIDTH + j] = pv;

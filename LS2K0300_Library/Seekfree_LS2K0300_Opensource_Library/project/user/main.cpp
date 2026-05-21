@@ -78,7 +78,7 @@ int main(int, char**)
         }
 
 
-        Camera::basic_image_processing(rgay_image);
+        Camera::basic_image_processing(gray_image);
         ImageProc::image_measurement(Camera::bin_pixels,Camera::lcd_pixels);
         Elem::elem_judge();
         Err::error_get(ImageProc::state, ImageProc::l_black, ImageProc::r_black, ImageProc::left_flags, ImageProc::right_flags);

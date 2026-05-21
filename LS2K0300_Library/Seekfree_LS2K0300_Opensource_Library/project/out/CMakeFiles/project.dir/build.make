@@ -676,6 +676,7 @@ project: /opt/ls_2k0300_env/opencv_4_10_build/lib/libopencv_photo.so.4.10.0
 project: /opt/ls_2k0300_env/opencv_4_10_build/lib/libopencv_stitching.so.4.10.0
 project: /opt/ls_2k0300_env/opencv_4_10_build/lib/libopencv_video.so.4.10.0
 project: /opt/ls_2k0300_env/opencv_4_10_build/lib/libopencv_videoio.so.4.10.0
+project: /home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/../../libraries/zf_device/liblq_camera_ex.a
 project: /opt/ls_2k0300_env/opencv_4_10_build/lib/libopencv_imgcodecs.so.4.10.0
 project: /opt/ls_2k0300_env/opencv_4_10_build/lib/libopencv_dnn.so.4.10.0
 project: /opt/ls_2k0300_env/opencv_4_10_build/lib/libopencv_calib3d.so.4.10.0

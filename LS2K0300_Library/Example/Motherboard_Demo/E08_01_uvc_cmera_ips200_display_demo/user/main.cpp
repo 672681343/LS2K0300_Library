@@ -33,6 +33,12 @@
 
 #include "zf_common_headfile.h"
 
+
+#include <opencv2/imgproc/imgproc.hpp>  // for cv::cvtColor
+#include <opencv2/highgui/highgui.hpp> // for cv::VideoCapture
+#include <opencv2/opencv.hpp>
+#include <signal.h>
+
 // *************************** 例程硬件连接说明 ***************************
 //  久久派与主板使用54pin排线连接，再将久久派插到主板上面，确保插到底核心板与主板插座间没有缝隙即可
 //  久久派与主板使用54pin排线连接，再将久久派插到主板上面，确保插到底核心板与主板插座间没有缝隙即可
@@ -91,6 +97,53 @@ int main(int, char**)
     // 初始化屏幕
     ips200_init("/dev/fb0");
 
+
+//     lq_camera_ex cam(320, 240, 90,LQ_CAMERA_0CPU_MJPG,"/dev/video0");
+
+//     // 检查状态
+//     if (!cam.is_cam_opened()) {
+//         std::cerr << "摄像头初始化失败，请检查 /dev/video0 是否存在" << std::endl;
+//         return -1;
+//     }
+
+//     std::cout << "摄像头已启动: " 
+//               << cam.get_camera_width() << "x" 
+//               << cam.get_camera_height() 
+//               << " @ " << cam.get_camera_fps() << "fps" << std::endl;
+
+//     // ========== 循环采集 ==========
+//     while (1)
+//     {
+//         // 获取原始彩色图像
+//         cv::Mat raw = cam.get_frame_raw();
+//         cv::Mat frame_rgb565;
+//         cv::cvtColor(raw, frame_rgb565, cv::COLOR_BGR2BGR565);
+
+//         const uint16_t* ptr = reinterpret_cast<const uint16_t*>(frame_rgb565.data);
+        
+//         // 或者获取灰度图像
+//         // cv::Mat gray = cam.get_frame_gray();
+        
+//         // 或者同时获取彩色+灰度（效率更高，只读一次硬件）
+//         // cv::Mat raw, gray;
+//         // cam.get_frame_raw_gray(raw, gray);
+
+//         if (raw.empty()) {
+//             std::cerr << "获取图像失败" << std::endl;
+//             exit(0);
+//         }
+
+//         // ips200_show_gray_image(0, 0, raw.data, UVC_WIDTH, UVC_HEIGHT);
+//         // ips200_show_rgb565_image(0,0,rgb565_image,320,240,60,20,0);
+
+
+//     }
+
+//     // 析构时会自动停止采集、释放资源
+//     return 0;
+// }
+
+
     // 初始化UVC摄像头
     if(uvc_camera_init("/dev/video0") < 0)
     {
@@ -106,8 +159,9 @@ int main(int, char**)
             exit(0);
         }
 
-        // 显示图像到屏幕上
-        //ips200_show_gray_image(0, 0, rgay_image, UVC_WIDTH, UVC_HEIGHT);
+        // // 显示图像到屏幕上
+        // ips200_show_gray_image(0, 0, gray_image, UVC_WIDTH, UVC_HEIGHT);
+        // ips200_show_rgb565_image(0,0,rgb565_image,320,240,60,20,0);
 
 
 
