@@ -12,3 +12,8 @@ nc -zv 192.168.1.113 22     #验证连通性()
 ssh root@192.168.1.113 "cat /tmp" > ~/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/values.txt # 从服务器获取单个文件
 
 scp root@192.168.1.113:/tmp/*.jpg ~/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/image_shoot/# 从服务器获取多个文件
+
+
+批量下载                 [快捷方式； download-bmp ] 
+查看当前文件夹下的图片数量 [快捷方式； count-bmp ] 
+下载并删除远程图片        [快捷方式；sync-bmp-auto ]

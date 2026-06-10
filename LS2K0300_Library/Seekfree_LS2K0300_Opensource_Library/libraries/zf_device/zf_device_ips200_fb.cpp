@@ -360,7 +360,7 @@ void show_cv_mat_on_ips200(uint16 x, uint16 y, cv::Mat& image, uint8 color_mode)
     uint16 width = image.cols;
     uint16 height = image.rows;
     uint16 channels = image.channels();
-    printf("Image size: %dx%d, channels: %d\n", width, height, channels);
+    // printf("Image size: %dx%d, channels: %d\n", width, height, channels);
     
     // 检查颜色通道
     if (channels != 3 && channels != 1) {

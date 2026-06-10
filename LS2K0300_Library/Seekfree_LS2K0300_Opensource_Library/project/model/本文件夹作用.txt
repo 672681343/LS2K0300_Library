@@ -4,3 +4,19 @@ loong_cnn_model_simple.h仅供学习使用，无法直接用于比赛。
 
 打开model终端，生成头文件
 xxd -i loong_cnn_model_simple.tflite "loong_cnn_model_simple.h"
+
+终端中删除tmp中的图片命令
+rm -f /tmp/*.jpg 2>/dev/null
+
+
+2. 下载图片到本地
+第一种：(批量下载)
+scp -O root@192.168.1.113:/tmp/*.bmp ~/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/image_shoot/
+
+第二种：（批量下载）
+ssh root@192.168.1.113 "cd /tmp && tar czf - *.bmp 2>/dev/null" | tar xzf - -C ~/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/image_shoot/
+
+删除本地图片
+find /home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/image_shoot -name "*.bmp" -type f -delete
+
+

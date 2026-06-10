@@ -1,53 +1,71 @@
 #pragma once
-// #ifndef RECOGNIZE_H
-// #define RECOGNIZE_H
 
 #include "zf_common_headfile.h"
-// #include <opencv2/opencv.hpp>
 using namespace cv;
 
-    //模型处理相关的宏定义
-    // 1. 模型相关配置
-    #define MODEL_INPUT_WIDTH         45      // 模型输入图像宽度（根据实际模型调整） --> 模型期待的标准尺寸
-    #define MODEL_INPUT_HEIGHT        45      // 模型输入图像高度（根据实际模型调整）
-    #define MODEL_INPUT_CHANNEL       3       // 模型输入图像通道数（RGB=3）
-    #define MODEL_OUTPUT_CLASS_NUM    3       // 模型输出类别数（根据实际任务调整）
-    #define MODEL_INPUT_SIZE          (MODEL_INPUT_WIDTH * MODEL_INPUT_HEIGHT * MODEL_INPUT_CHANNEL)  // 输入总元素数
-    #define TFLITE_OP_RESOLVER_MAX_NUM 20     // 算子解析器最大支持算子数
-    #define TENSOR_ARENA_SIZE         (324 * 1024)  // 张量空间大小（单位：字节，根据模型大小调整）
+// ========== 量化开关 ==========
+// 0 = FP32 (浮点模型，精度高，体积大)
+// 1 = INT8 (整型量化，速度快，体积小)
+#define USE_INT8_MODEL 1 //  定义是否使用INT8模型的宏，1表示使用INT8模型
 
-    // 2. 日志控制配置
-    #define LOG_PRINT_FREQUENCY       10      // 每N帧打印一次推理结果（降低刷屏频率）
-    #define ENABLE_FIRST_FRAME_DEBUG  true    // 打印第一帧的完整预处理日志（调试用）
-    
-    //cv图像矩阵初始化
-    extern Mat float_img,resized_img;
+// ========== 模型配置 ==========
+#define MODEL_INPUT_WIDTH          64 //  定义模型的输入宽度为48像素
+#define MODEL_INPUT_HEIGHT         64 //  定义模型的输入高度为48像素
+#define MODEL_INPUT_CHANNEL        3 //  定义模型的输入通道数为3（RGB三通道）
+#define MODEL_OUTPUT_CLASS_NUM     3 //  定义模型的输出类别数量为6
+#define MODEL_INPUT_SIZE           (MODEL_INPUT_WIDTH * MODEL_INPUT_HEIGHT * MODEL_INPUT_CHANNEL)
+#define TFLITE_OP_RESOLVER_MAX_NUM 25 //  定义TensorFlow Lite操作解析器支持的最大操作符数量为25
+#define TENSOR_ARENA_SIZE          (324 * 1024) //  定义TensorFlow Lite的内存池大小为324KB
 
-    extern const char* class_labels[];
+// ========== 日志配置 ==========
+#define LOG_PRINT_FREQUENCY        1
+#define ENABLE_FIRST_FRAME_DEBUG   true
 
-    // 日志控制变量
-    extern int frame_count;          // 帧计数器
-    extern bool first_frame_logged;  // 第一帧日志是否已打印
+// ========== 6小类标签定义 ==========
+extern const char* class_labels[];
 
-    extern tflite::MicroInterpreter* interpreter;
-    // extern tflite::MicroInterpreter* init_tflite_simple(uint8_t* tensor_arena, size_t arena_size);
-    bool init_tflite_simple(uint8_t* tensor_arena, size_t arena_size);
+// cv图像矩阵
+extern Mat float_img, resized_img;
 
-    void debug_log_printf_callback(const char* s); // 日志回调函数
+// 日志控制变量
+extern int frame_count;
+extern bool first_frame_logged;
 
-    // 添加推理结果结构体（如果还没有的话）
-    typedef struct {
-        int class_index;          // 预测的类别索引
-        float confidence;         // 置信度
-        long inference_time_us;   // 推理耗时（微秒）
-    } InferenceResult;
+// TFLite解释器
+extern tflite::MicroInterpreter* interpreter;
 
-    // 添加函数声明
-    InferenceResult perform_inference(
-        cv::Mat input_image,
-        int frame_count,
-        bool is_first_frame_debug,
-        tflite::MicroInterpreter& interpreter
-    );
+// ========== 函数声明 ==========
 
-// #endif // RECOGNIZE_H
+// 日志回调
+void debug_log_printf_callback(const char* s);
+
+// 初始化TFLite模型 (use_int8: 0=FP32, 1=INT8)
+bool init_tflite_simple(uint8_t* tensor_arena, size_t arena_size, bool use_int8);
+
+// 清理资源
+void cleanup_tflite();
+
+// 推理结果结构体
+typedef struct {
+    int class_index;
+    float confidence;
+    long inference_time_us;
+    float all_scores[MODEL_OUTPUT_CLASS_NUM];
+} InferenceResult;
+
+// 执行推理 (use_int8: 0=FP32, 1=INT8)
+InferenceResult perform_inference(
+    cv::Mat input_image,
+    int frame_count,
+    bool is_first_frame_debug,
+    tflite::MicroInterpreter& interpreter,
+    bool use_int8
+);
+
+// 获取类别名称
+inline const char* get_class_name(int index) {
+    if (index >= 0 && index < MODEL_OUTPUT_CLASS_NUM) {
+        return class_labels[index];
+    }
+    return "unknown";
+}

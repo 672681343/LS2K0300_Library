@@ -249,6 +249,390 @@ home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.cpp.s
 .PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.cpp.s
 
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.cc.s
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.cc.s
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.cc.s
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.cc.s
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.cc.s
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.cc.s
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.cc.s
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.cc.s
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.cc.s
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.cc.s
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.cc.s
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.cc.s
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.cc.s
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.cc.s
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.cc.s
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.o
+
+# target to build an object file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.cc.o
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.cc.o
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.i: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.i
+
+# target to preprocess a source file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.cc.i
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.cc.i
+
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.s: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.s
+
+# target to generate assembly for a file
+home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.cc.s
+.PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.cc.s
+
 home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_device/zf_device_imu660ra.o: home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_device/zf_device_imu660ra.cpp.o
 .PHONY : home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_device/zf_device_imu660ra.o
 
@@ -1065,6 +1449,54 @@ help:
 	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.o"
 	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.i"
 	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.s"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.o"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.i"
+	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.s"
 	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_device/zf_device_imu660ra.o"
 	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_device/zf_device_imu660ra.i"
 	@echo "... home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_device/zf_device_imu660ra.s"

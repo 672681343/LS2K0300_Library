@@ -126,8 +126,8 @@ int main(int, char**)
             duty = 500;
         }
 
-        pwm_set_duty(PWM_1, duty);
-        pwm_set_duty(PWM_2, 600);
+        pwm_set_duty(PWM_1, 3600);
+        pwm_set_duty(PWM_2, 3600);
   
         system_delay_ms(10);
     }

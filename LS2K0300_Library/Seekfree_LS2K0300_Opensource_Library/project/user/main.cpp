@@ -40,7 +40,7 @@ int main(int, char**)
     uint8_t tensor_arena[TENSOR_ARENA_SIZE];
     
     // 识别初始化（无返回值，通过全局变量访问）
-    if (!init_tflite_simple(tensor_arena, TENSOR_ARENA_SIZE)) {
+    if (!init_tflite_simple(tensor_arena, TENSOR_ARENA_SIZE, USE_INT8_MODEL)) {
         printf("Failed to initialize TFLite!\n");
         return -1;
     }
@@ -74,7 +74,7 @@ int main(int, char**)
 
         // ======================== 图像和控制处理 ========================
 
-        Camera::basic_image_processing(rgay_image);
+        Camera::basic_image_processing(gray_image);
         ImageProc::image_measurement(Camera::bin_pixels,Camera::lcd_pixels);
         Elem::elem_judge();
         Err::error_get(ImageProc::state, ImageProc::l_black, ImageProc::r_black, ImageProc::left_flags, ImageProc::right_flags);
@@ -96,7 +96,8 @@ int main(int, char**)
         // MenuSystem::key_shutdown();
         // MenuSystem::Menu_display();
 
-        process_image(rgb565_image, &frame_count);
+        
+        process_image(rgb_image, &frame_count);
 
         // ips200_show_rgb565_image(0,0,rgb565_image,160,120,60,20,0);
 
@@ -107,7 +108,7 @@ int main(int, char**)
         // show_rgb565_image(0, 0, scc8660_image[0], SCC8660_W, SCC8660_H, 100, 100, 1);  //
         // ips200_show_rgb565_image(0, 0, rgb565_image, 160, 120, 160, 120, 0);//用这个
 
-        ips200_show_rgb565_image(0, 0, rgb565_image, UVC_WIDTH, UVC_HEIGHT, 240, 240, 0);///显示彩色图像
+        // ips200_show_rgb565_image(0, 0, rgb565_image, UVC_WIDTH, UVC_HEIGHT, 240, 240, 0);///显示彩色图像
 
 
 

@@ -2,12 +2,28 @@
 cat /sys/class/video4linux/video0/device/modalias
 
 2. 下载图片到本地
-第一种：(批量下载)
-scp -O root@192.168.1.113:/tmp/*.jpg ~/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/image_shoot/
+第一种：(批量下载) [快捷方式； download-bmp ] 
+scp -O root@192.168.1.113:/tmp/*.bmp ~/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/image_shoot/
 
-第二种：（批量下载）
-ssh root@192.168.1.113 "cd /tmp && tar czf - *.jpg 2>/dev/null" | tar xzf - -C ~/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/image_shoot/
+第二种：（批量下载）（不常用）
+ssh root@192.168.1.113 "cd /tmp && tar czf - *.bmp 2>/dev/null" | tar xzf - -C ~/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/image_shoot/
 
+删除本地图片
+find /home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/image_shoot -name "*.bmp" -type f -delete
+
+删除远程图片
+ssh root@192.168.1.113 "cd /tmp && rm -rf *.bmp"
+
+查看当前文件夹下的图片数量 [快捷方式； count-bmp ] 
+find ~/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/image_shoot/ -name "*.bmp" | wc -l
+
+下载并删除远程图片
+[快捷方式；sync-bmp-auto ]
+
+
+编辑bash
+nano ~/.bashrc  --> 进入
+source ~/.bashrc  --> 使修改生效
 
 3.同步本地代码到开发板
 # 设置时区和时间

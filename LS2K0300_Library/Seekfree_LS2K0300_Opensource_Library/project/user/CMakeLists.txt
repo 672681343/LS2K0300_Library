@@ -69,6 +69,42 @@ aux_source_directory(../../libraries/zf_device DIR_SRCS)
 aux_source_directory(../../libraries/zf_driver DIR_SRCS)
 aux_source_directory(../../libraries/zf_components/seekfree_assistant DIR_SRCS)
 
+# ========== 添加关键的 TFLM 算子实现文件 ==========
+set(TFLM_KERNEL_SOURCES
+    ../../libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce.cc
+    ../../libraries/zf_components/tflm/tensorflow/lite/micro/kernels/unused/reduce_common.cc  # 添加这行
+    ../../libraries/zf_components/tflm/tensorflow/lite/micro/kernels/conv.cc
+    ../../libraries/zf_components/tflm/tensorflow/lite/micro/kernels/fully_connected.cc
+    ../../libraries/zf_components/tflm/tensorflow/lite/micro/kernels/softmax.cc
+    ../../libraries/zf_components/tflm/tensorflow/lite/micro/kernels/reshape.cc
+    ../../libraries/zf_components/tflm/tensorflow/lite/micro/kernels/add.cc
+    ../../libraries/zf_components/tflm/tensorflow/lite/micro/kernels/mul.cc
+    ../../libraries/zf_components/tflm/tensorflow/lite/micro/kernels/pooling.cc
+    ../../libraries/zf_components/tflm/tensorflow/lite/micro/kernels/depthwise_conv.cc
+    ../../libraries/zf_components/tflm/tensorflow/lite/micro/kernels/quantize.cc
+    ../../libraries/zf_components/tflm/tensorflow/lite/micro/kernels/dequantize.cc
+)
+
+# 检查并添加存在的文件
+foreach(source ${TFLM_KERNEL_SOURCES})
+    if(EXISTS ${source})
+        list(APPEND DIR_SRCS ${source})
+        message(STATUS "添加: ${source}")
+    else()
+        message(STATUS "跳过: ${source} (不存在)")
+    endif()
+endforeach()
+
+# 添加 TFLM 核心文件
+if(EXISTS "../../libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.cc")
+    list(APPEND DIR_SRCS
+        ../../libraries/zf_components/tflm/tensorflow/lite/micro/micro_allocator.cc
+        ../../libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.cc
+        ../../libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.cc
+        ../../libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.cc
+    )
+endif()
+
 # 生成可执行文件 & 配置属性
 add_executable(${PROJ_NAME} ${DIR_SRCS})
 set_target_properties(${PROJ_NAME} PROPERTIES
@@ -76,11 +112,16 @@ set_target_properties(${PROJ_NAME} PROPERTIES
     BUILD_WITH_INSTALL_RPATH ON
 )
 
+
+
+
 # 链接依赖库
 target_link_libraries(
-${PROJ_NAME} 
-${OpenCV_LIBS}
-tflm          # 链接TFLM静态库（必须）
-pthread       # 线程库（TFLM内部使用）
-m             # 数学库（算子计算依赖）
+    ${PROJ_NAME} 
+    ${OpenCV_LIBS}
+    m             # 数学库（算子计算依赖）
+    pthread       # 线程库（TFLM内部使用）
+    tflm          # 链接TFLM静态库（必须）
+
+    ${CMAKE_SOURCE_DIR}/../../libraries/zf_device/liblq_camera_ex.a
 )
