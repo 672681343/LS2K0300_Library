@@ -3,14 +3,22 @@
 // 全局指针定义
 tflite::MicroInterpreter* interpreter = nullptr;
 
-// ========== 6小类标签定义 ==========
+// ========== n小类标签定义 ==========
 const char* class_labels[] = {
-    "scope_1",      // 0 - 望远镜
-    // "medkit_2",     // 1 - 急救包
-    "tank_1",       // 2 - 装甲车
-    // "ambulance_2",  // 3 - 救护车
-    // "gun_1",        // 4 - 枪
-    "explosive_2" ,  // 5 - 爆炸物
+    "scope_1", 
+    "medkit_2", 
+    "tank_1",
+    "ambulance_2", 
+    "gun_1", 
+    "explosive_2",
+
+
+    // "scope_1",      // 0 - 望远镜
+    // // "medkit_2",     // 1 - 急救包
+    // "tank_1",       // 2 - 装甲车
+    // // "ambulance_2",  // 3 - 救护车
+    // // "gun_1",        // 4 - 枪
+    // "explosive_2" ,  // 5 - 爆炸物
 };
 
 // cv图像矩阵初始化

@@ -236,14 +236,14 @@ using namespace cv;
 //
 // ======================== 可配置参数宏定义 ========================
 // 1. 模型相关配置
-#define MODEL_INPUT_WIDTH         45      // 模型输入图像宽度（根据实际模型调整）
-#define MODEL_INPUT_HEIGHT        45      // 模型输入图像高度（根据实际模型调整）
+#define MODEL_INPUT_WIDTH         64      // 模型输入图像宽度（根据实际模型调整）
+#define MODEL_INPUT_HEIGHT        64      // 模型输入图像高度（根据实际模型调整）
 #define MODEL_INPUT_CHANNEL       3       // 模型输入图像通道数（RGB=3）
-#define MODEL_OUTPUT_CLASS_NUM    3       // 模型输出类别数（根据实际任务调整）
+#define MODEL_OUTPUT_CLASS_NUM    7       // 模型输出类别数（根据实际任务调整）
 #define MODEL_INPUT_SIZE          (MODEL_INPUT_WIDTH * MODEL_INPUT_HEIGHT * MODEL_INPUT_CHANNEL)  // 输入总元素数
 #define TFLITE_OP_RESOLVER_MAX_NUM 20     // 算子解析器最大支持算子数
 #define TENSOR_ARENA_SIZE         (324 * 1024)  // 张量空间大小（单位：字节，根据模型大小调整）
-const char* class_labels[] = {"materials","traffic","weapon"}; //需要与train.py提示顺序一致
+const char* class_labels[] = {"scope_1", "medkit_2", "tank_1", "ambulance_2", "gun_1", "explosive_2_1&2", "explosive_2_3"}; //需要与train.py提示顺序一致
 
 
 // ======================== 日志回调函数 ========================
@@ -303,11 +303,11 @@ int main(int, char**)
     // ======================== 图像预处理 ========================
 
     Mat src_img,float_img,resized_img;
-    src_img = imread("test.jpg", 1);  // 读取图片
+    src_img = imread("test.bmp", 1);  // 读取图片
     if (src_img.empty()) 
     {
         printf("❌ 图片读取失败！\n");
-        printf("❌ 未添加test.jpg测试图片\n");
+        printf("❌ 未添加test.bmp测试图片\n");
         return -1;
     }
     
