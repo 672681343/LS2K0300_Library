@@ -57,7 +57,7 @@ git add .
 git commit -m "$FINAL_MSG"
 
 echo "[2/2] 正在推送至 GitHub..."
-git push origin main
+git push origin 北方匈奴
 
 if [ $? -eq 0 ]; then
     echo "==========================================="
