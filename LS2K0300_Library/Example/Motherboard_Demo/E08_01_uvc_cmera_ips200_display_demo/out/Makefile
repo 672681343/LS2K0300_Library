@@ -129,6 +129,30 @@ E08_01_uvc_cmera_ips200_display_demo/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/E08_01_uvc_cmera_ips200_display_demo.dir/build.make CMakeFiles/E08_01_uvc_cmera_ips200_display_demo.dir/build
 .PHONY : E08_01_uvc_cmera_ips200_display_demo/fast
 
+home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.o: home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.cpp.o
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.o
+
+# target to build an object file
+home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/E08_01_uvc_cmera_ips200_display_demo.dir/build.make CMakeFiles/E08_01_uvc_cmera_ips200_display_demo.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.cpp.o
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.cpp.o
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.i: home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.cpp.i
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.i
+
+# target to preprocess a source file
+home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/E08_01_uvc_cmera_ips200_display_demo.dir/build.make CMakeFiles/E08_01_uvc_cmera_ips200_display_demo.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.cpp.i
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.cpp.i
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.s: home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.cpp.s
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.s
+
+# target to generate assembly for a file
+home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/E08_01_uvc_cmera_ips200_display_demo.dir/build.make CMakeFiles/E08_01_uvc_cmera_ips200_display_demo.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.cpp.s
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.cpp.s
+
 home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/libraries/zf_common/zf_common_fifo.o: home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/libraries/zf_common/zf_common_fifo.cpp.o
 .PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/libraries/zf_common/zf_common_fifo.o
 
@@ -642,6 +666,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... E08_01_uvc_cmera_ips200_display_demo"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.o"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.i"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.s"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/libraries/zf_common/zf_common_fifo.o"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/libraries/zf_common/zf_common_fifo.i"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/libraries/zf_common/zf_common_fifo.s"

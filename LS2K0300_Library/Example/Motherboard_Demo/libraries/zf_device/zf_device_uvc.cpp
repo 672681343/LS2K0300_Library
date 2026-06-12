@@ -21,7 +21,7 @@ cv::Mat frame_rgb565;     // 构建opencv对象 彩色565
 
 uint8_t *gray_image;    // 灰度图像数组指针
 
-uint16_t *rgb565_image;
+uint8_t *rgb_image;
 
 
 
@@ -67,12 +67,12 @@ int8 wait_image_refresh()
 
 
 
-    cv::cvtColor(frame_rgb, frame_rgb565, cv::COLOR_BGR2BGR565);
+    // cv::cvtColor(frame_rgb, frame_rgb565, cv::COLOR_BGR2BGR565);
 
     // cv对象转指针
     gray_image = reinterpret_cast<uint8_t *>(frame_gray.ptr(0));
 
-    rgb565_image = reinterpret_cast<uint16_t *>(frame_rgb565.ptr(0));
+    rgb_image = reinterpret_cast<uint8_t *>(frame_rgb.ptr(0));
 
 
     return 0;

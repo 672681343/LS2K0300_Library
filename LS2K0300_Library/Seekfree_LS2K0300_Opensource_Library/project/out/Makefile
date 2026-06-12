@@ -609,6 +609,30 @@ home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/lib
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_driver/zf_driver_udp.cpp.s
 .PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_driver/zf_driver_udp.cpp.s
 
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.o: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.cpp.o
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.o
+
+# target to build an object file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.cpp.o
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.cpp.o
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.i: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.cpp.i
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.i
+
+# target to preprocess a source file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.cpp.i
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.cpp.i
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.s: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.cpp.s
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.s
+
+# target to generate assembly for a file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.cpp.s
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.cpp.s
+
 home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Camera.o: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Camera.cpp.o
 .PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Camera.o
 
@@ -969,6 +993,78 @@ home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/pro
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Tool.cpp.s
 .PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Tool.cpp.s
 
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.o: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.cpp.o
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.o
+
+# target to build an object file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.cpp.o
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.cpp.o
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.i: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.cpp.i
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.i
+
+# target to preprocess a source file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.cpp.i
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.cpp.i
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.s: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.cpp.s
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.s
+
+# target to generate assembly for a file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.cpp.s
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.cpp.s
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.o: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.cpp.o
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.o
+
+# target to build an object file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.cpp.o
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.cpp.o
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.i: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.cpp.i
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.i
+
+# target to preprocess a source file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.cpp.i
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.cpp.i
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.s: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.cpp.s
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.s
+
+# target to generate assembly for a file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.cpp.s
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.cpp.s
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.o: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.cpp.o
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.o
+
+# target to build an object file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.cpp.o
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.cpp.o
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.i: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.cpp.i
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.i
+
+# target to preprocess a source file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.cpp.i
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.cpp.i
+
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.s: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.cpp.s
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.s
+
+# target to generate assembly for a file
+home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.cpp.s
+.PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.cpp.s
+
 home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.o: home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.cpp.o
 .PHONY : home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.o
 
@@ -1086,6 +1182,9 @@ help:
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_driver/zf_driver_udp.o"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_driver/zf_driver_udp.i"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_driver/zf_driver_udp.s"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.o"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.i"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/BLDC.s"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Camera.o"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Camera.i"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Camera.s"
@@ -1131,6 +1230,15 @@ help:
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Tool.o"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Tool.i"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/Tool.s"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.o"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.i"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ncnn.s"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.o"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.i"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/lq_ntp.s"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.o"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.i"
+	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/ncnn.s"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.o"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.i"
 	@echo "... home/ahh/桌面/xvniji/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/red_detecte.s"

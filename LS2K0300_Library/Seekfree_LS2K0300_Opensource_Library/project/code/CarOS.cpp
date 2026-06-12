@@ -49,14 +49,14 @@ namespace MenuSystem {
         {"Turn",        ACTION_SWITCH,   "car_flag.turn",      {0,1},   MenuID::NONE},
         {"Sloop",       ACTION_SWITCH,   "car_flag.speedloop", {0,1},   MenuID::NONE},
         {"PWM",         ACTION_CALLBACK, "car_flag.pwm",       {0,0},   MenuID::PWM},
-
+        {"bldc",        ACTION_SWITCH,   "car_flag.bldc",       {0,1},   MenuID::NONE},
         {"Timing",      ACTION_ADJUST,   "car_flag.set_time",  {0, 60}, MenuID::NONE},
         {"Protect",     ACTION_SWITCH,   "car_flag.protect",   {0,1},   MenuID::NONE},
         {"beep",        ACTION_SWITCH,   "car_flag.beep",      {0,1},   MenuID::NONE},
     };
 
     static const MenuItem confirm_items[] = {
-        
+        {"BLDC", ACTION_ADJUST, "pwm.BLDC", {3600,6000},MenuID::NONE},
         {"Officially Start", ACTION_CALLBACK, "officially.start",  {0,0}, MenuID::NONE},
     };
 
@@ -87,6 +87,7 @@ namespace MenuSystem {
         {"crvspi",  ACTION_ADJUST, "Group.crvspki", {0.0f, 100.0f}, MenuID::NONE},
         {"crvspD",  ACTION_ADJUST, "Group.crvspkd", {0.0f, 1000.0f}, MenuID::NONE},
         {"Err",   ACTION_ADJUST, "Group.crvErr", {10, 70}, MenuID::NONE},
+        {"BLDC",  ACTION_ADJUST, "Group.crvBLDC", {0,0}, MenuID::NONE},
         {"pwm_cl",  ACTION_ADJUST, "Group.pwm_cl", {0.0f, 5000.0f}, MenuID::NONE},
         {"pwm_cr",  ACTION_ADJUST, "Group.pwm_cr", {0.0f, 5000.0f}, MenuID::NONE},
 
@@ -103,6 +104,7 @@ namespace MenuSystem {
         {"shtspi",  ACTION_ADJUST, "Group.shtspki", {0.0f, 100.0f}, MenuID::NONE},
         {"shtspD",  ACTION_ADJUST, "Group.shtspkd", {0.0f, 1000.0f}, MenuID::NONE},
         {"Err",  ACTION_ADJUST, "Group.shtErr", {10, 70}, MenuID::NONE},
+        {"BLDC",  ACTION_ADJUST, "Group.shtBLDC", {0,0}, MenuID::NONE},
         {"pwm_sl",  ACTION_ADJUST, "Group.pwm_sl", {0.0f, 5000.0f}, MenuID::NONE},
         {"pwm_sr",  ACTION_ADJUST, "Group.pwm_sr", {0.0f, 5000.0f}, MenuID::NONE},
 
@@ -119,6 +121,7 @@ namespace MenuSystem {
         {"logspi",  ACTION_ADJUST, "Group.logspki", {0.0f, 100.0f}, MenuID::NONE},
         {"logspD",  ACTION_ADJUST, "Group.logspkd", {0.0f, 1000.0f}, MenuID::NONE},
         {"Err",  ACTION_ADJUST, "Group.logErr", {10, 70}, MenuID::NONE},
+        {"BLDC",  ACTION_ADJUST, "Group.logBLDC", {0,0}, MenuID::NONE},
         {"pwm_ll",  ACTION_ADJUST, "Group.pwm_ll", {0.0f, 5000.0f}, MenuID::NONE},
         {"pwm_lr",  ACTION_ADJUST, "Group.pwm_lr", {0.0f, 5000.0f}, MenuID::NONE},
   
@@ -135,6 +138,7 @@ namespace MenuSystem {
         {"islspi",  ACTION_ADJUST, "Group.islandspki", {0.0f, 100.0f}, MenuID::NONE},
         {"islspD",  ACTION_ADJUST, "Group.islandspkd", {0.0f, 1000.0f}, MenuID::NONE},
         {"Err", ACTION_ADJUST, "Group.islandErr", {10, 70}, MenuID::NONE},
+        {"BLDC", ACTION_ADJUST, "Group.islandBLDC", {0,0}, MenuID::NONE},
         {"pwm_il",  ACTION_ADJUST, "Group.pwm_il", {0.0f, 5000.0f}, MenuID::NONE},
         {"pwm_ir",  ACTION_ADJUST, "Group.pwm_ir", {0.0f, 5000.0f}, MenuID::NONE},
 
@@ -153,6 +157,7 @@ namespace MenuSystem {
         {"encR",ACTION_VIEW,   "count.R",        {0.0f, 0.0f},   MenuID::NONE},
         {"pwmL",ACTION_VIEW,   "pwm.L",          {0.0f, 0.0f},   MenuID::NONE},
         {"pwmR",ACTION_VIEW,   "pwm.R",          {0.0f, 0.0f},   MenuID::NONE},
+        {"BLDC",ACTION_ADJUST, "pwm.BLDC",       {0.0f, 0.0f},   MenuID::NONE}
 
     };
 
@@ -338,6 +343,7 @@ namespace MenuSystem {
     static const ParamMapping pwm_params[] = {
         {"L", TYPE_INT16, .as_int16 = &Control::pwm.L, .persist = false},
         {"R", TYPE_INT16, .as_int16 = &Control::pwm.R, .persist = false},
+        {"BLDC",TYPE_UINT16,.as_uint16 = &BLDC::duty,    .persist = false}
 
     };
     static const ParamMapping count_params[] = {
@@ -397,6 +403,7 @@ namespace MenuSystem {
 
         {"logdif", TYPE_FLOAT, .as_float = &Control::LongStrSpeed.dif, .persist = true},
         {"logspd", TYPE_INT16, .as_int16 = &Control::LongStrSpeed.set_speed, .persist = true},
+        {"logBLDC",TYPE_UINT16, .as_uint16 = &Control::LongStrSpeed.BLDC_duty, .persist = true},
         {"logErr", TYPE_UINT8, .as_uint8 = &Control::LongStrSpeed.err_row, .persist = true},
 
         {"logspkp", TYPE_FLOAT, .as_float = &Control::LongStrSpeed.l_kp, .persist = true},
@@ -414,6 +421,7 @@ namespace MenuSystem {
 
         {"shtdif", TYPE_FLOAT, .as_float = &Control::ShortStrSpeed.dif, .persist = true},
         {"shtspd", TYPE_INT16, .as_int16 = &Control::ShortStrSpeed.set_speed, .persist = true},
+        {"shtBLDC",   TYPE_UINT16, .as_uint16 = &Control::ShortStrSpeed.BLDC_duty, .persist = true},
         {"shtErr", TYPE_UINT8, .as_uint8 = &Control::ShortStrSpeed.err_row, .persist = true},
 
         {"shtspkp", TYPE_FLOAT, .as_float = &Control::ShortStrSpeed.l_kp, .persist = true},
@@ -433,6 +441,7 @@ namespace MenuSystem {
         {"crvdif", TYPE_FLOAT, .as_float = &Control::CurveSpeed.dif, .persist = true},
 
         {"crvspd", TYPE_INT16, .as_int16 = &Control::CurveSpeed.set_speed, .persist = true},
+        {"crvBLDC",   TYPE_UINT16, .as_uint16 = &Control::CurveSpeed.BLDC_duty, .persist = true},
         {"crvErr", TYPE_UINT8, .as_uint8 = &Control::CurveSpeed.err_row, .persist = true},
 
         {"crvspkp", TYPE_FLOAT, .as_float = &Control::CurveSpeed.l_kp, .persist = true},
@@ -449,6 +458,7 @@ namespace MenuSystem {
 
         {"islanddif", TYPE_FLOAT, .as_float = &Control::IslandSpeed.dif, .persist = true},
         {"islandspd", TYPE_INT16, .as_int16 = &Control::IslandSpeed.set_speed, .persist = true},
+        {"islandBLDC",   TYPE_UINT16, .as_uint16 = &Control::IslandSpeed.BLDC_duty, .persist = true},
         {"islandErr", TYPE_UINT8, .as_uint8 = &Control::IslandSpeed.err_row, .persist = true},
 
         {"islandspkp", TYPE_FLOAT, .as_float = &Control::IslandSpeed.l_kp, .persist = true},
@@ -466,6 +476,7 @@ namespace MenuSystem {
         {"turn",     TYPE_UINT8, .as_uint8 = &Car_flag.turn, .persist = true},
         {"speedloop",TYPE_UINT8, .as_uint8 = &Car_flag.speed_loop, .persist = true},
         {"pwm",      TYPE_INT16, .as_int16 = &Car_flag.pwm, .persist = true},
+        {"bldc",     TYPE_UINT8, .as_uint8 = &Car_flag.bldc,.persist = true},
         {"menu",     TYPE_UINT8, .as_uint8 = &Car_flag.menu, .persist = true},
         {"protect",  TYPE_UINT8, .as_uint8 = &Car_flag.protect, .persist = true},
         {"set_time", TYPE_UINT8, .as_uint8 = &Car_flag.set_time, .persist = true},
@@ -1229,7 +1240,7 @@ namespace MenuSystem {
     {
 
         Motor::deinit();
-        // BLDC::deinit();
+        BLDC::deinit();
 
         ips200_clear();
         ips200_show_string(40, 60, "Rebooting...");
@@ -1246,7 +1257,7 @@ namespace MenuSystem {
     {
 
         Motor::deinit();
-        // BLDC::deinit();
+        BLDC::deinit();
 
         MenuSystem::beep_off();
         ips200_clear();

@@ -39,8 +39,8 @@ namespace TCP {
             seekfree_assistant_oscilloscope_data.data[7] =  Pit::Angle_out;
 
 
-            // seekfree_assistant_oscilloscope_data.data[8] = PID::speed_pid_R.i_term;
-            // seekfree_assistant_oscilloscope_data.data[9] = PID::speed_pid_R.d_term;
+            // seekfree_assistant_oscilloscope_data.data[6] = PID::speed_pid_L.i_term;
+            // seekfree_assistant_oscilloscope_data.data[7] = PID::speed_pid_L.p_term;
             
             seekfree_assistant_oscilloscope_data.channel_num = 8;
 

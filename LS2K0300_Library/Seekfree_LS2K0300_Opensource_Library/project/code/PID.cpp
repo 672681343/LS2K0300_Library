@@ -20,7 +20,7 @@ namespace PID {
         angle_pid.integral = 0;
         angle_pid.prev_error = 0;
         angle_pid.I_limit = 0;
-        angle_pid.out_limit = 5000;////原本是4000
+        angle_pid.out_limit = 6000;////原本是4000
 
         turn_pid.kp = 0;
         turn_pid.kp2 = 0.0;
@@ -239,7 +239,7 @@ namespace PID {
             //     pid->out_limit = 5200;
             // }
 
-            pid->out_limit = 3500;
+            pid->out_limit = 4000;
         }
         if(Elem::Cross.State==2){
             pid->out_limit = 5500;

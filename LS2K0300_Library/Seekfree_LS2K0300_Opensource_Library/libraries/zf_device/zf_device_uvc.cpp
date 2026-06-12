@@ -112,11 +112,11 @@ using namespace cv;
 
 cv::Mat frame_rgb;      // 构建opencv对象 彩色
 cv::Mat frame_gray;     // 构建opencv对象 灰度
-cv::Mat frame_rgb565;     // 构建opencv对象 彩色565
+// cv::Mat frame_rgb565;     // 构建opencv对象 彩色565
 
 uint8_t *gray_image;    // 灰度图像数组指针
 
-uint16_t *rgb565_image;
+uint8_t *rgb_image;
 
 
 
@@ -128,7 +128,7 @@ int8 uvc_camera_init(const char *path)
 {
 
     frame_rgb.create(UVC_HEIGHT, UVC_WIDTH, CV_8UC3);
-    frame_rgb565.create(UVC_HEIGHT, UVC_WIDTH, CV_8UC2);
+    frame_gray.create(UVC_HEIGHT, UVC_WIDTH, CV_8UC1);
     cam.reset(new lq_camera_ex(UVC_WIDTH, UVC_HEIGHT, UVC_FPS, LQ_CAMERA_0CPU_MJPG, "/dev/video0"));  //LQ_CAMERA_HIGH_MJPG  LQ_CAMERA_0CPU_MJPG
 
     // 检查状态
@@ -162,12 +162,12 @@ int8 wait_image_refresh()
 
 
 
-    cv::cvtColor(frame_rgb, frame_rgb565, cv::COLOR_BGR2BGR565);
+    // cv::cvtColor(frame_rgb, frame_rgb565, cv::COLOR_BGR2BGR565);
 
     // cv对象转指针
     gray_image = reinterpret_cast<uint8_t *>(frame_gray.ptr(0));
 
-    rgb565_image = reinterpret_cast<uint16_t *>(frame_rgb565.ptr(0));
+    rgb_image = reinterpret_cast<uint8_t *>(frame_rgb.ptr(0));
 
 
     return 0;

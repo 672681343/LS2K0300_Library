@@ -32,6 +32,7 @@
 ********************************************************************************************************************/
 
 #include "zf_common_headfile.h"
+#include "red_detecte.h"
 
 
 #include <opencv2/imgproc/imgproc.hpp>  // for cv::cvtColor
@@ -159,6 +160,7 @@ int main(int, char**)
             exit(0);
         }
 
+        process_image(rgb_image);
         // // 显示图像到屏幕上
         // ips200_show_gray_image(0, 0, gray_image, UVC_WIDTH, UVC_HEIGHT);
         // ips200_show_rgb565_image(0,0,rgb565_image,320,240,60,20,0);

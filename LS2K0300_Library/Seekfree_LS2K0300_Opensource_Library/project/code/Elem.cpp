@@ -589,6 +589,8 @@ namespace Elem {
                 if (Right_corner.D_y > HEIGHT - 5) { Right_corner.D_y = 0;}
                 Crosshairs();
 
+
+
                 if (ImageProc::Mid_BF.LostParam.sum > 20 ){
                     Cross.State = 2;
                     Left_corner.D_y = 0;
@@ -626,7 +628,7 @@ namespace Elem {
             }
             case 3:{
                 
-                if (ImageProc::Mid_BF.LostParam.sum < 10 || ImageProc::Left_BF.LostParam.start < 30 || ImageProc::Right_BF.LostParam.start < 30){
+                if (ImageProc::Mid_BF.LostParam.sum < 4 || ImageProc::Left_BF.LostParam.start < 30 || ImageProc::Right_BF.LostParam.start < 30){
                     Cross.State = 0;
                     Err::Err.mode = 0;
                     clear();
@@ -664,10 +666,10 @@ namespace Elem {
                 if(  Right_Tilt_Cross.State==0 && Left_Tilt_Cross.State==0 && Left_Island.enable &&
                     Right_Island.State==0 && Cross.State == 0 &&
                     Zebra.State == 0 && 
-                    ImageProc::state.cutoff >= 65 &&  
+                    ImageProc::state.cutoff >= 54 &&  
                     ((ImageProc::Right_BF.LostParam.start > 67 && ImageProc::Right_BF.LostParam.sum < 15) ||
                      ImageProc::Right_BF.LostParam.sum < 2) && 
-                    ((ImageProc::Left_BF.LostParam.sum > 6 || ImageProc::sec_loss_left.LostParam.sum > 6)&& (ImageProc::Left_BF.LostParam.start < 50 || ImageProc::sec_loss_left.LostParam.start<50 ) ) && 
+                    ((ImageProc::Left_BF.LostParam.sum > 15 || ImageProc::sec_loss_left.LostParam.sum > 6)&& (ImageProc::Left_BF.LostParam.start < 50 || ImageProc::sec_loss_left.LostParam.start<50 ) ) && 
                     (ImageProc::Mid_BF.LostParam.sum < 2  )&& 
                     ImageProc::Right_BF.Var < 10 && ImageProc::Left_BF.Var > 100 ){
                     Left_corner.D_y = island_Down(HEIGHT - 4, HEIGHT - ImageProc::state.cutoff , 0, ImageProc::l_black);
@@ -684,6 +686,9 @@ namespace Elem {
                             my_draw_line(ImageProc::l_black[Left_corner.Curve_Row],Left_corner.Curve_Row,0,0,MODE_FIXED_SLOPE,DIRECTION_UP_LEFT,-ImageProc::Right_BF.Slope);
                         }
                         Left_Island.State = 1;
+                    }
+                    else if(Left_corner.Curve_Row != 0 && ImageProc::Left_BF.LostParam.sum > 20 && ImageProc::Left_BF.LostParam.start == 69){
+                        Left_Island.State = 2;
                     }
                 }
 
@@ -781,7 +786,7 @@ namespace Elem {
                     Err::Err.limit = HEIGHT - Left_corner.U_y;
                     my_draw_line(ImageProc::l_black[Left_corner.U_y],Left_corner.U_y,ImageProc::r_black[HEIGHT-10],HEIGHT-10,MODE_TWO_POINTS,DIRECTION_DOWN_RIGHT,0);
                 }
-                if (ImageProc::Right_BF.LostParam.sum > 36 && Left_corner.U_y != 0){
+                if (ImageProc::Right_BF.LostParam.sum > 25 ){
                     Left_Island.State = 4;
                     ImageProc::state.range_r = ImageProc::l_black[Left_corner.U_y - 2];
                     Right_corner.U_y = Left_corner.U_y;
@@ -842,7 +847,7 @@ namespace Elem {
                 }else if(Left_corner.Curve_Row != 0){
                     my_draw_line(ImageProc::l_black[Left_corner.Curve_Row],Left_corner.Curve_Row,0,0,MODE_FIXED_SLOPE,DIRECTION_DOWN_LEFT,-ImageProc::Right_BF.Slope);
                 }
-                if((ImageProc::Left_BF.LostParam.mid > 58  ) && (Left_corner.Curve_Row == 0 || Left_corner.Curve_Row < 25)){
+                if((ImageProc::Left_BF.LostParam.end > 48  ) && (Left_corner.Curve_Row == 0 || Left_corner.Curve_Row < 30)){
                     Left_Island.State = 8;
                 }
                 break;
@@ -871,10 +876,10 @@ namespace Elem {
             case 0:{
                 if(Right_Tilt_Cross.State==0 && Left_Tilt_Cross.State==0 && Right_Island.enable &&
                     Left_Island.State == 0 && Cross.State == 0  && Zebra.State == 0 && 
-                    ImageProc::state.cutoff >= 65 && 
+                    ImageProc::state.cutoff >= 54 && 
                     ((ImageProc::Left_BF.LostParam.start > 67 && ImageProc::Left_BF.LostParam.sum < 15) ||
                      ImageProc::Left_BF.LostParam.sum < 2) && 
-                    ((ImageProc::Right_BF.LostParam.sum > 6 || ImageProc::sec_loss_right.LostParam.sum > 6) && (ImageProc::Right_BF.LostParam.start < 50 || ImageProc::sec_loss_right.LostParam.start < 50)) && 
+                    ((ImageProc::Right_BF.LostParam.sum > 15 || ImageProc::sec_loss_right.LostParam.sum > 6) && (ImageProc::Right_BF.LostParam.start < 50 || ImageProc::sec_loss_right.LostParam.start < 50)) && 
                     (ImageProc::Mid_BF.LostParam.sum < 2 )&& 
                     ImageProc::Right_BF.Var > 100 && ImageProc::Left_BF.Var < 10 
                    ){
@@ -892,6 +897,9 @@ namespace Elem {
                         }
                         Right_Island.State = 1;
                         
+                    }
+                    else if(Right_corner.Curve_Row != 0 && ImageProc::Right_BF.LostParam.sum > 20 && ImageProc::Right_BF.LostParam.start == 69){
+                        Left_Island.State = 2;
                     }
                 }
 
@@ -989,7 +997,7 @@ namespace Elem {
                     
                 }
 
-                if (ImageProc::Left_BF.LostParam.sum > 30 ){
+                if (ImageProc::Left_BF.LostParam.sum > 25 ){
                     Right_Island.State = 4;
                     ImageProc::state.range_l = ImageProc::r_black[Right_corner.U_y - 2];
                     Left_corner.U_y = Right_corner.U_y;
@@ -1052,7 +1060,7 @@ namespace Elem {
                 }else if(Right_corner.Curve_Row != 0){
                     my_draw_line(ImageProc::r_black[Right_corner.Curve_Row],Right_corner.Curve_Row,0,0,MODE_FIXED_SLOPE,DIRECTION_DOWN_RIGHT,-ImageProc::Left_BF.Slope);
                 }
-                if((ImageProc::Right_BF.LostParam.mid > 58 ) && (Right_corner.Curve_Row == 0 || Right_corner.Curve_Row < 25)){
+                if((ImageProc::Right_BF.LostParam.end > 48 ) && (Right_corner.Curve_Row == 0 || Right_corner.Curve_Row < 30)){
                     Right_Island.State = 8;
                 }
                 break;

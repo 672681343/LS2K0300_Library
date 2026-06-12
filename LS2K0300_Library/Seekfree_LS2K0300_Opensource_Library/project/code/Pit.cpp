@@ -108,9 +108,9 @@ namespace Pit{
                 // 开环测试（允许左右轮独立 PWM）
 
                 if(MenuSystem::Car_flag.turn == 0){
-                    Motor::goMotor(Control::pwm.L, Control::pwm.L ); 
+                    Motor::goMotor(1500, 1500 ); 
                 }else{
-                    Motor::goMotor(Control::pwm.L + Angle_out , Control::pwm.L - Angle_out );
+                    Motor::goMotor(Control::pwm.L  , Control::pwm.L  );
                 }
             }
 

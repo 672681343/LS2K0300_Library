@@ -1,5 +1,8 @@
-#pragma once  // 防止重复包含
 
+#pragma once  // 防止重复包含
+#include "zf_common_headfile.h"
+#include <opencv2/opencv.hpp>
+#include "lq_ntp.hpp"
 #include <cstdint>
 #include <vector>
 
@@ -11,19 +14,34 @@ struct RedBox {
     float density;  // 填充密度
 };
 
-// 函数声明（默认参数只在这里写一次）
-bool is_red_pixel(uint16_t pixel, uint8_t min_red = 18, uint8_t min_diff = 4);
-void detect_red_regions(uint16_t* image, int width, int height,
-                       std::vector<RedBox>& boxes,
-                       int min_area = 30, int max_area = 10000);
-void draw_rect_rgb565(uint16_t* image, int width, int height,
-                     int x, int y, int w, int h, 
-                     uint16_t color, int thickness = 1);
-void draw_cross_rgb565(uint16_t* image, int width, int height,
-                      int cx, int cy, uint16_t color, int size = 5);
-void process_image(uint16_t* rgb565_image);
+// 图像尺寸（根据你的IPS200屏幕修改）
+#define IMG_WIDTH 320
+#define IMG_HEIGHT 240
 
-extern uint16_t* cropped;
+#define MODEL_INPUT_WIDTH          64 //  定义模型的输入宽度为48像素
+#define MODEL_INPUT_HEIGHT         64 //  定义模型的输入高度为48像素
+
+bool is_red_pixel(uint8_t r, uint8_t g, uint8_t b, uint8_t min_red = 120, uint8_t min_diff = 8);
+
+void detect_red_regions(uint8_t* image, int width, int height,
+                       std::vector<RedBox>& boxes,
+                       int min_area, int max_area);
+
+void draw_rect_bgr888(uint8_t* image, int width, int height,
+                     int x, int y, int w, int h,
+                     uint32_t color, int thickness);
+
+void draw_cross_bgr888(uint8_t* image, int width, int height,
+                      int cx, int cy, uint32_t color, int size);
+
+uint8_t* crop_image(uint8_t* src_image, int src_width, int src_height,
+                    int x, int y, int w, int h);
+
+cv::Mat crop_image_to_bgr_mat(uint8_t* src_image, int src_width, int src_height,
+                               int x, int y, int w, int h);
+
+void save_bgr888_as_bmp(const char* filename, uint8_t* bgr, int w, int h, int stride);
+
+void process_image(uint8_t* bgr888_image, int frame_count);
 
 extern std::vector<RedBox> boxes;
-

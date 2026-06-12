@@ -9,6 +9,12 @@ namespace Control{
         .cur_R = 0
     };
 
+    //BLDC电机PWM
+    Motor_PWM BLDC = {
+        .L = 0,
+        .R = 0
+    };
+
 
 ///////////////开环////////////////
 
@@ -146,6 +152,14 @@ namespace Control{
             {
             case LOOG: 
                 CurveSpeed.dif = 0;
+
+                if (MenuSystem::Car_flag.test == 1 && MenuSystem::Car_flag.bldc == 0){
+                    //BLDC::duty = LongStrSpeed.BLDC_duty;
+                }else{
+                    BLDC.L = LongStrSpeed.BLDC_duty; 
+                    BLDC.R = LongStrSpeed.BLDC_duty;
+                }
+
                 if(MenuSystem::Car_flag.speed_loop){
                     if (Err::Err.current > 0){
                         aim_speed.cur_L = LongStrSpeed.set_speed;
@@ -191,6 +205,14 @@ namespace Control{
                 break;
             case SHORT:
                 CurveSpeed.dif = 0;
+
+                if (MenuSystem::Car_flag.test == 1 && MenuSystem::Car_flag.bldc == 0){
+                    //BLDC::duty = ShortStrSpeed.BLDC_duty;
+                }else{
+                    BLDC.L = ShortStrSpeed.BLDC_duty; 
+                    BLDC.R = ShortStrSpeed.BLDC_duty;
+                }
+
                 if(MenuSystem::Car_flag.speed_loop){
                     if (Err::Err.current > 0){
                         aim_speed.cur_L = ShortStrSpeed.set_speed;
@@ -237,6 +259,15 @@ namespace Control{
                 //分段PD控制器
                 //SmartPD::SegmentPDController(Error::Err.current, CurvePid.kp, CurvePid.kd);
                 if(MenuSystem::Car_flag.speed_loop){
+
+                if (MenuSystem::Car_flag.test == 1 && MenuSystem::Car_flag.bldc == 0){
+                    //BLDC::duty = CurveSpeed.BLDC_duty;
+                }else{
+                    BLDC.L = CurveSpeed.BLDC_duty;
+                    BLDC.R = CurveSpeed.BLDC_duty ; 
+                }
+
+
                     if (Err::Err.current > 0){
                         aim_speed.cur_L = CurveSpeed.set_speed;
                         aim_speed.cur_R = CurveSpeed.set_speed;
@@ -278,6 +309,13 @@ namespace Control{
                 break;
             case ISLAND:
                 CurveSpeed.dif = 0;
+
+                if (MenuSystem::Car_flag.test == 1 && MenuSystem::Car_flag.bldc == 0){
+                    //BLDC::duty = IslandSpeed.BLDC_duty;
+                }else{
+                    BLDC::duty = IslandSpeed.BLDC_duty;
+                }
+
                 if(MenuSystem::Car_flag.speed_loop){
                     if (Err::Err.current > 0){
                         aim_speed.cur_L = IslandSpeed.set_speed;
@@ -358,6 +396,7 @@ namespace Control{
                     MenuSystem::Car_flag.stop = MenuSystem::Car_flag.stop;
                 }else{
                     MenuSystem::Car_flag.stop = 1;
+                    BLDC::deinit(); // 停止电机
 
                 }
 

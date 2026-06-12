@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/E08_01_uvc_cmera_ips200_display_demo.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.cpp.o"
+  "CMakeFiles/E08_01_uvc_cmera_ips200_display_demo.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/E08_01_uvc_cmera_ips200_display_demo/code/red_detecte.cpp.o.d"
   "CMakeFiles/E08_01_uvc_cmera_ips200_display_demo.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/libraries/zf_common/zf_common_fifo.cpp.o"
   "CMakeFiles/E08_01_uvc_cmera_ips200_display_demo.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/libraries/zf_common/zf_common_fifo.cpp.o.d"
   "CMakeFiles/E08_01_uvc_cmera_ips200_display_demo.dir/home/ahh/桌面/xvniji/LS2K0300_Library/Example/Motherboard_Demo/libraries/zf_common/zf_common_font.cpp.o"
