@@ -1,12 +1,4 @@
 #include "zf_common_headfile.h"
-using namespace cv;
-
-void debug_log_printf_callback(const char* s) 
-{
-    if (s == NULL)  return;
-    printf("%s", s);
-}
-
 
 
 void sigint_handler(int signum) 
@@ -38,11 +30,15 @@ int main(int, char**)
     // 时间统计结构体--------------------------------
 
 
+
     // 注册清理函数
     atexit(cleanup);
 
     // 注册SIGINT信号的处理函数
     signal(SIGINT, sigint_handler);
+
+    // // 初始化屏幕
+    // ips200_init("/dev/fb0");
 
     // 初始化UVC摄像头
     if(uvc_camera_init("/dev/video0") < 0)
@@ -50,7 +46,28 @@ int main(int, char**)
         return -1;
     }
 
-    TCP::init();                                // 初始化逐飞助手
+    // 初始化模型
+    if (InitModel() == false)
+    {
+        printf("模型初始化没成功\n");
+        return -1;
+    }
+
+    int g_frame_count = 0;
+    int g_last_infer_frame = -999;
+    const int INFER_COOLDOWN_FRAMES = 30; // 冷却帧数
+
+    // // 张量内存
+    // uint8_t tensor_arena[TENSOR_ARENA_SIZE];
+    
+    // // 初始化（无返回值，通过全局变量访问）
+    // if (!init_tflite_simple(tensor_arena, TENSOR_ARENA_SIZE)) {
+    //     printf("Failed to initialize TFLite!\n");
+    //     return -1;
+    // }
+
+
+    TCP::init();
     Motor::Init();                              // 初始化电机
     Motor::goMotor(0, 0);                       // 电机清空
     BLDC::Init();                               // 初始化电调
@@ -62,10 +79,6 @@ int main(int, char**)
     Pit::Init();                                // 中断初始化
 
 
-    
-    // // 日志控制变量
-    int frame_count = 0;          // 帧计数器
-    
 
     while(1)
     {
@@ -73,7 +86,7 @@ int main(int, char**)
         //统计开始时间
         // loop_start_time = std::chrono::high_resolution_clock::now();
 
-        frame_count++;  // 帧计数+1
+        g_frame_count++;
 
         // 阻塞式等待，图像刷新
         if(wait_image_refresh() < 0)
@@ -81,6 +94,7 @@ int main(int, char**)
             // 摄像头未采集到图像，这里需要关闭电机，关闭电调等。
             exit(0);
         }
+
 
         Camera::basic_image_processing(gray_image);
         ImageProc::image_measurement(Camera::bin_pixels,Camera::lcd_pixels);
@@ -108,17 +122,36 @@ int main(int, char**)
         MenuSystem::key_shutdown();
         MenuSystem::Menu_display();
 
-        process_image(rgb_image, frame_count);
+        // system_delay_ms(1);
 
+        // ips200_show_rgb565_image(0,0,rgb565_image,160,120,60,20,0);
 
+        detect_red_regions(rgb_120_image, WIDTH_160, HEIGHT_120, boxes, 20, 2600);
+
+        // process_image(rgb_120_image, frame_count);
 
         if(!boxes.empty()){
-            Inference(rgb_image, frame_count);
+            // const auto& box = boxes[0];
+
+            ImageProc::b_flag = true;
+
+            int frames_since_last = g_frame_count - g_last_infer_frame;
+            if (frames_since_last >= INFER_COOLDOWN_FRAMES)
+            {
+                printf("[DEBUG] 帧%d: 触发推理（距上次%d帧）\n", g_frame_count, frames_since_last);
+                Inference(rgb_image);
+                g_last_infer_frame = g_frame_count;
+            }else{
+                printf("[DEBUG] 帧%d: 跳过推理（冷却中，还需%d帧）\n",
+                       g_frame_count, INFER_COOLDOWN_FRAMES - frames_since_last);
+            }
         }
 
+        // ips200_show_rgb565_image(0, 0, rgb565_image, 160, 120, 160, 120, 0);
 
+        // system_delay_ms(10);
 
-        //统计结束时间
+        // 统计结束时间
         // loop_end_time = std::chrono::high_resolution_clock::now();
 
 //---------------------------------时间统计--------------------------------
@@ -129,7 +162,6 @@ int main(int, char**)
         
 // ---------------------------------时间统计--------------------------------
 
-        system_delay_ms(10);
         
     }
 }

@@ -188,61 +188,174 @@ namespace PID {
                 pid->integral = -pid->I_limit;
             }
         }
-        // // //分段输出限幅
-        if(current<50){
-            pid->out_limit = 3800;
-        }else if(current<100){
-            pid->out_limit = 3900;
-        }else if(current<150){
-            pid->out_limit = 4100;
-        }else if(current<200){
-             pid->out_limit = 4500;
-        }else if(current<250){
-            pid->out_limit = 4900;
-        }else if(current<300){
-            pid->out_limit = 5300;
-        }else if(current<350){
-            pid->out_limit = 5700;
-        }else if(current<400){
-            pid->out_limit = 6100;
-        }else if(current<450){
-            pid->out_limit = 6500;
-        }else if(current<500){
-            pid->out_limit = 6900;
-        }else if(current<550){
-            pid->out_limit = 7300;
-        }else if(current<600){
-            pid->out_limit = 7700;
-        }else{
-            pid->out_limit = 8000;
+        // //分段输出限幅
+        // if(current<50){
+        //     pid->out_limit = 3800;
+        // }else if(current<100){
+        //     pid->out_limit = 3900;
+        // }else if(current<150){
+        //     pid->out_limit = 4100;
+        // }else if(current<200){
+        //      pid->out_limit = 4500;
+        // }else if(current<250){
+        //     pid->out_limit = 4900;
+        // }else if(current<300){
+        //     pid->out_limit = 5300;
+        // }else if(current<350){
+        //     pid->out_limit = 5700;
+        // }else if(current<400){
+        //     pid->out_limit = 6100;
+        // }else if(current<450){
+        //     pid->out_limit = 6500;
+        // }else if(current<500){
+        //     pid->out_limit = 6900;
+        // }else if(current<550){
+        //     pid->out_limit = 7300;
+        // }else if(current<600){
+        //     pid->out_limit = 7700;
+        // }else{
+        //     pid->out_limit = 8000;
+        // }
+
+        if (error > 0){
+            if (error < 50)
+            {
+                pid->out_limit = 2100;
+            }
+            else if (error < 100)
+            {
+                pid->out_limit = 2400;
+            }
+            else if (error < 150)
+            {
+                pid->out_limit = 2600;
+            }
+            else if (error < 200)
+            {
+                pid->out_limit = 2750;
+            }
+            else if (error < 250)
+            {
+                pid->out_limit = 3100;
+            }
+            else if (error < 300)
+            {
+                pid->out_limit = 3500;
+            }
+            else if (error < 350)
+            {
+                pid->out_limit = 3600;
+            }
+            else if (error < 400)
+            {
+                pid->out_limit = 3500;
+            }
+            else if (error < 450)
+            {
+                pid->out_limit = 3700;
+            }
+            else if (error < 500)
+            {
+                pid->out_limit = 3900;
+            }
+            else if (error < 550)
+            {
+                pid->out_limit = 4100;
+            }
+            else if (error < 600)
+            {
+                pid->out_limit = 4300;
+            }
+            else
+            {
+                pid->out_limit = 8000;
+            }
         }
-
-        if(Control::RoadSegment_t == 1 || Control::RoadSegment_t == 4 ){
-
-            // if(current<50){
-            //     pid->out_limit = 2500;
-            // }else if(current<100){
-            //     pid->out_limit = 2800;
-            // }else if(current<150){
-            //     pid->out_limit = 3300;
-            // }else if(current<200){
-            //     pid->out_limit = 3800;
-            // }else if(current<250){
-            //     pid->out_limit = 4300;
-            // }else if(current<300){
-            //     pid->out_limit = 4500;
-            // }else if(current<350){
-            //     pid->out_limit = 4700;
-            // }else if(current<400){
-            //     pid->out_limit = 4900;
-            // }else if(current<450){
-            //     pid->out_limit = 5200;
-            // }
-
-            pid->out_limit = 4000;
+        else if (error < 0){
+            if (error > -50)
+            {
+                pid->out_limit = 2000;
+            }
+            else if (error > -100)
+            {
+                pid->out_limit = 2300;
+            }
+            else if (error > -150)
+            {
+                pid->out_limit = 2500;
+            }
+            else if (error > -200)
+            {
+                pid->out_limit = 2800;
+            }
+            else if (error > -250)
+            {
+                pid->out_limit = 3000;
+            }
+            else if (error > -300)
+            {
+                pid->out_limit = 3300;
+            }
+            else if (error > -350)
+            {
+                pid->out_limit = 3700;
+            }
+            else if (error > -400)
+            {
+                pid->out_limit = 4100;
+            }
+            else if (error > -450)
+            {
+                pid->out_limit = 4500;
+            }
+            else if (error > -500)
+            {
+                pid->out_limit = 4900;
+            }
+            else if (error > -550)
+            {
+                pid->out_limit = 5300;
+            }
+            else if (error > -600)
+            {
+                pid->out_limit = 5700;
+            }
+            else
+            {
+                pid->out_limit = 8000;
+            }
         }
+        // if (target == 0){
+        //     pid->out_limit = 0;
+        // }
+
+            if (Control::RoadSegment_t == 1 || Control::RoadSegment_t == 4)
+            {
+
+                // if(current<50){
+                //     pid->out_limit = 2500;
+                // }else if(current<100){
+                //     pid->out_limit = 2800;
+                // }else if(current<150){
+                //     pid->out_limit = 3300;
+                // }else if(current<200){
+                //     pid->out_limit = 3800;
+                // }else if(current<250){
+                //     pid->out_limit = 4300;
+                // }else if(current<300){
+                //     pid->out_limit = 4500;
+                // }else if(current<350){
+                //     pid->out_limit = 4700;
+                // }else if(current<400){
+                //     pid->out_limit = 4900;
+                // }else if(current<450){
+                //     pid->out_limit = 5200;
+                // }
+
+                // pid->out_limit = 4000;
+            }
         if(Elem::Cross.State==2){
-            pid->out_limit = 5500;
+            // pid->out_limit = 5500;
         }
 
 

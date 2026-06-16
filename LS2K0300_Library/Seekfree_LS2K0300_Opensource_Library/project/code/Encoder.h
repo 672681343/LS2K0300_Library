@@ -18,4 +18,6 @@ namespace Encoder {
     void update();
 
     int16_t LowPassFilter(uint8_t ch, int16_t currentValue, float alpha, int16_t maxDelta) ;
+
+    int16_t MovingAverageFilter(uint8_t ch, int16_t currentValue, uint8_t windowSize);
 }

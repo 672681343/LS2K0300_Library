@@ -15,6 +15,7 @@ namespace Err {
 
     uint8_t turn_time = 0;
     uint8_t turn_flag = 0;
+    
 
     alignas(8) std::array<uint16_t, HEIGHT> center_line;    //中线数组
     alignas(8) std::array<uint16_t, HEIGHT> fit_center_line;//拟合中线数组
@@ -47,33 +48,40 @@ namespace Err {
 
         Err.current=error_calculate(Err.row, state, Err.limit, center_line);
 
-        if((!boxes.empty() || (turn_time<20 && turn_time!=0)) && turn_flag==0 ){
+        if((!boxes.empty() || (turn_time<20 && turn_time!=0)) && ahclass==2 ){
             Err.current=error_calculate(Err.row, state, Err.limit, ImageProc::l_black);
             turn_time++;
-            if(turn_time>=20){
-                turn_flag=1;
+            ImageProc::b_flag = true;
+            if (turn_time >= 20)
+            {
+                ahclass = 1;
+                ImageProc::b_flag = false;
             }
         }
-        else if((!boxes.empty() || (turn_time<20 && turn_time!=0)) && turn_flag==1 ){
+        else if((!boxes.empty() || (turn_time<20 && turn_time!=0)) && ahclass==0 ){
             Err.current=error_calculate(Err.row, state, Err.limit, ImageProc::r_black);
             turn_time++;
+            ImageProc::b_flag = true;
             if(turn_time>=20){
-                turn_flag=2;
+                ahclass = 1;
+                ImageProc::b_flag = false;
             }
         }
-        else if((!boxes.empty() || (turn_time<20 && turn_time!=0)) && turn_flag==2 ){
+        else if((!boxes.empty() || (turn_time<20 && turn_time!=0)) && ahclass==1 ){
             Err.current=error_calculate(Err.row, state, Err.limit, center_line);
             turn_time++;
+            ImageProc::b_flag = true;
             if(turn_time>=20){
-                turn_flag=0;
+                ahclass = 1;
+                ImageProc::b_flag = false;
             }
         }
-        else{
-            Err.current=error_calculate(Err.row, state, Err.limit, center_line);
-            if(turn_time>=20){
-                turn_time=0;
-            }
-        }
+        // else{
+        //     Err.current=error_calculate(Err.row, state, Err.limit, center_line);
+        //     if(turn_time>=20){
+        //         turn_time=0;
+        //     }
+        // }
 
         //printf("row=%d\ntem_row=%d\n",Err.row, Err.tem_row);
         //printf("Err=%d\n",Err.current);

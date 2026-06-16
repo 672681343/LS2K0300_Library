@@ -18,14 +18,18 @@ struct RedBox {
 #define IMG_WIDTH 320
 #define IMG_HEIGHT 240
 
-#define MODEL_INPUT_WIDTH          64 //  定义模型的输入宽度为48像素
-#define MODEL_INPUT_HEIGHT         64 //  定义模型的输入高度为48像素
+#define MODEL_INPUT_WIDTH          32 //  定义模型的输入宽度为48像素
+#define MODEL_INPUT_HEIGHT         32 //  定义模型的输入高度为48像素
 
 bool is_red_pixel(uint8_t r, uint8_t g, uint8_t b, uint8_t min_red = 120, uint8_t min_diff = 8);
 
 void detect_red_regions(uint8_t* image, int width, int height,
                        std::vector<RedBox>& boxes,
                        int min_area, int max_area);
+
+void detect_red_regions_H(uint8_t *image, int width, int height,
+                        std::vector<RedBox> &boxes,
+                        int min_area, int max_area);
 
 void draw_rect_bgr888(uint8_t* image, int width, int height,
                      int x, int y, int w, int h,

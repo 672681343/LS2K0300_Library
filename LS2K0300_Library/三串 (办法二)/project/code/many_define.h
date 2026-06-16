@@ -2,6 +2,10 @@
 
 #define WIDTH           (186)
 #define HEIGHT          (70)
+
+#define WIDTH_160           (160)
+#define HEIGHT_120          (120)
+
 //上位机保存模式 1：保存拟图  0：保存lcd图
 #define Saving_mode     (1)
 //上位机保存参数 1：图像参数 0：控制参数

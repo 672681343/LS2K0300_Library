@@ -76,6 +76,8 @@ namespace ImageProc {
     extern std::array<bool, HEIGHT> left_flags;  // 左边界标志
     extern std::array<bool, HEIGHT> right_flags; // 右边界标志
 
+    extern bool b_flag; // 八邻域巡线标志
+
     // 核心功能接口
     void image_measurement(uint8_t* bin, uint8_t* lcd);
     void find_starting_point(uint8_t* bin, uint8_t* lcd, 

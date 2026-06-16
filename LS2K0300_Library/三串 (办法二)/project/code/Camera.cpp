@@ -14,16 +14,16 @@ namespace Camera {
     uint8_t lcd_pixels[WIDTH * HEIGHT]{};   // 可视化图像
     uint8_t huidu[WIDTH * HEIGHT]{};
 
-        uint8_t original_pixels[UVC_WIDTH * UVC_HEIGHT]{};
-        void basic_image_processing(uint8_t* image) {
-            // 阈值计算流程
-            threshold = calculate_otsu_threshold(image);
-            // 阈值调整
-            threshold = adjust_threshold(threshold, threshold_camp, 0, 255);
-            // 二值化处理
-            binarize_image(image, threshold);
-
-        }
+    uint8_t original_pixels[WIDTH_160 * HEIGHT_120]{};
+    void basic_image_processing(uint8_t *image)
+    {
+        // 阈值计算流程
+        threshold = calculate_otsu_threshold(image);
+        // 阈值调整
+        threshold = adjust_threshold(threshold, threshold_camp, 0, 255);
+        // 二值化处理
+        binarize_image(image, threshold);
+    }
         // Otsu算法实现
         uint8_t calculate_otsu_threshold(uint8_t* image) {
             constexpr size_t PIXEL_SAMPLE_STRIDE = 2;  // 下采样步长
@@ -35,8 +35,8 @@ namespace Camera {
 
             // 带下采样的直方图统计
             for (size_t y = 0; y < HEIGHT; y += PIXEL_SAMPLE_STRIDE) {
-                for (size_t x = 0; x < UVC_WIDTH; x += PIXEL_SAMPLE_STRIDE) {
-                    const auto val = image[y * UVC_WIDTH + x];
+                for (size_t x = 0; x < WIDTH_160; x += PIXEL_SAMPLE_STRIDE) {
+                    const auto val = image[y * WIDTH_160 + x];
                     ++histogram[val];
                     min_val = std::min(min_val, val);
                     max_val = std::max(max_val, val);
@@ -44,8 +44,8 @@ namespace Camera {
                 }
             }
 
-            const float total_pixels = (UVC_WIDTH * HEIGHT) / 
-                                    (PIXEL_SAMPLE_STRIDE * PIXEL_SAMPLE_STRIDE);
+            const float total_pixels = (WIDTH_160 * HEIGHT) /
+                                       (PIXEL_SAMPLE_STRIDE * PIXEL_SAMPLE_STRIDE);
             float max_variance = 0.0f;
             uint8_t optimal_thresh = min_val;
             
@@ -75,12 +75,12 @@ namespace Camera {
         }
 
     void binarize_image(uint8_t* image, uint8_t threshold) {
-        const uint32_t sx = (UVC_WIDTH  << 16) / WIDTH;   // 列方向
+        const uint32_t sx = (WIDTH_160  << 16) / WIDTH;   // 列方向
         for (int i = 0; i < HEIGHT; ++i) {
             for (int j = 0; j < WIDTH; ++j) {
                 uint32_t xs = (j * sx) >> 16;            // 源列坐标
-                if (xs >= UVC_WIDTH)  xs = UVC_WIDTH - 1;
-                uint8_t pv = image[i * UVC_WIDTH + xs];
+                if (xs >= WIDTH_160)  xs = WIDTH_160 - 1;
+                uint8_t pv = image[i * WIDTH_160 + xs];
                 bin_pixels[i * WIDTH + j] = (pv > threshold) ? 255 : 0;
                 lcd_pixels[i * WIDTH + j] = (pv > threshold) ? 255 : 0;
                 huidu[i * WIDTH + j] = pv;

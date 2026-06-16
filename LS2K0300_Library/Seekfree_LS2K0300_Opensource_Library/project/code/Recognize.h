@@ -5,4 +5,9 @@
 #include <cstdint>
 #include <vector>
 
-void Inference(uint8_t *bgr888_image, int frame_count);
+extern uint8_t ahclass;
+
+// 初始化模型（只调用一次）
+bool InitModel();
+
+void Inference(uint8_t *bgr888_image);

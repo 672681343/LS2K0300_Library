@@ -221,33 +221,33 @@ void process_image(uint16_t* rgb565_image) {
 
     // printf("Detected %zu boxes\n", boxes.size());
     
-    static int frame_count = 0;
-    frame_count++;
+    // static int frame_count = 0;
+    // frame_count++;
     
-    // 每30帧自动保存一张（约0.5秒@60fps）
-    if (!boxes.empty() ) {   // && (frame_count % 10 == 0)
-        const auto& box = boxes[0];
-        // printf("Box: Area=%d at (%d,%d) size %dx%d\n",
-        //        box.area, box.x, box.y, box.w, box.h);
+    // // 每30帧自动保存一张（约0.5秒@60fps）
+    // if (!boxes.empty() ) {   // && (frame_count % 10 == 0)
+    //     const auto& box = boxes[0];
+    //     // printf("Box: Area=%d at (%d,%d) size %dx%d\n",
+    //     //        box.area, box.x, box.y, box.w, box.h);
         
-        // 画框
-        draw_rect_rgb565(rgb565_image, IMG_WIDTH, IMG_HEIGHT,
-                        box.x - 2, box.y +2, box.w + 4, box.h+15, 
-                        RGB565_WHITE, 2);
+    //     // 画框
+    //     draw_rect_rgb565(rgb565_image, IMG_WIDTH, IMG_HEIGHT,
+    //                     box.x - 2, box.y +2, box.w + 4, box.h+15, 
+    //                     RGB565_WHITE, 2);
         
-        // 裁剪并保存
-        uint16_t* cropped = crop_image(rgb565_image, IMG_WIDTH, IMG_HEIGHT,
-                                      box.x - 2, box.y+2, box.w + 4, box.h+15);
-        if (cropped) {
-            char path[128];
-            // 保存到 /tmp（内存中），之后用scp拷出
-            snprintf(path, sizeof(path), "/tmp/redbox_%d_%d.jpg", 
-                    frame_count, box.area);
-            save_rgb565_as_jpg(path, cropped, box.w + 4, box.h + 15);
+    //     // 裁剪并保存
+    //     uint16_t* cropped = crop_image(rgb565_image, IMG_WIDTH, IMG_HEIGHT,
+    //                                   box.x - 2, box.y+2, box.w + 4, box.h+15);
+    //     if (cropped) {
+    //         char path[128];
+    //         // 保存到 /tmp（内存中），之后用scp拷出
+    //         snprintf(path, sizeof(path), "/tmp/redbox_%d_%d.jpg", 
+    //                 frame_count, box.area);
+    //         save_rgb565_as_jpg(path, cropped, box.w + 4, box.h + 15);
             
-            free(cropped);
-        }
-    }
+    //         free(cropped);
+    //     }
+    // }
     
 
 }

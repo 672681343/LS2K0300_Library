@@ -40,14 +40,14 @@
 
 std::vector<RedBox> boxes; //  存储红色框对象的容器
 
-static uint cnt = 0;
+// static uint cnt = 0;
 
-static std::string get_time_str(void)
-{
-    // 时间获取对象
-    static lq_ntp g_ntp;
-    return g_ntp.get_local_time_str();
-}
+// static std::string get_time_str(void)
+// {
+//     // 时间获取对象
+//     static lq_ntp g_ntp;
+//     return g_ntp.get_local_time_str();
+// }
 
 
 cv::Mat crop_image_to_bgr_mat(uint8_t* src_image, int src_width, int src_height,
@@ -62,32 +62,32 @@ cv::Mat crop_image_to_bgr_mat(uint8_t* src_image, int src_width, int src_height,
 // ============================================================
 void process_image(uint8_t* bgr888_image, int frame_count) {
 
-    detect_red_regions(bgr888_image, UVC_WIDTH, UVC_HEIGHT, boxes, 100, 2600);
-    // printf("DEBUG: box=(%d,%d,%d,%d), cx=%d, cy=%d, crop=(%d,%d,%d)\n",
-    //    box.x, box.y, box.w, box.h, cx, cy, crop_x, crop_y, crop_size);
-    frame_count++;  // 帧计数+1
+    // detect_red_regions(bgr888_image, UVC_WIDTH, UVC_HEIGHT, boxes, 20, 2600);
+    // // printf("DEBUG: box=(%d,%d,%d,%d), cx=%d, cy=%d, crop=(%d,%d,%d)\n",
+    // //    box.x, box.y, box.w, box.h, cx, cy, crop_x, crop_y, crop_size);
+    // frame_count++;  // 帧计数+1
 
 
-    if (!boxes.empty() && (frame_count % 1 == 0)) {  // 每10帧自动保存一张, 并且只保存第一个检测到的红色区域（如果有的话）
-        cnt++;
-        auto& box = boxes[0]; //  获取检测到的第一个边界框
-        // ========== 新增：先保存原始图像（带黄色裁剪框） ==========
-        // // 创建原图的副本，避免画框影响后续裁剪
-        // uint8_t* debug_image = new uint8_t[IMG_WIDTH * IMG_HEIGHT * 3];
-        // memcpy(debug_image, bgr888_image, IMG_WIDTH * IMG_HEIGHT * 3);
+    // if (!boxes.empty() && (frame_count % 1 == 0)) {  // 每10帧自动保存一张, 并且只保存第一个检测到的红色区域（如果有的话）
+    //     cnt++;
+    //     auto& box = boxes[0]; //  获取检测到的第一个边界框
+    //     // ========== 新增：先保存原始图像（带黄色裁剪框） ==========
+    //     // // 创建原图的副本，避免画框影响后续裁剪
+    //     uint8_t *debug_image = new uint8_t[UVC_WIDTH * UVC_HEIGHT * 3];
+    //     memcpy(debug_image, bgr888_image, UVC_WIDTH * UVC_HEIGHT * 3);
 
-        int process_height = MODEL_INPUT_HEIGHT; // 裁剪高度固定为48像素，宽度根据检测到的红色区域和模型输入大小调整（适配68*68的）
-        int process_width = box.w + 15;   // 裁剪宽度box.w + 8（适配40*40）
-        if(process_width < MODEL_INPUT_WIDTH){
-            process_width = MODEL_INPUT_WIDTH; // 保持宽度不变，增加一些边距
-        }
-        process_height = process_width;// 保持宽高一致，适配模型输入要求
+    //     int process_height = MODEL_INPUT_HEIGHT; // 裁剪高度固定为48像素，宽度根据检测到的红色区域和模型输入大小调整（适配68*68的）
+    //     int process_width = box.w + 15;   // 裁剪宽度box.w + 8（适配40*40）
+    //     if(process_width < MODEL_INPUT_WIDTH){
+    //         process_width = MODEL_INPUT_WIDTH; // 保持宽度不变，增加一些边距
+    //     }
+        // process_height = process_width;// 保持宽高一致，适配模型输入要求
 
-        int crop_x = box.x - 8;  // 水平偏左一点
+        // int crop_x = box.x - 8;  // 水平偏左一点
             
         // 框底边 + 偏移 - 裁剪高度 = 裁剪区域顶部
         // 这样框底边在裁剪区域底部附近
-        int crop_y = box.y + box.h + 15 - process_height; //算的是裁剪区域的左上角坐标
+        // int crop_y = box.y + box.h + 15 - process_height; //算的是裁剪区域的左上角坐标
 
 
             // // 边界限幅
@@ -109,81 +109,81 @@ void process_image(uint8_t* bgr888_image, int frame_count) {
 
         // // // 保存原始调试图
         // char debug_path[128];
-        // snprintf(debug_path, sizeof(debug_path), "/tmp/debug_original_%d_%d.bmp", cnt, *frame_count);
-        // save_bgr888_as_bmp(debug_path, debug_image, IMG_WIDTH, IMG_HEIGHT, IMG_WIDTH * 3);
-        
+        // snprintf(debug_path, sizeof(debug_path), "/tmp/debug_original_%d_%d.bmp", cnt, frame_count);
+        // save_bgr888_as_bmp(debug_path, debug_image, UVC_WIDTH, UVC_HEIGHT, UVC_WIDTH * 3);
+
         // delete[] debug_image;
         // ========== 新增结束 ==========
 
 
-        // === 裁剪（用同样的坐标）===
-        cv::Mat cropped_mat = crop_image_to_bgr_mat(
-            bgr888_image, IMG_WIDTH, IMG_HEIGHT,
-            crop_x, crop_y, process_width, process_height);
+        // // === 裁剪（用同样的坐标）===
+        // cv::Mat cropped_mat = crop_image_to_bgr_mat(
+        //     bgr888_image, IMG_WIDTH, IMG_HEIGHT,
+        //     crop_x, crop_y, process_width, process_height);
 
-        if (cropped_mat.data) {
+        // if (cropped_mat.data) {
         
-            printf("========================================\n");
-            printf("       NCNN 图像分类推理示例\n");
-            printf("========================================\n\n");
+        //     printf("========================================\n");
+        //     printf("       NCNN 图像分类推理示例\n");
+        //     printf("========================================\n\n");
 
-            // ==================== 配置区域 ====================
+        //     // ==================== 配置区域 ====================
     
-            // 模型配置
-            std::string model_param = "tiny_classifier_fp32.ncnn.param";
-            std::string model_bin   = "tiny_classifier_fp32.ncnn.bin";
-            int input_width    = 96;
-            int input_height   = 96;
+        //     // 模型配置
+        //     std::string model_param = "tiny_classifier_fp32.ncnn.param";
+        //     std::string model_bin   = "tiny_classifier_fp32.ncnn.bin";
+        //     int input_width    = 96;
+        //     int input_height   = 96;
     
-            // 类别标签（顺序必须与训练时一致）
-            std::vector<std::string> labels = {"supplies", "vehicle", "weapon"};
+        //     // 类别标签（顺序必须与训练时一致）
+        //     std::vector<std::string> labels = {"supplies", "vehicle", "weapon"};
     
-            // 归一化参数（ImageNet标准）
-            float mean_vals[3] = {123.675f, 116.28f, 103.53f};
-            float norm_vals[3] = {0.01712475f, 0.017507f, 0.01742919f};
-            // =================================================
+        //     // 归一化参数（ImageNet标准）
+        //     float mean_vals[3] = {123.675f, 116.28f, 103.53f};
+        //     float norm_vals[3] = {0.01712475f, 0.017507f, 0.01742919f};
+        //     // =================================================
 
-            // 创建NCNN对象并配置
-            LQ_NCNN ncnn;
-            ncnn.SetModelPath(model_param, model_bin);
-            ncnn.SetInputSize(input_width, input_height);
-            ncnn.SetLabels(labels);
-            ncnn.SetNormalize(mean_vals, norm_vals);
+        //     // 创建NCNN对象并配置
+        //     LQ_NCNN ncnn;
+        //     ncnn.SetModelPath(model_param, model_bin);
+        //     ncnn.SetInputSize(input_width, input_height);
+        //     ncnn.SetLabels(labels);
+        //     ncnn.SetNormalize(mean_vals, norm_vals);
 
-            // 初始化模型
-            printf("[%s] 正在加载模型...\n", get_time_str().c_str());
-            if (!ncnn.Init()) {
-                printf("[%s] 模型加载失败!\n", get_time_str().c_str());
-                return ;
-            }
-            printf("[%s] 模型加载成功!\n\n", get_time_str().c_str());
+        //     // 初始化模型
+        //     printf("[%s] 正在加载模型...\n", get_time_str().c_str());
+        //     if (!ncnn.Init()) {
+        //         printf("[%s] 模型加载失败!\n", get_time_str().c_str());
+        //         return ;
+        //     }
+        //     printf("[%s] 模型加载成功!\n\n", get_time_str().c_str());
 
 
-            if (cropped_mat.empty()) {
-                printf("请确保图片文件存在\n");
-                return ;
-            }
-            printf("[%s] 图片尺寸: %d x %d\n\n", get_time_str().c_str(), cropped_mat.cols, cropped_mat.rows);
+        //     if (cropped_mat.empty()) {
+        //         printf("请确保图片文件存在\n");
+        //         return ;
+        //     }
+        //     printf("[%s] 图片尺寸: %d x %d\n\n", get_time_str().c_str(), cropped_mat.cols, cropped_mat.rows);
 
-            // 注意: OpenCV读取的是BGR格式，但在推理时会自动转换为RGB格式以匹配训练时的输入
-            // 训练使用PIL读取的RGB格式，因此需要色彩空间转换
+        //     // 注意: OpenCV读取的是BGR格式，但在推理时会自动转换为RGB格式以匹配训练时的输入
+        //     // 训练使用PIL读取的RGB格式，因此需要色彩空间转换
 
-            // 推理
-            printf("[%s] 开始推理...\n", get_time_str().c_str());
-            auto start = std::chrono::high_resolution_clock::now();
-            std::string result = ncnn.Infer(cropped_mat);
-            auto end = std::chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        //     // 推理
+        //     printf("[%s] 开始推理...\n", get_time_str().c_str());
+        //     auto start = std::chrono::high_resolution_clock::now();
+        //     std::string result = ncnn.Infer(cropped_mat);
+        //     auto end = std::chrono::high_resolution_clock::now();
+        //     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
-            // 输出结果
-            printf("\n========================================\n");
-            printf("推理结果: %s\n", result.c_str());
-            printf("推理耗时: %ld ms\n", duration.count());
-            printf("========================================\n");
+        //     // 输出结果
+        //     printf("\n========================================\n");
+        //     printf("推理结果: %s\n", result.c_str());
+        //     printf("推理耗时: %ld ms\n", duration.count());
+        //     printf("========================================\n");
 
-        }
+        // }
 
-    }
+    // }
     
 }
 
@@ -216,18 +216,13 @@ void detect_red_regions(uint8_t* image, int width, int height,
     uint8_t* mask = new uint8_t[total_pixels];
     uint8_t* visited = new uint8_t[total_pixels];
 
-    //     // 边界过滤阈值（新增参数，方便外部配置）(适配160*120， 40*40的红色区域)
-    // int min_y_threshold = 85;          // min_y 必须大于此值（上侧边界裁剪值）
-    // int max_y_threshold = 5;           // min_y 必须小于 height - 此值（下侧边界裁剪值）
-    // int min_x_threshold = 5;            // min_x 必须大于此值  （左侧边界裁剪值）
-    // int max_x_threshold = 10;           // max_x 必须小于 width - 此值（右侧边界裁剪值）
-    // float min_density = 0.2f;
 
-            // 边界过滤阈值（新增参数，方便外部配置） 适配68*68的
-    int min_y_threshold = MODEL_INPUT_HEIGHT-1;          // min_y 必须大于此值（上侧边界裁剪值）
-    int max_y_threshold = 5;           // min_y 必须小于 height - 此值（下侧边界裁剪值）
-    int min_x_threshold = 5;            // min_x 必须大于此值  （左侧边界裁剪值）
-    int max_x_threshold =  MODEL_INPUT_WIDTH + 20;           // max_x 必须小于 width - 此值（右侧边界裁剪值）
+
+
+    int min_y_threshold = 20;          // min_y 必须大于此值（上侧边界裁剪值）
+    int max_y_threshold = 95;           // min_y 必须小于 height - 此值（下侧边界裁剪值）
+    int min_x_threshold = 45;            // min_x 必须大于此值  （左侧边界裁剪值）
+    int max_x_threshold = 115;           // max_x 必须小于 width - 此值（右侧边界裁剪值）
     float min_density = 0.2f;
     
     // 生成二值掩码
@@ -285,11 +280,11 @@ void detect_red_regions(uint8_t* image, int width, int height,
             // 过滤并记录（使用参数化的阈值）
             if (pixel_count >= min_area && 
                 pixel_count <= max_area && 
-                min_y < height - max_y_threshold &&   // 意思是 min_y 必须小于 height - max_y_threshold（下侧边界裁剪值），确保红色区域不在图像底部过近的位置
+                min_y < max_y_threshold &&   
                 min_y > min_y_threshold &&
                 min_x > min_x_threshold && 
-                max_x < width - max_x_threshold &&
-                (max_x - min_x) > 30 ){ //  确保红色区域在图像内部，并且宽度大于30像素{    // 原：UVC_WIDTH - 85，改为通用 width
+                max_x < max_x_threshold &&
+                (max_x - min_x) > 15 ){ 
                 
                 RedBox box;
                 box.x = min_x; //  设置框的左上角x坐标为最小x值
@@ -315,6 +310,124 @@ void detect_red_regions(uint8_t* image, int width, int height,
     delete[] visited;
 }
 
+void detect_red_regions_H(uint8_t *image, int width, int height,
+                        std::vector<RedBox> &boxes,
+                        int min_area, int max_area)
+{ // 最小填充密度
+
+
+        // 保存 320x240 BGR
+        save_bgr888_as_bmp("/tmp/debug_320x240.bmp", rgb_image, 320, 240, 320 * 3);
+
+        // 保存 160x120 BGR
+        save_bgr888_as_bmp("/tmp/debug_160x120.bmp", rgb_120_image, 160, 120, 160 * 3);
+
+
+    const int total_pixels = width * height;
+    uint8_t *mask = new uint8_t[total_pixels];
+    uint8_t *visited = new uint8_t[total_pixels];
+
+    int min_y_threshold = 20;  // min_y 必须大于此值（上侧边界裁剪值）
+    int max_y_threshold = 200;  // min_y 必须小于 height - 此值（下侧边界裁剪值）
+    int min_x_threshold = 80;  // min_x 必须大于此值  （左侧边界裁剪值）
+    int max_x_threshold = 240; // max_x 必须小于 width - 此值（右侧边界裁剪值）
+    float min_density = 0.2f;
+
+    // 生成二值掩码
+    for (int i = 0; i < total_pixels; i++)
+    {
+        uint8_t b = image[i * 3];
+        uint8_t g = image[i * 3 + 1];
+        uint8_t r = image[i * 3 + 2];
+        mask[i] = is_red_pixel(r, g, b, 100, 30) ? 255 : 0;
+    }
+
+    memset(visited, 0, total_pixels);
+    boxes.clear();
+
+    const int dx[4] = {0, 0, -1, 1};
+    const int dy[4] = {-1, 1, 0, 0};
+
+    // BFS 查找连通域
+    for (int y = 0; y < height; y = y + 4)
+    {
+        for (int x = 0; x < width; x = x + 4)
+        {
+            int idx = y * width + x;
+            if (mask[idx] == 0 || visited[idx])
+                continue;
+
+            int min_x = x, max_x = x;
+            int min_y = y, max_y = y;
+            int pixel_count = 0;
+
+            std::queue<std::pair<int, int>> q;
+            q.push({x, y});
+            visited[idx] = 1;
+
+            while (!q.empty())
+            {
+                auto [cx, cy] = q.front();
+                q.pop();
+                pixel_count++;
+
+                if (cx < min_x)
+                    min_x = cx; //  更新当前连通区域的最小和最大x坐标
+                if (cx > max_x)
+                    max_x = cx;
+                if (cy < min_y)
+                    min_y = cy; //  更新当前连通区域的最小和最大y坐标
+                if (cy > max_y)
+                    max_y = cy;
+
+                for (int i = 0; i < 4; i++)
+                {
+                    int nx = cx + dx[i];
+                    int ny = cy + dy[i];
+                    if (nx < 0 || nx >= width || ny < 0 || ny >= height)
+                        continue;
+
+                    int nidx = ny * width + nx;
+                    if (mask[nidx] && !visited[nidx])
+                    {
+                        visited[nidx] = 1;
+                        q.push({nx, ny});
+                    }
+                }
+            }
+
+            // 过滤并记录（使用参数化的阈值）
+            if (pixel_count >= min_area &&
+                pixel_count <= max_area &&
+                min_y < max_y_threshold &&
+                min_y > min_y_threshold &&
+                min_x > min_x_threshold &&
+                max_x < max_x_threshold &&
+                (max_x - min_x) > 30)
+            {
+
+                RedBox box;
+                box.x = min_x;             //  设置框的左上角x坐标为最小x值
+                box.y = min_y;             //  设置框的左上角y坐标为最小y值
+                box.w = max_x - min_x + 1; //  计算框的宽度，最大x值减去最小x值加1（包含边界）
+                box.h = max_y - min_y + 1; //  计算框的高度，最大y值减去最小y值加1（包含边界）
+                box.area = pixel_count;    //  设置框的像素数量
+
+                int bbox_area = box.w * box.h;
+                box.density = bbox_area > 0 ? (float)pixel_count / bbox_area : 0;
+
+                if (box.density > min_density)
+                {
+                    boxes.push_back(box);
+                }
+            }
+        }
+    }
+
+    // 释放内存
+    delete[] mask; //  释放动态分配的内存
+    delete[] visited;
+}
 
 static inline void set_pixel_bgr888(uint8_t* image, int width, int x, int y, uint32_t color) {
     int idx = (y * width + x) * 3;

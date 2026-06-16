@@ -77,11 +77,11 @@ namespace Pit{
             } else if(MenuSystem::Car_flag.stop == 0){
                 // 开环测试（允许左右轮独立 PWM）
 
-                // if(MenuSystem::Car_flag.turn == 0){
-                //     Motor::goMotor(  Angle_out, -Angle_out); //Control::pwm.L
-                // }else{
-                //     Motor::goMotor(1300 - Err_out , 1300 + Err_out );
-                // }
+                if(MenuSystem::Car_flag.turn == 0){
+                    Motor::goMotor(  Angle_out, -Angle_out); //Control::pwm.L
+                }else{
+                    Motor::goMotor(1300 - Err_out , 1300 + Err_out );
+                }
 
             } else {
                 // 停止测试模式s

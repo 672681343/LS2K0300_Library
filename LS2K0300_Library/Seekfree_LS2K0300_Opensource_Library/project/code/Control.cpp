@@ -376,6 +376,10 @@ namespace Control{
             aim_speed.cur_L = 0; // 停车速度
             aim_speed.cur_R = 0; // 停车速度
         }
+        if(ImageProc::b_flag == true){
+            aim_speed.cur_L = 200;
+            aim_speed.cur_R = 200;
+        }
 
 
     }

@@ -26,6 +26,8 @@ namespace ImageProc {
     _SecLossDetect sec_loss_left {};            // 二次丢线左区域
     _SecLossDetect sec_loss_right {};           // 二次丢线右区域
     _SecLossDetect sec_loss_both {};            // 二次丢线双区域
+
+    bool b_flag = false;
     //-------------------------------------------------------------------------------------------------------------------
     // 函数简介: 图像基础测算
     // 参数说明: 处理图像和显示图像
@@ -37,15 +39,17 @@ namespace ImageProc {
         // //找起始点
         find_starting_point(bin, lcd, state.range_l, state.range_r, state.mode);
         // //找边界
-        if(!boxes.empty()){
+        if (!boxes.empty() || b_flag==true)
+        {
             if(state.cutoff > 10){
                 eight_sfinding_boundary(bin, lcd);            
             }
-        }else{
+        }
+        else
+        {
             finding_boundary(bin, lcd, state.cutoff);
         }
 
-        
         //二次丢线统计
         sec_lost_line_statistics(bin, 10, WIDTH-10, state.cutoff);
         //丢线统计
@@ -304,19 +308,18 @@ namespace ImageProc {
                 // 左边约束：新X必须 >= 旧X（向右走，不回头）
                 if(new_x < Rx_l - 1) continue;
 
-                if(bin[new_y * WIDTH + new_x] == 255 &&
-                bin[(Ry_l + Dy_l[(d+1)%8]) * WIDTH + (Rx_l + Dx_l[(d+1)%8])] == 0)
+                if (bin[new_y * WIDTH + new_x] == 255 &&
+                    (new_x > 0 && bin[new_y * WIDTH + (new_x - 1)] == 0))
                 {
-                    if(d > 0 && d < 4) {
-                        l_black[new_y] = new_x;
-                        left_flags[new_y] = true;
-                        uint8_t lcd_col = new_x + 2;
-                        if(lcd_col < WIDTH) lcd[new_y * WIDTH + lcd_col] = 0;
-                    }
+                    l_black[new_y] = new_x;
+                    left_flags[new_y] = true;
                     Rx_l = new_x;
                     Ry_l = new_y;
                     moved = true;
-                    break;
+
+                    if (new_x < WIDTH -2)
+                        lcd[new_y * WIDTH + new_x + 2] = 0;
+                    break; // 找到就换下一行
                 }
             }
 
@@ -363,17 +366,16 @@ namespace ImageProc {
                 // 右边约束：新X必须 <= 旧X（向左走，不回头）
                 if(new_x > Rx_r + 1) continue;
 
-                if(bin[new_y * WIDTH + new_x] == 255 &&
-                bin[(Ry_r + Dy_r[(d+1)%8]) * WIDTH + (Rx_r + Dx_r[(d+1)%8])] == 0)
+                if (bin[new_y * WIDTH + new_x] == 255 &&
+                    (new_x < WIDTH - 1 && bin[new_y * WIDTH + (new_x + 1)] == 0))
                 {
-                    if(d > 0 && d < 4) {
-                        r_black[new_y] = new_x;
-                        right_flags[new_y] = true;
-                        uint8_t lcd_col = new_x - 2;
-                        if(lcd_col >= 0) lcd[new_y * WIDTH + lcd_col] = 0;
-                    }
+                    r_black[new_y] = new_x;
+                    right_flags[new_y] = true;
                     Rx_r = new_x;
                     Ry_r = new_y;
+
+                    if (new_x >= 2 ) lcd[new_y * WIDTH + new_x -2] = 0;
+
                     moved = true;
                     break;
                 }
