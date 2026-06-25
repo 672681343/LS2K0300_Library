@@ -9,12 +9,9 @@
 #include <opencv2/opencv.hpp>
 #include <time.h>
 
-
 // 图像尺寸（根据你的IPS200屏幕修改）
 #define IMG_WIDTH  320  
 #define IMG_HEIGHT 240
-
-
 
 // RGB565 颜色定义
 #define RGB565_RED     0xF800
@@ -31,25 +28,23 @@ static uint cnt = 0;
 cv::Mat crop_image_to_bgr_mat(uint8_t* src_image, int src_width, int src_height,
                                int x, int y, int w, int h) ;
 
-
-
-
-
 // ============================================================
 // 主处理：坐标全部按标准图像坐标（左上角原点）
 // ============================================================
 void process_image(uint8_t* bgr888_image, int* frame_count) {
-    // // 打印左上角像素
+    // // 打印左上角像素信息（已注释）
     // printf("Pixel(0,0): B=%d, G=%d, R=%d\n", 
     //        bgr888_image[0], bgr888_image[1], bgr888_image[2]);
     
-    // // 打印图像中心像素
+    // // 打印图像中心像素信息（已注释）
     // int center = (IMG_HEIGHT/2 * IMG_WIDTH + IMG_WIDTH/2) * 3;
     // printf("Pixel(center): B=%d, G=%d, R=%d\n", 
     //        bgr888_image[center], bgr888_image[center+1], bgr888_image[center+2]);
     
 
-    detect_red_regions(bgr888_image, IMG_WIDTH, IMG_HEIGHT, boxes, 200, 5200);
+    // 检测图像中的红色区域
+    detect_red_regions(bgr888_image, IMG_WIDTH, IMG_HEIGHT, boxes, 200, 2200);
+        printf("第 %d 帧: 检测到 %zu 个红色区域\n", *frame_count, boxes.size());
     // printf("DEBUG: box=(%d,%d,%d,%d), cx=%d, cy=%d, crop=(%d,%d,%d)\n",
     //    box.x, box.y, box.w, box.h, cx, cy, crop_x, crop_y, crop_size);
     (*frame_count)++;  // 帧计数+1
@@ -64,17 +59,21 @@ void process_image(uint8_t* bgr888_image, int* frame_count) {
         memcpy(debug_image, bgr888_image, IMG_WIDTH * IMG_HEIGHT * 3);
 
         int process_height = MODEL_INPUT_HEIGHT; // 裁剪高度固定为48像素，宽度根据检测到的红色区域和模型输入大小调整（适配68*68的）
-        int process_width = box.w + 15;   // 裁剪宽度box.w + 8（适配40*40）
+        //int process_width = box.w + 16;   // 裁剪宽度box.w + 8（适配40*40）//
+        int process_width = (int)(box.w*1.5);
         if(process_width < MODEL_INPUT_WIDTH){
             process_width = MODEL_INPUT_WIDTH; // 保持宽度不变，增加一些边距
         }
         process_height = process_width;// 保持宽高一致，适配模型输入要求
 
-        int crop_x = box.x - 8;  // 水平偏左一点
-            
+        //if (box.h > int((box.w)*1.17))
+
+
+        // int crop_x = box.x - 8;  // 水平偏左一点
+        int crop_x = box.x - (int)(process_width-box.w)/2;  // 水平居中裁剪，增加一些边距
         // 框底边 + 偏移 - 裁剪高度 = 裁剪区域顶部
         // 这样框底边在裁剪区域底部附近
-        int crop_y = box.y + box.h + 15 - process_height; //算的是裁剪区域的左上角坐标
+        int crop_y = box.y + box.h + 16 - process_height; //算的是裁剪区域的左上角坐标
 
 
             // // 边界限幅
@@ -88,7 +87,7 @@ void process_image(uint8_t* bgr888_image, int* frame_count) {
             //     box.x, box.y, box.w, box.h, crop_x, crop_y, process_width, process_height);
 
 
-        // // === 画框（用限幅后的坐标）=== //这个调试的时候会用到
+        // === 画框（用限幅后的坐标）=== //这个调试的时候会用到
         // draw_rect_bgr888(bgr888_image, UVC_WIDTH, UVC_HEIGHT,
         //                 box.x, box.y, box.w, box.h,
         //                 RGB565_YELLOW, 2);
@@ -102,18 +101,14 @@ void process_image(uint8_t* bgr888_image, int* frame_count) {
         delete[] debug_image;
         // ========== 新增结束 ==========
 
-
         // === 裁剪（用同样的坐标）===
         cv::Mat cropped_mat = crop_image_to_bgr_mat(
             bgr888_image, UVC_WIDTH, UVC_HEIGHT,
             crop_x, crop_y, process_width, process_height
         );
 
-        
         if (cropped_mat.data) {
-
-
-        // 获取带毫秒的时间戳
+            // 获取带毫秒的时间戳
             struct timeval tv;
             gettimeofday(&tv, NULL);
             time_t now = tv.tv_sec;
@@ -132,63 +127,55 @@ void process_image(uint8_t* bgr888_image, int* frame_count) {
             
             snprintf(full_timestamp, sizeof(full_timestamp), "%s_%03ld", timestamp, ms);
             
-
-
             // printf("已经保存了 %d 张图片\n", cnt); 
-
             // printf("裁剪成功，裁剪图像尺寸: %dx%d ", cropped_mat.cols, cropped_mat.rows);   
                                                                          
             char path[128];
-            InferenceResult inference_result = perform_inference(
-                cropped_mat, 
-                *frame_count, 
-                (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged), 
-                *interpreter,
-                USE_INT8_MODEL          
-            );
-            // 更新first_frame_logged标志（如果需要）
-            if (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged) {
-                first_frame_logged = true;
-            }
+            // InferenceResult inference_result = perform_inference(
+            //     cropped_mat, 
+            //     *frame_count, 
+            //     (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged), 
+            //     *interpreter,
+            //     USE_INT8_MODEL          
+            // );
+            // // 更新first_frame_logged标志（如果需要）
+            // if (ENABLE_FIRST_FRAME_DEBUG && !first_frame_logged) {
+            //     first_frame_logged = true;
+            // }
             
+            // //测试模型效果时使用//
+            // snprintf(path, sizeof(path), "/tmp/%s_%d_%d_%d_%d_%d___%s.bmp",
+            //         class_labels[inference_result.class_index], cnt, *frame_count, box.area, box.y + box.h, process_height, full_timestamp);
 
-            // // 保存到 /tmp（内存中），之后用scp拷出 //真正推理的时候再用这个保存
-            // snprintf(path, sizeof(path), "/tmp/%s_%d_%d.jpg",  //  格式化生成文件名，包含帧数和区域面积信息
-            //         class_labels[inference_result.class_index], *frame_count, box.area);
-                  
-            // snprintf(path, sizeof(path), "/tmp/materials_p1_1_%d_%d_%d_%d_%d.bmp",  //  格式化生成文件名，包含帧数和区域面积信息
-            //          cnt, *frame_count, box.area, box.y + box.h, process_height); // 这里把box.y + box.h也加到文件名里，方便后续分析裁剪位置和识别结果的关系
+            // //拍数据集的时候用// 把时间戳加入进去，就不会有重名覆盖的风险了（拍数据集的时候用）
+            snprintf(path, sizeof(path), "/tmp/materials_p1_1_%d_%d_%d_%d_%d___%s.bmp",
+                    cnt, *frame_count, box.area, box.y + box.h, process_height, full_timestamp);
 
+            if (cnt <= 3000) {  //这个决定单次保存的图片数量，拍数据集的时候用
+                save_bgr888_as_bmp(path, cropped_mat.data,  //调试和取数据集用
+                                cropped_mat.cols, cropped_mat.rows, 
+                                cropped_mat.step);
+            }
 
-
-            //测试模型效果时使用
-            snprintf(path, sizeof(path), "/tmp/%s_%d_%d_%d_%d_%d___%s.bmp",
-                    class_labels[inference_result.class_index], cnt, *frame_count, box.area, box.y + box.h, process_height, full_timestamp);
-
-
-            // // 修改 snprintf //把时间戳加入进去，就不会有重名覆盖的风险了（拍数据集的时候用）
-            // snprintf(path, sizeof(path), "/tmp/add_weapon_p2_1_%d_%d_%d_%d_%d___%s.bmp",
-            //         cnt, *frame_count, box.area, box.y + box.h, process_height, full_timestamp);
-
-
+            //增补时，前面加上一个add就好了add_，比如add_weapon_p2_1_*.bmp，这样就不会和之前的数据集重名了
             //新的文件名格式
-            //traffic_p1_1_*_*_*_*_*.bmp --> 是装甲车(白色背景)√
-            //traffic_p1_2_*_*_*_*_*.bmp --> 是装甲车(杂乱背景)√
-            //traffic_p2_1_*_*_*_*_*.bmp --> 是救护车(白色背景)√
-            //traffic_p2_2_*_*_*_*_*.bmp --> 是救护车(杂乱背景)√
+            //traffic_p1_1_*_*_*_*_*.bmp --> 是装甲车(白色背景)
+            //traffic_p1_2_*_*_*_*_*.bmp --> 是装甲车(杂乱背景)
+            //traffic_p2_1_*_*_*_*_*.bmp --> 是救护车(白色背景)
+            //traffic_p2_2_*_*_*_*_*.bmp --> 是救护车(杂乱背景)
 
-            //weapon_p1_1_*_*_*_*_*.bmp --> 是步枪(白色背景)√
-            //weapon_p1_2_*_*_*_*_*.bmp --> 是手枪(白色背景)√
-            //weapon_p2_1_*_*_*_*_*.bmp --> 是手榴弹(白色背景)√
-            //weapon_p2_2_*_*_*_*_*.bmp --> 是手榴弹(杂乱背景) ✓
-            //weapon_p2_3_*_*_*_*_*.bmp --> 是C4(杂乱和白天背景) √
+            //weapon_p1_1_*_*_*_*_*.bmp --> 是步枪(白色背景)
+            //weapon_p1_2_*_*_*_*_*.bmp --> 是手枪(白色背景)
+            //weapon_p2_1_*_*_*_*_*.bmp --> 是手榴弹(白色背景)
+            //weapon_p2_2_*_*_*_*_*.bmp --> 是手榴弹(杂乱背景) 
+            //weapon_p2_3_*_*_*_*_*.bmp --> 是C4(杂乱和白天背景) 
 
-            //materials_p1_1_*_*_*_*_*.bmp --> 是望远镜(白色背景) √
-            //materials_p2_1_*_*_*_*_*.bmp --> 是急救包(白色背景) √
+            //materials_p1_1_*_*_*_*_*.bmp --> 是望远镜(白色背景) --
+            //materials_p2_1_*_*_*_*_*.bmp --> 是急救包(白色背景)√
             //materials_p2_2_*_*_*_*_*.bmp --> 是急救包(杂乱背景) √
 
 
-
+            //旧文件格式
             //traffic_*_*_1.jpg --> 是装甲车
             //traffic_*_*_2.jpg --> 是救护车
 
@@ -197,41 +184,22 @@ void process_image(uint8_t* bgr888_image, int* frame_count) {
 
             //materials_*_*_1.jpg --> 是望远镜
             //materials_*_*_2.jpg --> 是急救包
-
-
-
-
             
-            if (cnt <= 10) {
-                save_bgr888_as_bmp(path, cropped_mat.data,  //调试和取数据集用
-                                cropped_mat.cols, cropped_mat.rows, 
-                                cropped_mat.step);
-            }
-
-
-
-
-
-            // save_bgr888_as_bmp(path, cropped_mat.data,  //调试和取数据集用
-            //                 cropped_mat.cols, cropped_mat.rows, 
-            //                 cropped_mat.step);
-
 
             // printf("[保存的第 %d 个图片]红框: x=%d, y=%d, w=%d, h=%d | 裁剪: x=%d, y=%d, size=%dx%d | 时间戳: %s\n", //拍数据集时一起用
             //     cnt, box.x, box.y, box.w, box.h, crop_x, crop_y, process_width, process_height, full_timestamp);
+
+                printf("[保存的第 %d 个图片]时间戳: %s\n", //拍数据集时一起用
+                    cnt, full_timestamp);
 
             // printf("Box: Area=%d at (%d,%d) size %dx%d, 文件名: %s\n", //之前用的这个打印
             //    box.area, box.x, box.y, box.w, box.h, path);
         
         }
-
-
-
-
     }
 
     // if (boxes.empty()) {
-    //     frame_count = 0; // 没有检测到红色区域，重置帧计数器
+    //     *frame_count = 0; // 没有检测到红色区域，重置帧计数器
     // }
     
 
@@ -274,10 +242,10 @@ void detect_red_regions(uint8_t* image, int width, int height,
     // float min_density = 0.2f;
 
             // 边界过滤阈值（新增参数，方便外部配置） 适配68*68的
-    int min_y_threshold = MODEL_INPUT_HEIGHT-1;          // min_y 必须大于此值（上侧边界裁剪值）
-    int max_y_threshold = 5;           // min_y 必须小于 height - 此值（下侧边界裁剪值）
-    int min_x_threshold = 5;            // min_x 必须大于此值  （左侧边界裁剪值）
-    int max_x_threshold =  MODEL_INPUT_WIDTH + 20;           // max_x 必须小于 width - 此值（右侧边界裁剪值）
+    int min_y_threshold = 20;//MODEL_INPUT_HEIGHT-5;          // min_y 必须大于此值（上侧边界裁剪值）
+    int max_y_threshold = 190;//5;           // min_y 必须小于 height - 此值（下侧边界裁剪值）
+    int min_x_threshold = 20;//5;            // min_x 必须大于此值  （左侧边界裁剪值）
+    int max_x_threshold = 300;//MODEL_INPUT_WIDTH + 5;           // max_x 必须小于 width - 此值（右侧边界裁剪值）
     float min_density = 0.2f;
     
     // 生成二值掩码
@@ -285,7 +253,7 @@ void detect_red_regions(uint8_t* image, int width, int height,
         uint8_t b = image[i * 3];
         uint8_t g = image[i * 3 + 1];
         uint8_t r = image[i * 3 + 2];
-        mask[i] = is_red_pixel(r, g, b, 120, 30) ? 255 : 0;
+        mask[i] = is_red_pixel(r, g, b, 100, 80) ? 255 : 0;
 
     }
     
@@ -335,11 +303,13 @@ void detect_red_regions(uint8_t* image, int width, int height,
             // 过滤并记录（使用参数化的阈值）
             if (pixel_count >= min_area && 
                 pixel_count <= max_area && 
-                min_y < height - max_y_threshold &&   // 意思是 min_y 必须小于 height - max_y_threshold（下侧边界裁剪值），确保红色区域不在图像底部过近的位置
+                min_y < max_y_threshold &&//height - max_y_threshold &&   // 意思是 min_y 必须小于 height - max_y_threshold（下侧边界裁剪值），确保红色区域不在图像底部过近的位置
                 min_y > min_y_threshold &&
                 min_x > min_x_threshold && 
-                max_x < width - max_x_threshold &&
-                (max_x - min_x) > 30 ){ //  确保红色区域在图像内部，并且宽度大于30像素{    // 原：UVC_WIDTH - 85，改为通用 width
+                max_x < max_x_threshold &&//width - max_x_threshold &&
+                (max_x - min_x) > 15 && //限宽
+                (max_y - min_y + 1) < 0.9 * (max_x - min_x + 1)) //高比0.9*宽小
+                { //  确保红色区域在图像内部，并且宽度大于30像素{    // 原：UVC_WIDTH - 85，改为通用 width
                 
                 RedBox box;
                 box.x = min_x; //  设置框的左上角x坐标为最小x值
@@ -473,6 +443,10 @@ cv::Mat crop_image_to_bgr_mat(uint8_t* src_image, int src_width, int src_height,
 }
 
 void save_bgr888_as_bmp(const char* filename, uint8_t* bgr, int w, int h, int stride) {
+
+    int row_padded1 = ((w * 3) + 3) & ~3;
+    printf("BMP: w=%d stride=%d w*3=%d row_padded=%d\n", w, stride, w*3, row_padded1);
+
     if (stride <= 0) stride = w * 3;  // 默认连续内存
     
     #pragma pack(push, 1)

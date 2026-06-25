@@ -51,7 +51,7 @@ include_directories(
     ../../libraries/zf_components/tflm/tensorflow/lite/core/api
     ../../libraries/zf_components/tflm/tensorflow/lite/core/c
     ../../libraries/zf_components/tflm/tensorflow/lite/schema
-    ../../libraries/zf_components/ncnn/include/ncnn
+    ../../libraries/zf_components/ncnn/include/
 )
 
 # 静态库路径
@@ -102,6 +102,7 @@ if(EXISTS "../../libraries/zf_components/tflm/tensorflow/lite/micro/micro_alloca
         ../../libraries/zf_components/tflm/tensorflow/lite/micro/micro_interpreter.cc
         ../../libraries/zf_components/tflm/tensorflow/lite/micro/micro_profiler.cc
         ../../libraries/zf_components/tflm/tensorflow/lite/micro/micro_utils.cc
+
     )
 endif()
 
@@ -122,6 +123,6 @@ target_link_libraries(
     m             # 数学库（算子计算依赖）
     pthread       # 线程库（TFLM内部使用）
     tflm          # 链接TFLM静态库（必须）
-
+    ncnn           # 链接NCNN静态库（必须）
     ${CMAKE_SOURCE_DIR}/../../libraries/zf_device/liblq_camera_ex.a
 )

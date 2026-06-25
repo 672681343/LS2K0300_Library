@@ -88,6 +88,7 @@ int main(int, char**)
                 Control::ControlOutput(Control::RoadSegment_t);
                 DataSaving::saveTask(1);
                 TCP::send_data();
+                // process_image(rgb_image, &frame_count);
             }
             Control::stop(0);
         }

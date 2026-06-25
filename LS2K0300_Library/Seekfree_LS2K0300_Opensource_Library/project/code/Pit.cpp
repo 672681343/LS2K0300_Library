@@ -30,7 +30,7 @@ namespace Pit{
 
         Angle_out = PID::AnglePID(Err_out, 0, &PID::angle_pid);
 
-
+// printf("MenuSystem::Car_flag.stop = %d\n", MenuSystem::Car_flag.stop);
         // // 公共停机逻辑
         if(ImageProc::state.cutoff < 3){
             MenuSystem::Car_flag.stop = 1;
@@ -64,18 +64,27 @@ namespace Pit{
 
             } else if(MenuSystem::Car_flag.stop == 0){
                 // 开环测试（允许左右轮独立 PWM）
-
+                
                 if(MenuSystem::Car_flag.turn == 0){
-                    Motor::goMotor(Control::pwm.L, Control::pwm.R); 
+                    Motor::goMotor(+1500, -1600);
+                    // Motor::goMotor(Control::pwm.L, Control::pwm.R); 
                 }else{
-                    Motor::goMotor(Control::pwm.L-Angle_out, Control::pwm.R+Angle_out);
+                    // Motor::goMotor(Control::pwm.L-Angle_out, Control::pwm.R+Angle_out);
+                    Motor::goMotor(+1500, -1600);
                 }
 
+                // if(ImageProc::l_black[40] < 25 ){
+                //     MenuSystem::Car_flag.stop = 1;
+                // }
+
             } else {
+                // printf("测试模式下，车辆已停止，等待重启...\n");
+                Motor::goMotor(0, 0);
+
                 // 停止测试模式
-                Control::pwm.L = 0;
-                Control::pwm.R = 0;
-                Motor::goMotor(Control::pwm.L, Control::pwm.R);
+                // Control::pwm.L = 0;
+                // Control::pwm.R = 0;
+                // Motor::goMotor(Control::pwm.L, Control::pwm.R);
             }
             
         } 
@@ -98,9 +107,11 @@ namespace Pit{
                 // 开环测试（允许左右轮独立 PWM）
 
                 if(MenuSystem::Car_flag.turn == 0){
-                    Motor::goMotor(Control::pwm.L, Control::pwm.R); 
+                    // Motor::goMotor(Control::pwm.L, Control::pwm.R); 
+                    Motor::goMotor(1000, 0);
                 }else{
-                    Motor::goMotor(Control::pwm.L+Angle_out, Control::pwm.R-Angle_out);
+                    // Motor::goMotor(Control::pwm.L+Angle_out, Control::pwm.R-Angle_out);
+                    Motor::goMotor(1000, 0);
                 }
             }
 
@@ -133,11 +144,11 @@ namespace Pit{
     {
         TCP::data_analysis();
         if (MenuSystem::Car_flag.test && MenuSystem::Car_flag.start && MenuSystem::Car_flag.stop_times > 0) {
-            if (MenuSystem::Car_flag.stop_times > count_50ms) {
-                count_50ms++;
-            } else {
-                MenuSystem::Car_flag.stop = 1;
-            }
+            // if (MenuSystem::Car_flag.stop_times > count_50ms) {
+            //     count_50ms++;
+            // } else {
+            //     MenuSystem::Car_flag.stop = 1;
+            // }
         }
 
         

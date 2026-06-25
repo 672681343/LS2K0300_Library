@@ -1,3 +1,15 @@
+拍数据集步骤：
+1. 在小车终端上运行 ./project
+2. 单次拍摄250~300张图片
+3. 下载图片到本地(image_shoot文件夹) CTRL+L --> 9 
+4. 重复以上动作
+5. 拍齐一类后复制图片到数据集文件夹(image_shoot 到 car_shoot) CTRL+L --> W
+6. 拍完一类后记得修改图片保存的名称，然后再重新编译一下
+ 
+*image_shoot是临时文件夹（也就是本地，实际存储在虚拟机里），用于存放拍摄的照片
+*car_shoot是数据集文件夹（实际存储在windows系统里），用于存放整理好的数据集
+
+
 1.查看摄像头设备信息
 cat /sys/class/video4linux/video0/device/modalias
 
@@ -17,7 +29,7 @@ ssh root@192.168.1.113 "cd /tmp && rm -rf *.bmp"
 查看当前文件夹下的图片数量 [快捷方式； count-bmp ] 
 find ~/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/image_shoot/ -name "*.bmp" | wc -l
 
-下载并删除远程图片
+下载并删除远程图片(一般用这个)
 [快捷方式；sync-bmp-auto ]
 
 

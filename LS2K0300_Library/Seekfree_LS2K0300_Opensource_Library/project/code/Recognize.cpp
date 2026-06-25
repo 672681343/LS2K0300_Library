@@ -1,14 +1,15 @@
+//逐飞识别方案
 #include "Recognize.h"
-
 // 全局指针定义
 tflite::MicroInterpreter* interpreter = nullptr;
 
 // ========== n小类标签定义 ==========
 const char* class_labels[] = {
-    "scope_1", 
-    "medkit_2", 
-    "tank_1",
-    "ambulance_2", 
+    "materials",
+    // "scope_1", 
+    // "medkit_2", 
+    "traffic",
+    // "ambulance_2", 
     "gun_1", 
     "explosive_2",
 
@@ -72,6 +73,10 @@ bool init_tflite_simple(uint8_t* tensor_arena, size_t arena_size, bool use_int8)
     //添加一些常用的算子，确保模型中使用的算子都被注册了
     resolver.AddMean();
 
+    if (MODEL_OUTPUT_CLASS_NUM != sizeof(class_labels) / sizeof(class_labels[0])) {
+        printf("Error: MODEL_OUTPUT_CLASS_NUM (%d) does not match number of class labels (%d)!\n", MODEL_OUTPUT_CLASS_NUM, (int)(sizeof(class_labels) / sizeof(class_labels[0])));
+        return false;
+    }
     // 根据开关加载不同模型
     const tflite::Model* model;
     if (use_int8) {
@@ -194,7 +199,6 @@ InferenceResult perform_inference(
     result.inference_time_us = time_cnt;
 
     // ========== 输出解析 ==========
-    float scores[MODEL_OUTPUT_CLASS_NUM];
     float max_v = -999.0f;
     int max_i = 0;
     float second_v = -999.0f;
@@ -209,7 +213,7 @@ InferenceResult perform_inference(
 
         for (int n = 0; n < MODEL_OUTPUT_CLASS_NUM; n++) {
             float v = (output_int8[n] - output_zero_point) * output_scale;
-            scores[n] = v;
+
             result.all_scores[n] = v;
 
             if (v > max_v) {
@@ -228,7 +232,7 @@ InferenceResult perform_inference(
 
         for (int n = 0; n < MODEL_OUTPUT_CLASS_NUM; n++) {
             float v = output_data[n];
-            scores[n] = v;
+
             result.all_scores[n] = v;
 
             if (v > max_v) {
