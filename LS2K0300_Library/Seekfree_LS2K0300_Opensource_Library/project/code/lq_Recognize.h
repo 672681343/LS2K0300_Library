@@ -178,6 +178,11 @@ private:
 
 
 
+// ========== 供 process_image 直接调用的全局接口 ==========
+bool ncnn_init(void);                           // main 里初始化一次
+int  ncnn_perform_inference(const cv::Mat& bgr_image);  // 返回类别索引 0/1/2
+
+
 
 
 

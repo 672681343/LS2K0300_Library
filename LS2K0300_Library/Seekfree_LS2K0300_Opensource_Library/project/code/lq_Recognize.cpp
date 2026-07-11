@@ -94,22 +94,24 @@ void lq_ncnn_photo_demo(void)
     printf("       NCNN 图像分类推理示例\n");
     printf("========================================\n\n");
 
-    // ==================== 配置区域 ====================
-    // 测试图片路径（修改为你的图片路径）
-    std::string test_image_path = "test.bmp";
+    // ==================== 配置区域（已按你的模型修改） ====================
+    std::string test_image_path = "/home/root/test.bmp";  // 改成你的测试图绝对路径
     
-    // 模型配置
-    std::string model_param = "tiny_classifier_fp32.ncnn.param";
-    std::string model_bin   = "tiny_classifier_fp32.ncnn.bin";
-    int input_width    = 96;
-    int input_height   = 96;
+    // 模型文件（已传到 /home/root/）
+    std::string model_param = "/home/root/tiny_classifier_fp32.ncnn.param";
+    std::string model_bin   = "/home/root/tiny_classifier_fp32.ncnn.bin";
     
-    // 类别标签（顺序必须与训练时一致）
-    std::vector<std::string> labels = {"supplies", "vehicle", "weapon"};
+    // 输入尺寸：必须和训练时一致！
+    int input_width  = 48;
+    int input_height = 48;
     
-    // 归一化参数（ImageNet标准）
-    float mean_vals[3] = {123.675f, 116.28f, 103.53f};
-    float norm_vals[3] = {0.01712475f, 0.017507f, 0.01742919f};
+    // 类别标签（顺序必须和训练时 labels.txt 一致）
+    std::vector<std::string> labels = {"materials", "traffic", "weapon"};
+    
+    // 归一化参数：对应训练时的 transforms.Normalize([0.5,0.5,0.5], [0.5,0.5,0.5])
+    // 计算方式：mean = 0.5 * 255 = 127.5,  norm = 1 / (0.5 * 255) = 1/127.5
+    float mean_vals[3] = {127.5f, 127.5f, 127.5f};
+    float norm_vals[3] = {0.007843137f, 0.007843137f, 0.007843137f};
     // =================================================
 
     // 创建NCNN对象并配置
@@ -123,7 +125,7 @@ void lq_ncnn_photo_demo(void)
     printf("[%s] 正在加载模型...\n", get_time_str().c_str());
     if (!ncnn.Init()) {
         printf("[%s] 模型加载失败!\n", get_time_str().c_str());
-        return ;
+        return;
     }
     printf("[%s] 模型加载成功!\n\n", get_time_str().c_str());
 
@@ -134,12 +136,9 @@ void lq_ncnn_photo_demo(void)
     if (image.empty()) {
         printf("无法读取图片: %s\n", test_image_path.c_str());
         printf("请确保图片文件存在\n");
-        return ;
+        return;
     }
     printf("[%s] 图片尺寸: %d x %d\n\n", get_time_str().c_str(), image.cols, image.rows);
-
-    // 注意: OpenCV读取的是BGR格式，但在推理时会自动转换为RGB格式以匹配训练时的输入
-    // 训练使用PIL读取的RGB格式，因此需要色彩空间转换
 
     // 推理
     printf("[%s] 开始推理...\n", get_time_str().c_str());
@@ -154,8 +153,9 @@ void lq_ncnn_photo_demo(void)
     printf("推理耗时: %ld ms\n", duration.count());
     printf("========================================\n");
 
-    return ;
+    return;
 }
+
 
 
 //lq_ntp部分

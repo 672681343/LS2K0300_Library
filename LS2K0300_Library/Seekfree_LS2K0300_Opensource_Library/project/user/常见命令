@@ -39,13 +39,16 @@ source ~/.bashrc  --> 使修改生效
 
 3.同步本地代码到开发板
 # 设置时区和时间
-ssh root@192.168.1.113 "ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && date -s '$(date "+%Y-%m-%d %H:%M:%S")'"
+ssh root@192.168.1.104 "ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && date -s '$(date "+%Y-%m-%d %H:%M:%S")'"
 
 # 查看本地时间
 echo "本地时间: $(date)"
 
 # 查看远程时间
-echo "远程时间: $(ssh root@192.168.1.113 "date")"
+echo "远程时间: $(ssh root@192.168.1.104 "date")"
+
+# 根据时间戳寻找找已经下载的bmp照片
+find /home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/image_shoot -type f -name "*20260711_051748_261*.bmp"
 
 
 未使用的算子地址：

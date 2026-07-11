@@ -24,6 +24,10 @@
 
 std::vector<RedBox> boxes; //  存储红色框对象的容器
 
+
+
+RedPoint2f corners[4];
+
 static uint cnt = 0;
 cv::Mat crop_image_to_bgr_mat(uint8_t* src_image, int src_width, int src_height,
                                int x, int y, int w, int h) ;
@@ -43,65 +47,104 @@ void process_image(uint8_t* bgr888_image, int* frame_count) {
     
 
     // 检测图像中的红色区域
-    detect_red_regions(bgr888_image, IMG_WIDTH, IMG_HEIGHT, boxes, 200, 2200);
+    detect_red_regions(bgr888_image, IMG_WIDTH, IMG_HEIGHT, boxes, 400, 2200);
         printf("第 %d 帧: 检测到 %zu 个红色区域\n", *frame_count, boxes.size());
     // printf("DEBUG: box=(%d,%d,%d,%d), cx=%d, cy=%d, crop=(%d,%d,%d)\n",
     //    box.x, box.y, box.w, box.h, cx, cy, crop_x, crop_y, crop_size);
     (*frame_count)++;  // 帧计数+1
 
-    // 每10帧自动保存一张, 并且只保存第一个检测到的红色区域（如果有的话）
-    if (!boxes.empty() && (*frame_count % 1 == 0)) {   // && (*frame_count % 10 == 0)
+    if (!boxes.empty() && (*frame_count % 1 == 0)) {
         cnt++;
-        auto& box = boxes[0]; //  获取检测到的第一个边界框
-        // ========== 新增：先保存原始图像（带黄色裁剪框） ==========
-        // 创建原图的副本，避免画框影响后续裁剪
+        auto& box = boxes[0];
+
+        // ========== 基于旋转红框的裁剪参数计算 ==========
+        // 获取旋转角点（用于画框和计算极值）
+        get_rotated_box_corners(box, corners);
+
+        // 裁剪尺寸：基于旋转框实际宽度，保持正方形
+        float angle_factor = 1.0f + 0.6f * fabsf(sinf(box.angle));
+
+        int process_width = (int)(box.obb_w * 1.5f* angle_factor);
+        if (process_width < MODEL_INPUT_WIDTH) {
+            process_width = MODEL_INPUT_WIDTH;
+        }
+        int process_height = process_width;
+
+        // 红框最下端 + 边距 作为裁剪底部，向上裁剪
+        int crop_bottom = box.max_y + 16;
+        if (crop_bottom > IMG_HEIGHT) crop_bottom = IMG_HEIGHT;
+
+        float angle_offset = sinf(box.angle) * (box.obb_h * 1.8f);
+        
+        int crop_y = crop_bottom - process_height;
+        int crop_x = (int)(box.cx - process_width / 2.0f) + angle_offset;
+
+        // --- 边界保护（左右）---
+        if (crop_x < 0) {
+            crop_x = 0;
+            if (process_width > IMG_WIDTH) {
+                process_width = IMG_WIDTH;
+                process_height = process_width;
+            }
+        } else if (crop_x + process_width > IMG_WIDTH) {
+            crop_x = IMG_WIDTH - (int)(box.obb_w * 1.5f);
+            if (crop_x < 0) {
+                crop_x = 0;
+                process_width = (int)(box.obb_w * 1.5f);
+                process_height = process_width;
+            }
+            
+                process_width = (int)(box.obb_w * 1.5f);
+                process_height = process_width;
+                crop_y = crop_bottom - process_height;
+                
+        }
+
+        // --- 边界保护（上下：红框必须在裁剪底部附近）---
+        if (crop_y < 0) {
+            // 上方空间不足，压缩高度但保持底部对齐
+            crop_y = 0;
+            process_height = crop_bottom;
+            if (process_height < MODEL_INPUT_WIDTH) process_height = MODEL_INPUT_WIDTH;
+            process_width = process_height;
+        }
+        if (crop_y + process_height > IMG_HEIGHT) {
+            crop_y = IMG_HEIGHT - process_height;
+            if (crop_y < 0) {
+                crop_y = 0;
+                process_height = IMG_HEIGHT;
+                process_width = process_height;
+            }
+        }
+
+        // ========== 画框与保存（原有逻辑保留）==========
         uint8_t* debug_image = new uint8_t[IMG_WIDTH * IMG_HEIGHT * 3];
         memcpy(debug_image, bgr888_image, IMG_WIDTH * IMG_HEIGHT * 3);
 
-        int process_height = MODEL_INPUT_HEIGHT; // 裁剪高度固定为48像素，宽度根据检测到的红色区域和模型输入大小调整（适配68*68的）
-        //int process_width = box.w + 16;   // 裁剪宽度box.w + 8（适配40*40）//
-        int process_width = (int)(box.w*1.5);
-        if(process_width < MODEL_INPUT_WIDTH){
-            process_width = MODEL_INPUT_WIDTH; // 保持宽度不变，增加一些边距
-        }
-        process_height = process_width;// 保持宽高一致，适配模型输入要求
-
-        //if (box.h > int((box.w)*1.17))
-
-
-        // int crop_x = box.x - 8;  // 水平偏左一点
-        int crop_x = box.x - (int)(process_width-box.w)/2;  // 水平居中裁剪，增加一些边距
-        // 框底边 + 偏移 - 裁剪高度 = 裁剪区域顶部
-        // 这样框底边在裁剪区域底部附近
-        int crop_y = box.y + box.h + 16 - process_height; //算的是裁剪区域的左上角坐标
-
-
-            // // 边界限幅
-            // if (crop_x < 0) crop_x = 0;
-            // if (crop_y < 0) crop_y = 0;
-            // if (crop_x + process_width > UVC_WIDTH) crop_x = UVC_WIDTH - process_width;
-            // if (crop_y + process_height > UVC_HEIGHT) crop_y = UVC_HEIGHT - process_height;
-
-            
-            // printf("裁剪前: box=(%d,%d,%d,%d), crop=(%d,%d,%d,%d)\n",
-            //     box.x, box.y, box.w, box.h, crop_x, crop_y, process_width, process_height);
-
-
-        // === 画框（用限幅后的坐标）=== //这个调试的时候会用到
+        // // 黄色 AABB 框（保留，调试用）
+        // draw_rect_bgr888(debug_image, UVC_WIDTH, UVC_HEIGHT,
+        //                 box.x, box.y, box.w, box.h,
+        //                 RGB565_YELLOW, 2);
         // draw_rect_bgr888(bgr888_image, UVC_WIDTH, UVC_HEIGHT,
         //                 box.x, box.y, box.w, box.h,
         //                 RGB565_YELLOW, 2);
 
+        // // 绿色旋转框
+        // draw_rotated_rect_bgr888(bgr888_image, IMG_WIDTH, IMG_HEIGHT, corners, 0x00FF00, 2);
 
-        // // // 保存原始调试图
+        // // 红色裁剪框（调试用，显示实际裁剪区域）
+        // draw_rect_bgr888(debug_image, IMG_WIDTH, IMG_HEIGHT,
+        //                 crop_x, crop_y, process_width, process_height,
+        //                 RGB565_RED, 1);
+
+        // // 保存原始调试图
         // char debug_path[128];
-        // snprintf(debug_path, sizeof(debug_path), "/tmp/debug_original_%d_%d.bmp", cnt, *frame_count);
+        // snprintf(debug_path, sizeof(debug_path), "/tmp/debug_original_%d_%d_%d_%.2f.bmp", cnt, *frame_count, box.area, box.angle);
         // save_bgr888_as_bmp(debug_path, debug_image, IMG_WIDTH, IMG_HEIGHT, IMG_WIDTH * 3);
-        
-        delete[] debug_image;
+        // delete[] debug_image;
         // ========== 新增结束 ==========
 
-        // === 裁剪（用同样的坐标）===
+        // === 裁剪（用旋转框计算出的新坐标）===
         cv::Mat cropped_mat = crop_image_to_bgr_mat(
             bgr888_image, UVC_WIDTH, UVC_HEIGHT,
             crop_x, crop_y, process_width, process_height
@@ -148,7 +191,7 @@ void process_image(uint8_t* bgr888_image, int* frame_count) {
             //         class_labels[inference_result.class_index], cnt, *frame_count, box.area, box.y + box.h, process_height, full_timestamp);
 
             // //拍数据集的时候用// 把时间戳加入进去，就不会有重名覆盖的风险了（拍数据集的时候用）
-            snprintf(path, sizeof(path), "/tmp/materials_p1_1_%d_%d_%d_%d_%d___%s.bmp",
+            snprintf(path, sizeof(path), "/tmp/weapon_p1_1_%d_%d_%d_%d_%d___%s.bmp",
                     cnt, *frame_count, box.area, box.y + box.h, process_height, full_timestamp);
 
             if (cnt <= 3000) {  //这个决定单次保存的图片数量，拍数据集的时候用
@@ -159,20 +202,20 @@ void process_image(uint8_t* bgr888_image, int* frame_count) {
 
             //增补时，前面加上一个add就好了add_，比如add_weapon_p2_1_*.bmp，这样就不会和之前的数据集重名了
             //新的文件名格式
-            //traffic_p1_1_*_*_*_*_*.bmp --> 是装甲车(白色背景)
-            //traffic_p1_2_*_*_*_*_*.bmp --> 是装甲车(杂乱背景)
-            //traffic_p2_1_*_*_*_*_*.bmp --> 是救护车(白色背景)
-            //traffic_p2_2_*_*_*_*_*.bmp --> 是救护车(杂乱背景)
+            //traffic_p1_1_*_*_*_*_*.bmp --> 是装甲车(白色背景)√
+            //traffic_p1_2_*_*_*_*_*.bmp --> 是装甲车(杂乱背景)√
+            //traffic_p2_1_*_*_*_*_*.bmp --> 是救护车(白色背景)√
+            //traffic_p2_2_*_*_*_*_*.bmp --> 是救护车(杂乱背景)√
 
-            //weapon_p1_1_*_*_*_*_*.bmp --> 是步枪(白色背景)
+            //weapon_p1_1_*_*_*_*_*.bmp --> 是步枪(白色背景)--（还没拍--2026-7-11-5:52）（）
             //weapon_p1_2_*_*_*_*_*.bmp --> 是手枪(白色背景)
             //weapon_p2_1_*_*_*_*_*.bmp --> 是手榴弹(白色背景)
             //weapon_p2_2_*_*_*_*_*.bmp --> 是手榴弹(杂乱背景) 
-            //weapon_p2_3_*_*_*_*_*.bmp --> 是C4(杂乱和白天背景) 
+            //weapon_p2_3_*_*_*_*_*.bmp --> 是C4(杂乱和白天背景) ×××不拍这个
 
-            //materials_p1_1_*_*_*_*_*.bmp --> 是望远镜(白色背景) --
-            //materials_p2_1_*_*_*_*_*.bmp --> 是急救包(白色背景)√
-            //materials_p2_2_*_*_*_*_*.bmp --> 是急救包(杂乱背景) √
+            //materials_p1_1_*_*_*_*_*.bmp --> 是望远镜(白色背景) 
+            //materials_p2_1_*_*_*_*_*.bmp --> 是急救包(白色背景)
+            //materials_p2_2_*_*_*_*_*.bmp --> 是急救包(杂乱背景) 
 
 
             //旧文件格式
@@ -228,24 +271,17 @@ bool is_red_pixel(uint8_t r, uint8_t g, uint8_t b, uint8_t min_red, uint8_t min_
 //该函数用于检测图像中的红色区域，并根据面积和密度条件筛选出符合条件的红色矩形框。
 void detect_red_regions(uint8_t* image, int width, int height,
                        std::vector<RedBox>& boxes,
-                       int min_area, int max_area) {        // 最小填充密度
+                       int min_area, int max_area) {
     
     const int total_pixels = width * height;
     uint8_t* mask = new uint8_t[total_pixels];
     uint8_t* visited = new uint8_t[total_pixels];
 
-    //     // 边界过滤阈值（新增参数，方便外部配置）(适配160*120， 40*40的红色区域)
-    // int min_y_threshold = 85;          // min_y 必须大于此值（上侧边界裁剪值）
-    // int max_y_threshold = 5;           // min_y 必须小于 height - 此值（下侧边界裁剪值）
-    // int min_x_threshold = 5;            // min_x 必须大于此值  （左侧边界裁剪值）
-    // int max_x_threshold = 10;           // max_x 必须小于 width - 此值（右侧边界裁剪值）
-    // float min_density = 0.2f;
-
-            // 边界过滤阈值（新增参数，方便外部配置） 适配68*68的
-    int min_y_threshold = 20;//MODEL_INPUT_HEIGHT-5;          // min_y 必须大于此值（上侧边界裁剪值）
-    int max_y_threshold = 190;//5;           // min_y 必须小于 height - 此值（下侧边界裁剪值）
-    int min_x_threshold = 20;//5;            // min_x 必须大于此值  （左侧边界裁剪值）
-    int max_x_threshold = 300;//MODEL_INPUT_WIDTH + 5;           // max_x 必须小于 width - 此值（右侧边界裁剪值）
+    // 边界过滤阈值（根据你的 320×240 调整）
+    int min_y_threshold = 20;
+    int max_y_threshold = height - 20;
+    int min_x_threshold = 20;
+    int max_x_threshold = width - 20;
     float min_density = 0.2f;
     
     // 生成二值掩码
@@ -254,7 +290,6 @@ void detect_red_regions(uint8_t* image, int width, int height,
         uint8_t g = image[i * 3 + 1];
         uint8_t r = image[i * 3 + 2];
         mask[i] = is_red_pixel(r, g, b, 100, 80) ? 255 : 0;
-
     }
     
     memset(visited, 0, total_pixels);
@@ -263,15 +298,21 @@ void detect_red_regions(uint8_t* image, int width, int height,
     const int dx[4] = {0, 0, -1, 1};
     const int dy[4] = {-1, 1, 0, 0};
     
-    // BFS 查找连通域
-    for (int y = 0; y < height; y = y + 4) {
-        for (int x = 0; x < width; x = x + 4) {
+    // 临时存储连通域像素坐标（PCA 用）
+    std::vector<std::pair<int, int>> points;
+    points.reserve(2048);
+    
+    // BFS 查找连通域（步长 1，避免漏检）
+    for (int y = 0; y < height; y+=4) {
+        for (int x = 0; x < width; x+=4) {
             int idx = y * width + x;
             if (mask[idx] == 0 || visited[idx]) continue;
             
+            points.clear();
             int min_x = x, max_x = x;
             int min_y = y, max_y = y;
-            int pixel_count = 0;
+            long long sum_x = 0, sum_y = 0;
+            long long sum_x2 = 0, sum_y2 = 0, sum_xy = 0;
             
             std::queue<std::pair<int, int>> q;
             q.push({x, y});
@@ -280,11 +321,16 @@ void detect_red_regions(uint8_t* image, int width, int height,
             while (!q.empty()) {
                 auto [cx, cy] = q.front();
                 q.pop();
-                pixel_count++;
                 
-                if (cx < min_x) min_x = cx; //  更新当前连通区域的最小和最大x坐标
+                points.push_back({cx, cy});
+                sum_x += cx;  sum_y += cy;
+                sum_x2 += 1LL * cx * cx;
+                sum_y2 += 1LL * cy * cy;
+                sum_xy += 1LL * cx * cy;
+                
+                if (cx < min_x) min_x = cx;
                 if (cx > max_x) max_x = cx;
-                if (cy < min_y) min_y = cy; //  更新当前连通区域的最小和最大y坐标
+                if (cy < min_y) min_y = cy;
                 if (cy > max_y) max_y = cy;
                 
                 for (int i = 0; i < 4; i++) {
@@ -300,40 +346,88 @@ void detect_red_regions(uint8_t* image, int width, int height,
                 }
             }
             
-            // 过滤并记录（使用参数化的阈值）
-            if (pixel_count >= min_area && 
-                pixel_count <= max_area && 
-                min_y < max_y_threshold &&//height - max_y_threshold &&   // 意思是 min_y 必须小于 height - max_y_threshold（下侧边界裁剪值），确保红色区域不在图像底部过近的位置
-                min_y > min_y_threshold &&
-                min_x > min_x_threshold && 
-                max_x < max_x_threshold &&//width - max_x_threshold &&
-                (max_x - min_x) > 15 && //限宽
-                (max_y - min_y + 1) < 0.9 * (max_x - min_x + 1)) //高比0.9*宽小
-                { //  确保红色区域在图像内部，并且宽度大于30像素{    // 原：UVC_WIDTH - 85，改为通用 width
-                
+            int pixel_count = (int)points.size();
+            int aabb_w = max_x - min_x + 1;
+            int aabb_h = max_y - min_y + 1;
+            
+            // 快速过滤（AABB 层面）
+            if (pixel_count < min_area || pixel_count > max_area) continue;
+            if (min_y < min_y_threshold || max_y > max_y_threshold) continue;
+            if (min_x < min_x_threshold || max_x > max_x_threshold) continue;
+            if (aabb_w < 15) continue;
+            
+            // ===== PCA 计算旋转矩形 =====
+            float n = pixel_count;
+            float cx_f = sum_x / n;
+            float cy_f = sum_y / n;
+            float mu20 = sum_x2 / n - cx_f * cx_f;
+            float mu02 = sum_y2 / n - cy_f * cy_f;
+            float mu11 = sum_xy / n - cx_f * cy_f;
+            
+            float angle = 0.5f * atan2f(2.0f * mu11, mu20 - mu02);
+            
+            float cos_a = cosf(angle);
+            float sin_a = sinf(angle);
+            float min_u = 1e9f, max_u = -1e9f;
+            float min_v = 1e9f, max_v = -1e9f;
+            
+            for (auto& p : points) {
+                float dx_ = p.first - cx_f;
+                float dy_ = p.second - cy_f;
+                float u =  dx_ * cos_a + dy_ * sin_a;   // 主轴投影
+                float v = -dx_ * sin_a + dy_ * cos_a;   // 垂直轴投影
+                min_u = std::min(min_u, u); max_u = std::max(max_u, u);
+                min_v = std::min(min_v, v); max_v = std::max(max_v, v);
+            }
+            
+            float obb_w = max_u - min_u;
+            float obb_h = max_v - min_v;
+            if (obb_w < 1.0f) obb_w = 1.0f;
+            if (obb_h < 1.0f) obb_h = 1.0f;
+            
+            // 规范化：w 始终为长边
+            if (obb_w < obb_h) {
+                std::swap(obb_w, obb_h);
+                angle += 3.14159265f / 2.0f;
+            }
+            while (angle > 3.14159265f / 2.0f) angle -= 3.14159265f;
+            while (angle < -3.14159265f / 2.0f) angle += 3.14159265f;
+            
+            float obb_area = obb_w * obb_h;
+            float density = pixel_count / obb_area;
+            
+            // 旋转矩形过滤（更鲁棒，不受倾斜影响）
+            bool aspect_ok = (std::max(obb_w, obb_h) / std::min(obb_w, obb_h)) < 6.0f;
+            bool size_ok   = obb_w > 8.0f && obb_h > 4.0f;
+            bool angle_ok  = fabsf(angle) < 3.14159265f / 4.0f;  // 限制旋转角度在 ±45 度内
+            
+            if (density >= min_density && aspect_ok && size_ok && angle_ok) {
                 RedBox box;
-                box.x = min_x; //  设置框的左上角x坐标为最小x值
-                box.y = min_y; //  设置框的左上角y坐标为最小y值
-                box.w = max_x - min_x + 1; //  计算框的宽度，最大x值减去最小x值加1（包含边界）
-                box.h = max_y - min_y + 1; //  计算框的高度，最大y值减去最小y值加1（包含边界）
-                box.area = pixel_count; //  设置框的像素数量
+                // AABB 字段（兼容旧代码：裁剪、画黄框都用这些）
+                box.x = min_x;
+                box.y = min_y;
+                box.w = aabb_w;
+                box.h = aabb_h;
+                box.area = pixel_count;
+                box.density = density;
                 
-                int bbox_area = box.w * box.h;
-                box.density = bbox_area > 0 ? (float)pixel_count / bbox_area : 0;
+                // OBB 字段（新增：旋转矩形参数）
+                box.cx = cx_f;
+                box.cy = cy_f;
+                box.obb_w = obb_w;
+                box.obb_h = obb_h;
+                box.angle = angle;
+                box.max_y = max_y;  
                 
-                if (box.density > min_density) {
-                    boxes.push_back(box);
-                }
+                boxes.push_back(box);
             }
         }
-
-
     }
     
-    // 释放内存
-    delete[] mask; //  释放动态分配的内存
+    delete[] mask;
     delete[] visited;
 }
+
 
 
 static inline void set_pixel_bgr888(uint8_t* image, int width, int x, int y, uint32_t color) {
@@ -341,6 +435,73 @@ static inline void set_pixel_bgr888(uint8_t* image, int width, int x, int y, uin
     image[idx]     = (color >> 16) & 0xFF;  // B
     image[idx + 1] = (color >> 8)  & 0xFF;  // G
     image[idx + 2] =  color        & 0xFF;  // R
+}
+
+
+// ============================================================
+// 旋转矩形辅助函数（新增）
+// ============================================================
+
+
+// 安全画点（带边界保护）
+static inline void set_pixel_bgr888_safe(uint8_t* image, int width, int height,
+                                         int x, int y, uint32_t color) {
+    if (x < 0 || x >= width || y < 0 || y >= height) return;
+    set_pixel_bgr888(image, width, x, y, color);
+}
+
+// 获取旋转矩形四个角点
+void get_rotated_box_corners(const RedBox& box, RedPoint2f corners[4]) {
+    float cos_a = cosf(box.angle);
+    float sin_a = sinf(box.angle);
+    float hw = box.obb_w * 0.5f;
+    float hh = box.obb_h * 0.5f;
+
+    float lx[4] = {-hw, hw, hw, -hw};
+    float ly[4] = {-hh, -hh, hh, hh};
+
+    for (int i = 0; i < 4; i++) {
+        corners[i].x = box.cx + (lx[i] * cos_a - ly[i] * sin_a);
+        corners[i].y = box.cy + (lx[i] * sin_a + ly[i] * cos_a);
+    }
+}
+
+// Bresenham 画线（支持 brush 线宽）
+static void draw_line_bgr888(uint8_t* image, int width, int height,
+                             int x0, int y0, int x1, int y1,
+                             uint32_t color, int thickness) {
+    int dx = std::abs(x1 - x0);
+    int dy = std::abs(y1 - y0);
+    int sx = (x0 < x1) ? 1 : -1;
+    int sy = (y0 < y1) ? 1 : -1;
+    int err = dx - dy;
+    int r = thickness / 2;
+
+    while (1) {
+        for (int by = -r; by <= r; by++) {
+            for (int bx = -r; bx <= r; bx++) {
+                set_pixel_bgr888_safe(image, width, height, x0 + bx, y0 + by, color);
+            }
+        }
+        if (x0 == x1 && y0 == y1) break;
+        int e2 = 2 * err;
+        if (e2 > -dy) { err -= dy; x0 += sx; }
+        if (e2 < dx)  { err += dx; y0 += sy; }
+    }
+}
+
+// 旋转矩形画框
+void draw_rotated_rect_bgr888(uint8_t* image, int width, int height,
+                              const RedPoint2f corners[4],
+                              uint32_t color, int thickness) {
+    for (int i = 0; i < 4; i++) {
+        int j = (i + 1) % 4;
+        int x0 = (int)(corners[i].x + 0.5f);
+        int y0 = (int)(corners[i].y + 0.5f);
+        int x1 = (int)(corners[j].x + 0.5f);
+        int y1 = (int)(corners[j].y + 0.5f);
+        draw_line_bgr888(image, width, height, x0, y0, x1, y1, color, thickness);
+    }
 }
 
 
@@ -492,5 +653,3 @@ void save_bgr888_as_bmp(const char* filename, uint8_t* bgr, int w, int h, int st
     free(row_buf);
     fclose(fp);
 }
-
-

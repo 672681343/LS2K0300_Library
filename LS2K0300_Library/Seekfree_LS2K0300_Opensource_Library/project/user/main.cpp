@@ -36,6 +36,8 @@ int main(int, char**)
     }
     printf("✅ 摄像头初始化成功\n");
 
+
+    // ======================== 逐飞模型初始化 ========================
     // 张量内存
     uint8_t tensor_arena[TENSOR_ARENA_SIZE];
     
@@ -44,6 +46,8 @@ int main(int, char**)
         printf("Failed to initialize TFLite!\n");
         return -1;
     }
+    // ======================== 龙邱模型初始化 ========================
+
   
     // ======================== 基础初始化 ========================
     TCP::init();
@@ -53,6 +57,7 @@ int main(int, char**)
     PID::PID_init();                            // PID初始化
     // MenuSystem::init();                         // 菜单初始化
     Pit::Init();                                // 中断初始化
+    lq_ncnn_photo_demo();
 
     while(1)
     {
@@ -70,6 +75,7 @@ int main(int, char**)
             printf("❌ 第%d帧：获取图像数据为空！\n", frame_count);
             continue;  // 跳过空帧，不退出程序
         }
+        
 
 
         // ======================== 图像和控制处理 ========================
