@@ -47,8 +47,26 @@ echo "本地时间: $(date)"
 # 查看远程时间
 echo "远程时间: $(ssh root@192.168.1.104 "date")"
 
+
+# 先把旧的移走（正在运行的程序不受影响，因为它打开的是 inode）
+mv ./project ./project.old
+
+
+# 删掉特定路径下的bmp图片
+find /home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/car_shoot/fist_classify/materials -name '*.bmp' -type f -delete
+
 # 根据时间戳寻找找已经下载的bmp照片
 find /home/kaka/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/image_shoot -type f -name "*20260711_051748_261*.bmp"
+
+
+# 建立软链接的方法
+# 1 先备份/删除本地 car_shoot
+mv ~/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/car_shoot ~/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/car_shoot_backup
+
+# 2 创建软链接指向共享文件夹
+ln -s /mnt/hgfs/car_shoot ~/桌面/LS2K0300_Library/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/user/car_shoot
+
+
 
 
 未使用的算子地址：

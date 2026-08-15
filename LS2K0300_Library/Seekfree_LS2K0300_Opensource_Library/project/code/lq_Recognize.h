@@ -25,9 +25,16 @@
 #include <sys/stat.h>
 #include <limits.h>
 
+
+// 全局类别标签（顺序必须和模型训练时一致）
+static const std::vector<std::string> CLASS_NAMES = {
+    "telescope_1", "medkit_2", "traffic", "weapon_1", "weapon_2"
+};
+
 void lq_ncnn_demo(void);            // NCNN 测试
 void lq_ncnn_photo_demo(void);      // NCNN 图像分类测试
-
+void lq_ncnn_video_demo(void);      // ← 新增：NCNN 视频流推理
+bool ncnn_init_model(void);      // 初始化 NCNN 模型
 
 class lq_ntp
 {
@@ -116,6 +123,11 @@ public:
      */
     std::string Infer(const cv::Mat& bgr_image);
 
+        // ↓↓↓ 新增：在类里声明 ↓↓↓
+    std::pair<std::string, std::vector<float>> InferWithProbs(const cv::Mat& bgr_image);
+
+
+    
     /*!
      * @brief   设置模型路径
      * @param   param_path : 模型参数文件路径(.param)

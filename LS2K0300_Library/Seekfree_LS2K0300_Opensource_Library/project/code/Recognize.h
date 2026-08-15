@@ -9,8 +9,8 @@ using namespace cv;
 #define USE_INT8_MODEL 0 //  定义是否使用INT8模型的宏，1表示使用INT8模型
 
 // ========== 模型配置 ==========
-#define MODEL_INPUT_WIDTH          64 //  定义模型的输入宽度为48像素
-#define MODEL_INPUT_HEIGHT         64 //  定义模型的输入高度为48像素
+#define MODEL_INPUT_WIDTH          52 //  定义模型的输入宽度为48像素
+#define MODEL_INPUT_HEIGHT         52 //  定义模型的输入高度为48像素
 #define MODEL_INPUT_CHANNEL        3 //  定义模型的输入通道数为3（RGB三通道）
 #define MODEL_OUTPUT_CLASS_NUM     4 //  定义模型的输出类别数量为6
 #define MODEL_INPUT_SIZE           (MODEL_INPUT_WIDTH * MODEL_INPUT_HEIGHT * MODEL_INPUT_CHANNEL)

@@ -5,6 +5,12 @@
 #include <stdexcept>
 #include <opencv2/imgproc.hpp>
 
+// 定义全局 NCNN 对象
+LQ_NCNN g_ncnn;
+
+
+
+
 /********************************************************************************
  * @file    lq_ncnn_demo.cpp
  * @brief   NCNN 测试.
@@ -24,6 +30,265 @@ static std::string get_time_str(void)
 }
 
 
+
+bool ncnn_init_model(void)
+{
+    extern LQ_NCNN g_ncnn;  // 声明外部对象
+
+    g_ncnn.SetModelPath("/home/root/tiny_classifier_fp32.ncnn.param",
+                        "/home/root/tiny_classifier_fp32.ncnn.bin");
+    g_ncnn.SetInputSize(48, 48);
+    g_ncnn.SetLabels(CLASS_NAMES);  // 传给 NCNN 内部的标签数组
+
+
+// NORM_MEAN = [0.4629, 0.4272, 0.4120] # 直道+左转弯+右转弯
+// NORM_STD  = [ 0.1333, 0.1765, 0.1648]
+
+    float mean_vals[3] = {118.0395f, 108.9360f, 105.0600f};
+    float norm_vals[3] = {0.029419f, 0.022219f, 0.023795f};
+
+    // float mean_vals[3] = {121.533f, 112.0725f, 107.661f};
+    // float norm_vals[3] = {0.031651f, 0.0226287f, 0.023956f};
+
+    // float mean_vals[3] = {127.466850f, 116.576565f, 110.429025f};
+    // float norm_vals[3] = {0.041489f, 0.023834f, 0.024194f};
+    g_ncnn.SetNormalize(mean_vals, norm_vals);
+
+    printf("[NCNN] 正在加载模型...\n");
+    if (!g_ncnn.Init()) {
+        printf("[NCNN] 模型加载失败!\n");
+        return false;
+    }
+    printf("[NCNN] 模型加载成功!\n");
+    return true;
+}
+
+
+void lq_ncnn_video_demo(void)
+{
+    printf("========================================\n");
+    printf("       NCNN 视频流分类推理示例\n");
+    printf("========================================\n\n");
+
+    // ==================== 配置区域（按需修改） ====================
+    // 视频源： "0"=默认摄像头，或写视频文件路径如 "/home/root/test.mp4"
+    std::string video_source = "0";
+
+    std::string model_param = "/home/root/tiny_classifier_fp32.ncnn.param";
+    std::string model_bin   = "/home/root/tiny_classifier_fp32.ncnn.bin";
+
+    int input_width  = 48;
+    int input_height = 48;
+
+    // 类别标签（顺序必须和训练时 labels.txt 一致）
+    // 不限数量，2个、4个、8个都可以，调色盘会自动循环
+    std::vector<std::string> labels = {"materials", "traffic", "weapon_1", "weapon_2"};
+
+    float mean_vals[3] = {127.466850f, 116.576565f, 110.429025f};
+    float norm_vals[3] = {0.041489f, 0.023834f, 0.024194f};
+
+    // 预定义调色盘（BGR 格式）。类别数超过时会自动循环使用。
+    // 想换颜色直接改下面的值，范围 0~255，格式 (B, G, R)
+    static const std::vector<cv::Scalar> COLOR_PALETTE = {
+        cv::Scalar(0, 128, 255),    // 橙色
+        cv::Scalar(0, 255, 0),      // 绿色
+        cv::Scalar(255, 0, 255),    // 紫色
+        cv::Scalar(0, 255, 255),    // 黄色
+        cv::Scalar(255, 0, 0),      // 蓝色
+        cv::Scalar(0, 0, 255),      // 红色
+        cv::Scalar(255, 255, 0),    // 青色
+        cv::Scalar(128, 128, 255),  // 粉色
+    };
+    // =============================================================
+
+    // 获取颜色辅助函数（预测中的类别自动加亮）
+    auto getColor = [&](size_t idx, bool is_predicted) -> cv::Scalar {
+        cv::Scalar base = COLOR_PALETTE[idx % COLOR_PALETTE.size()];
+        if (is_predicted) {
+            return cv::Scalar(
+                std::min(base[0] + 50, 255.0),
+                std::min(base[1] + 50, 255.0),
+                std::min(base[2] + 50, 255.0)
+            );
+        }
+        return base;
+    };
+
+    // 初始化 NCNN
+    LQ_NCNN ncnn;
+    ncnn.SetModelPath(model_param, model_bin);
+    ncnn.SetInputSize(input_width, input_height);
+    ncnn.SetLabels(labels);
+    ncnn.SetNormalize(mean_vals, norm_vals);
+
+    printf("[%s] 正在加载模型...\n", get_time_str().c_str());
+    if (!ncnn.Init()) {
+        printf("[%s] 模型加载失败!\n", get_time_str().c_str());
+        return;
+    }
+    printf("[%s] 模型加载成功!\n\n", get_time_str().c_str());
+
+    // 打开视频源
+    cv::VideoCapture cap;
+    int camera_id = -1;
+    try {
+        camera_id = std::stoi(video_source);
+    } catch (...) {
+        camera_id = -1;
+    }
+
+    if (camera_id >= 0) {
+        cap.open(camera_id);
+    } else {
+        cap.open(video_source);
+    }
+
+    if (!cap.isOpened()) {
+        printf("无法打开视频源: %s\n", video_source.c_str());
+        return;
+    }
+
+    printf("[%s] 视频流已启动，分辨率: %dx%d, 按 Q 退出...\n\n",
+           get_time_str().c_str(),
+           (int)cap.get(cv::CAP_PROP_FRAME_WIDTH),
+           (int)cap.get(cv::CAP_PROP_FRAME_HEIGHT));
+
+    cv::Mat frame;
+    const int font = cv::FONT_HERSHEY_SIMPLEX;
+
+    while (true) {
+        if (!cap.read(frame)) {
+            printf("视频流读取结束\n");
+            break;
+        }
+
+        // 推理
+        auto t0 = std::chrono::high_resolution_clock::now();
+        std::pair<std::string, std::vector<float>> result = ncnn.InferWithProbs(frame);
+        auto t1 = std::chrono::high_resolution_clock::now();
+
+        std::string pred_label = result.first;
+        std::vector<float> probs = result.second;
+
+        long ms = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+
+        // 找最大概率索引
+        size_t pid = 0;
+        float max_prob = probs[0];
+        for (size_t i = 1; i < probs.size(); ++i) {
+            if (probs[i] > max_prob) {
+                max_prob = probs[i];
+                pid = i;
+            }
+        }
+
+        float fps = (ms > 0) ? (1000.0f / ms) : 0.0f;
+
+        // ========== 绘制（类似 Python 版本） ==========
+        // 1. 预测结果（左上角，绿色）
+        std::string pred_txt = "Pred: " + pred_label + " (" + std::to_string(static_cast<int>(max_prob * 100)) + "%)";
+        cv::putText(frame, pred_txt, cv::Point(10, 30), font, 0.7, cv::Scalar(0, 255, 0), 2);
+
+        // 2. 耗时和 FPS（第二行，青色）
+        std::string fps_txt = std::to_string(ms) + "ms (" + std::to_string(static_cast<int>(fps)) + " FPS)";
+        cv::putText(frame, fps_txt, cv::Point(10, 60), font, 0.6, cv::Scalar(255, 255, 0), 2);
+
+        // 3. 各类别置信度（动态调色盘）
+        int y = 95;
+        for (size_t i = 0; i < labels.size(); ++i) {
+            bool is_pred = (i == pid);
+            cv::Scalar color = getColor(i, is_pred);
+            int thickness = is_pred ? 2 : 1;
+            double fontScale = is_pred ? 0.55 : 0.5;
+
+            std::string txt = labels[i] + ": " + std::to_string(static_cast<int>(probs[i] * 100)) + "%";
+            cv::putText(frame, txt, cv::Point(10, y), font, fontScale, color, thickness);
+            y += 24;
+        }
+
+        // 显示
+        cv::imshow("NCNN Video", frame);
+
+        // 按 Q 退出
+        int key = cv::waitKey(1) & 0xFF;
+        if (key == 'q' || key == 'Q') {
+            printf("用户退出\n");
+            break;
+        }
+    }
+
+    cap.release();
+    cv::destroyAllWindows();
+    printf("视频流已关闭\n");
+    return;
+}
+
+
+
+
+
+
+
+/*LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+ * @函数名称：std::pair<std::string, std::vector<float>> LQ_NCNN::InferWithProbs(const cv::Mat& bgr_image)
+ * @功能说明：推理并返回各类别概率
+ * @参数说明：bgr_image : 输入BGR图像
+ * @函数返回：{类别名称, 各类别概率向量}
+ * @备注说明：内部做 Softmax
+ QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ*/
+std::pair<std::string, std::vector<float>> LQ_NCNN::InferWithProbs(const cv::Mat& bgr_image)
+{
+    if (!m_initialized) {
+        throw std::runtime_error("NCNN not initialized. Call Init() first.");
+    }
+    if (bgr_image.empty()) {
+        throw std::invalid_argument("Input image is empty.");
+    }
+
+    cv::Mat resized;
+    cv::resize(bgr_image, resized, cv::Size(m_input_width, m_input_height));
+
+    cv::Mat rgb;
+    cv::cvtColor(resized, rgb, cv::COLOR_BGR2RGB);
+
+    ncnn::Mat input = ncnn::Mat::from_pixels(
+        rgb.data,
+        ncnn::Mat::PIXEL_RGB,
+        m_input_width,
+        m_input_height
+    );
+    input.substract_mean_normalize(m_mean_vals, m_norm_vals);
+
+    ncnn::Extractor ex = m_net.create_extractor();
+    ex.input(m_input_name.c_str(), input);
+
+    ncnn::Mat logits;
+    ex.extract(m_output_name.c_str(), logits);
+
+    // Softmax
+    std::vector<float> probs;
+    float max_val = -std::numeric_limits<float>::infinity();
+    for (int i = 0; i < logits.w; ++i) {
+        if (logits[i] > max_val) max_val = logits[i];
+    }
+
+    float sum_exp = 0.0f;
+    for (int i = 0; i < logits.w; ++i) {
+        float e = std::exp(logits[i] - max_val);
+        probs.push_back(e);
+        sum_exp += e;
+    }
+    for (auto& p : probs) {
+        p /= sum_exp;
+    }
+
+    int class_id = Argmax(logits);
+    std::string label = (class_id >= 0 && class_id < static_cast<int>(m_labels.size()))
+                        ? m_labels[class_id]
+                        : std::to_string(class_id);
+
+    return {label, probs};
+}
 
 
 void lq_ncnn_demo(void)
@@ -106,12 +371,12 @@ void lq_ncnn_photo_demo(void)
     int input_height = 48;
     
     // 类别标签（顺序必须和训练时 labels.txt 一致）
-    std::vector<std::string> labels = {"materials", "traffic", "weapon"};
+std::vector<std::string> labels = {"materials", "traffic", "weapon_1", "weapon_2"};
     
-    // 归一化参数：对应训练时的 transforms.Normalize([0.5,0.5,0.5], [0.5,0.5,0.5])
-    // 计算方式：mean = 0.5 * 255 = 127.5,  norm = 1 / (0.5 * 255) = 1/127.5
-    float mean_vals[3] = {127.5f, 127.5f, 127.5f};
-    float norm_vals[3] = {0.007843137f, 0.007843137f, 0.007843137f};
+    // 新：对应 Normalize([0.499870,0.457163,0.433055], [0.094522,0.164531,0.162088])
+    // 公式：mean_val = mean * 255,  norm_val = 1 / (std * 255)
+    float mean_vals[3] = {127.466850f, 116.576565f, 110.429025f};
+    float norm_vals[3] = {0.041489f, 0.023834f, 0.024194f};
     // =================================================
 
     // 创建NCNN对象并配置

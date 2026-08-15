@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <vector>
 
+
+
 struct RedPoint2f {
     float x;
     float y;

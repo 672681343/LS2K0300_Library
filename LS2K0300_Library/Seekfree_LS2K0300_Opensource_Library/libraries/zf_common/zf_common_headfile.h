@@ -175,9 +175,9 @@
 #include "Saving.h"
 #include "TCP.h"
 #include "Control.h"
-#include "red_detecte.h"
 #include "Recognize.h" 
 #include "lq_Recognize.h"
+#include "red_detecte.h"
 
 
 //===================================================用户自定义文件===================================================

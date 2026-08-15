@@ -38,14 +38,14 @@ int main(int, char**)
 
 
     // ======================== 逐飞模型初始化 ========================
-    // 张量内存
-    uint8_t tensor_arena[TENSOR_ARENA_SIZE];
+    // // 张量内存
+    // uint8_t tensor_arena[TENSOR_ARENA_SIZE];
     
-    // 识别初始化（无返回值，通过全局变量访问）
-    if (!init_tflite_simple(tensor_arena, TENSOR_ARENA_SIZE, USE_INT8_MODEL)) {
-        printf("Failed to initialize TFLite!\n");
-        return -1;
-    }
+    // // 识别初始化（无返回值，通过全局变量访问）
+    // if (!init_tflite_simple(tensor_arena, TENSOR_ARENA_SIZE, USE_INT8_MODEL)) {
+    //     printf("Failed to initialize TFLite!\n");
+    //     return -1;
+    // }
     // ======================== 龙邱模型初始化 ========================
 
   
@@ -57,7 +57,10 @@ int main(int, char**)
     PID::PID_init();                            // PID初始化
     // MenuSystem::init();                         // 菜单初始化
     Pit::Init();                                // 中断初始化
-    lq_ncnn_photo_demo();
+    // lq_ncnn_photo_demo();
+    // lq_ncnn_video_demo();
+
+    if (!ncnn_init_model()) return -1;
 
     while(1)
     {
